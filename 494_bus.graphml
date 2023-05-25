@@ -1,0 +1,3737 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d0" for="edge" attr.name="weight" attr.type="float"/>
+<graph edgedefault="undirected"><node id="0"/>
+<node id="1"/>
+<node id="2"/>
+<node id="3"/>
+<node id="4"/>
+<node id="5"/>
+<node id="6"/>
+<node id="7"/>
+<node id="8"/>
+<node id="9"/>
+<node id="10"/>
+<node id="11"/>
+<node id="12"/>
+<node id="13"/>
+<node id="14"/>
+<node id="15"/>
+<node id="16"/>
+<node id="17"/>
+<node id="18"/>
+<node id="19"/>
+<node id="20"/>
+<node id="21"/>
+<node id="22"/>
+<node id="23"/>
+<node id="24"/>
+<node id="25"/>
+<node id="26"/>
+<node id="27"/>
+<node id="28"/>
+<node id="29"/>
+<node id="30"/>
+<node id="31"/>
+<node id="32"/>
+<node id="33"/>
+<node id="34"/>
+<node id="35"/>
+<node id="36"/>
+<node id="37"/>
+<node id="38"/>
+<node id="39"/>
+<node id="40"/>
+<node id="41"/>
+<node id="42"/>
+<node id="43"/>
+<node id="44"/>
+<node id="45"/>
+<node id="46"/>
+<node id="47"/>
+<node id="48"/>
+<node id="49"/>
+<node id="50"/>
+<node id="51"/>
+<node id="52"/>
+<node id="53"/>
+<node id="54"/>
+<node id="55"/>
+<node id="56"/>
+<node id="57"/>
+<node id="58"/>
+<node id="59"/>
+<node id="60"/>
+<node id="61"/>
+<node id="62"/>
+<node id="63"/>
+<node id="64"/>
+<node id="65"/>
+<node id="66"/>
+<node id="67"/>
+<node id="68"/>
+<node id="69"/>
+<node id="70"/>
+<node id="71"/>
+<node id="72"/>
+<node id="73"/>
+<node id="74"/>
+<node id="75"/>
+<node id="76"/>
+<node id="77"/>
+<node id="78"/>
+<node id="79"/>
+<node id="80"/>
+<node id="81"/>
+<node id="82"/>
+<node id="83"/>
+<node id="84"/>
+<node id="85"/>
+<node id="86"/>
+<node id="87"/>
+<node id="88"/>
+<node id="89"/>
+<node id="90"/>
+<node id="91"/>
+<node id="92"/>
+<node id="93"/>
+<node id="94"/>
+<node id="95"/>
+<node id="96"/>
+<node id="97"/>
+<node id="98"/>
+<node id="99"/>
+<node id="100"/>
+<node id="101"/>
+<node id="102"/>
+<node id="103"/>
+<node id="104"/>
+<node id="105"/>
+<node id="106"/>
+<node id="107"/>
+<node id="108"/>
+<node id="109"/>
+<node id="110"/>
+<node id="111"/>
+<node id="112"/>
+<node id="113"/>
+<node id="114"/>
+<node id="115"/>
+<node id="116"/>
+<node id="117"/>
+<node id="118"/>
+<node id="119"/>
+<node id="120"/>
+<node id="121"/>
+<node id="122"/>
+<node id="123"/>
+<node id="124"/>
+<node id="125"/>
+<node id="126"/>
+<node id="127"/>
+<node id="128"/>
+<node id="129"/>
+<node id="130"/>
+<node id="131"/>
+<node id="132"/>
+<node id="133"/>
+<node id="134"/>
+<node id="135"/>
+<node id="136"/>
+<node id="137"/>
+<node id="138"/>
+<node id="139"/>
+<node id="140"/>
+<node id="141"/>
+<node id="142"/>
+<node id="143"/>
+<node id="144"/>
+<node id="145"/>
+<node id="146"/>
+<node id="147"/>
+<node id="148"/>
+<node id="149"/>
+<node id="150"/>
+<node id="151"/>
+<node id="152"/>
+<node id="153"/>
+<node id="154"/>
+<node id="155"/>
+<node id="156"/>
+<node id="157"/>
+<node id="158"/>
+<node id="159"/>
+<node id="160"/>
+<node id="161"/>
+<node id="162"/>
+<node id="163"/>
+<node id="164"/>
+<node id="165"/>
+<node id="166"/>
+<node id="167"/>
+<node id="168"/>
+<node id="169"/>
+<node id="170"/>
+<node id="171"/>
+<node id="172"/>
+<node id="173"/>
+<node id="174"/>
+<node id="175"/>
+<node id="176"/>
+<node id="177"/>
+<node id="178"/>
+<node id="179"/>
+<node id="180"/>
+<node id="181"/>
+<node id="182"/>
+<node id="183"/>
+<node id="184"/>
+<node id="185"/>
+<node id="186"/>
+<node id="187"/>
+<node id="188"/>
+<node id="189"/>
+<node id="190"/>
+<node id="191"/>
+<node id="192"/>
+<node id="193"/>
+<node id="194"/>
+<node id="195"/>
+<node id="196"/>
+<node id="197"/>
+<node id="198"/>
+<node id="199"/>
+<node id="200"/>
+<node id="201"/>
+<node id="202"/>
+<node id="203"/>
+<node id="204"/>
+<node id="205"/>
+<node id="206"/>
+<node id="207"/>
+<node id="208"/>
+<node id="209"/>
+<node id="210"/>
+<node id="211"/>
+<node id="212"/>
+<node id="213"/>
+<node id="214"/>
+<node id="215"/>
+<node id="216"/>
+<node id="217"/>
+<node id="218"/>
+<node id="219"/>
+<node id="220"/>
+<node id="221"/>
+<node id="222"/>
+<node id="223"/>
+<node id="224"/>
+<node id="225"/>
+<node id="226"/>
+<node id="227"/>
+<node id="228"/>
+<node id="229"/>
+<node id="230"/>
+<node id="231"/>
+<node id="232"/>
+<node id="233"/>
+<node id="234"/>
+<node id="235"/>
+<node id="236"/>
+<node id="237"/>
+<node id="238"/>
+<node id="239"/>
+<node id="240"/>
+<node id="241"/>
+<node id="242"/>
+<node id="243"/>
+<node id="244"/>
+<node id="245"/>
+<node id="246"/>
+<node id="247"/>
+<node id="248"/>
+<node id="249"/>
+<node id="250"/>
+<node id="251"/>
+<node id="252"/>
+<node id="253"/>
+<node id="254"/>
+<node id="255"/>
+<node id="256"/>
+<node id="257"/>
+<node id="258"/>
+<node id="259"/>
+<node id="260"/>
+<node id="261"/>
+<node id="262"/>
+<node id="263"/>
+<node id="264"/>
+<node id="265"/>
+<node id="266"/>
+<node id="267"/>
+<node id="268"/>
+<node id="269"/>
+<node id="270"/>
+<node id="271"/>
+<node id="272"/>
+<node id="273"/>
+<node id="274"/>
+<node id="275"/>
+<node id="276"/>
+<node id="277"/>
+<node id="278"/>
+<node id="279"/>
+<node id="280"/>
+<node id="281"/>
+<node id="282"/>
+<node id="283"/>
+<node id="284"/>
+<node id="285"/>
+<node id="286"/>
+<node id="287"/>
+<node id="288"/>
+<node id="289"/>
+<node id="290"/>
+<node id="291"/>
+<node id="292"/>
+<node id="293"/>
+<node id="294"/>
+<node id="295"/>
+<node id="296"/>
+<node id="297"/>
+<node id="298"/>
+<node id="299"/>
+<node id="300"/>
+<node id="301"/>
+<node id="302"/>
+<node id="303"/>
+<node id="304"/>
+<node id="305"/>
+<node id="306"/>
+<node id="307"/>
+<node id="308"/>
+<node id="309"/>
+<node id="310"/>
+<node id="311"/>
+<node id="312"/>
+<node id="313"/>
+<node id="314"/>
+<node id="315"/>
+<node id="316"/>
+<node id="317"/>
+<node id="318"/>
+<node id="319"/>
+<node id="320"/>
+<node id="321"/>
+<node id="322"/>
+<node id="323"/>
+<node id="324"/>
+<node id="325"/>
+<node id="326"/>
+<node id="327"/>
+<node id="328"/>
+<node id="329"/>
+<node id="330"/>
+<node id="331"/>
+<node id="332"/>
+<node id="333"/>
+<node id="334"/>
+<node id="335"/>
+<node id="336"/>
+<node id="337"/>
+<node id="338"/>
+<node id="339"/>
+<node id="340"/>
+<node id="341"/>
+<node id="342"/>
+<node id="343"/>
+<node id="344"/>
+<node id="345"/>
+<node id="346"/>
+<node id="347"/>
+<node id="348"/>
+<node id="349"/>
+<node id="350"/>
+<node id="351"/>
+<node id="352"/>
+<node id="353"/>
+<node id="354"/>
+<node id="355"/>
+<node id="356"/>
+<node id="357"/>
+<node id="358"/>
+<node id="359"/>
+<node id="360"/>
+<node id="361"/>
+<node id="362"/>
+<node id="363"/>
+<node id="364"/>
+<node id="365"/>
+<node id="366"/>
+<node id="367"/>
+<node id="368"/>
+<node id="369"/>
+<node id="370"/>
+<node id="371"/>
+<node id="372"/>
+<node id="373"/>
+<node id="374"/>
+<node id="375"/>
+<node id="376"/>
+<node id="377"/>
+<node id="378"/>
+<node id="379"/>
+<node id="380"/>
+<node id="381"/>
+<node id="382"/>
+<node id="383"/>
+<node id="384"/>
+<node id="385"/>
+<node id="386"/>
+<node id="387"/>
+<node id="388"/>
+<node id="389"/>
+<node id="390"/>
+<node id="391"/>
+<node id="392"/>
+<node id="393"/>
+<node id="394"/>
+<node id="395"/>
+<node id="396"/>
+<node id="397"/>
+<node id="398"/>
+<node id="399"/>
+<node id="400"/>
+<node id="401"/>
+<node id="402"/>
+<node id="403"/>
+<node id="404"/>
+<node id="405"/>
+<node id="406"/>
+<node id="407"/>
+<node id="408"/>
+<node id="409"/>
+<node id="410"/>
+<node id="411"/>
+<node id="412"/>
+<node id="413"/>
+<node id="414"/>
+<node id="415"/>
+<node id="416"/>
+<node id="417"/>
+<node id="418"/>
+<node id="419"/>
+<node id="420"/>
+<node id="421"/>
+<node id="422"/>
+<node id="423"/>
+<node id="424"/>
+<node id="425"/>
+<node id="426"/>
+<node id="427"/>
+<node id="428"/>
+<node id="429"/>
+<node id="430"/>
+<node id="431"/>
+<node id="432"/>
+<node id="433"/>
+<node id="434"/>
+<node id="435"/>
+<node id="436"/>
+<node id="437"/>
+<node id="438"/>
+<node id="439"/>
+<node id="440"/>
+<node id="441"/>
+<node id="442"/>
+<node id="443"/>
+<node id="444"/>
+<node id="445"/>
+<node id="446"/>
+<node id="447"/>
+<node id="448"/>
+<node id="449"/>
+<node id="450"/>
+<node id="451"/>
+<node id="452"/>
+<node id="453"/>
+<node id="454"/>
+<node id="455"/>
+<node id="456"/>
+<node id="457"/>
+<node id="458"/>
+<node id="459"/>
+<node id="460"/>
+<node id="461"/>
+<node id="462"/>
+<node id="463"/>
+<node id="464"/>
+<node id="465"/>
+<node id="466"/>
+<node id="467"/>
+<node id="468"/>
+<node id="469"/>
+<node id="470"/>
+<node id="471"/>
+<node id="472"/>
+<node id="473"/>
+<node id="474"/>
+<node id="475"/>
+<node id="476"/>
+<node id="477"/>
+<node id="478"/>
+<node id="479"/>
+<node id="480"/>
+<node id="481"/>
+<node id="482"/>
+<node id="483"/>
+<node id="484"/>
+<node id="485"/>
+<node id="486"/>
+<node id="487"/>
+<node id="488"/>
+<node id="489"/>
+<node id="490"/>
+<node id="491"/>
+<node id="492"/>
+<node id="493"/>
+<edge source="0" target="0">
+  <data key="d0">2220.874</data>
+</edge>
+<edge source="0" target="15">
+  <data key="d0">-9.960159</data>
+</edge>
+<edge source="0" target="45">
+  <data key="d0">-8.196721</data>
+</edge>
+<edge source="0" target="266">
+  <data key="d0">-4.051864</data>
+</edge>
+<edge source="1" target="1">
+  <data key="d0">5.41067</data>
+</edge>
+<edge source="1" target="3">
+  <data key="d0">-5.41067</data>
+</edge>
+<edge source="2" target="2">
+  <data key="d0">13.57086</data>
+</edge>
+<edge source="2" target="51">
+  <data key="d0">-5.665723</data>
+</edge>
+<edge source="2" target="185">
+  <data key="d0">-7.905138</data>
+</edge>
+<edge source="3" target="3">
+  <data key="d0">618.3968</data>
+</edge>
+<edge source="3" target="7">
+  <data key="d0">-91.99632</data>
+</edge>
+<edge source="3" target="119">
+  <data key="d0">-100.0</data>
+</edge>
+<edge source="3" target="157">
+  <data key="d0">-294.1176</data>
+</edge>
+<edge source="3" target="428">
+  <data key="d0">-53.50455</data>
+</edge>
+<edge source="3" target="431">
+  <data key="d0">-73.36757</data>
+</edge>
+<edge source="4" target="4">
+  <data key="d0">8.0</data>
+</edge>
+<edge source="4" target="114">
+  <data key="d0">-8.0</data>
+</edge>
+<edge source="5" target="5">
+  <data key="d0">5.251112</data>
+</edge>
+<edge source="5" target="149">
+  <data key="d0">-1.526718</data>
+</edge>
+<edge source="5" target="432">
+  <data key="d0">-3.724395</data>
+</edge>
+<edge source="6" target="6">
+  <data key="d0">12.50981</data>
+</edge>
+<edge source="6" target="17">
+  <data key="d0">-0.5</data>
+</edge>
+<edge source="6" target="164">
+  <data key="d0">-2.619172</data>
+</edge>
+<edge source="6" target="366">
+  <data key="d0">-3.603604</data>
+</edge>
+<edge source="6" target="425">
+  <data key="d0">-5.787037</data>
+</edge>
+<edge source="7" target="7">
+  <data key="d0">91.99632</data>
+</edge>
+<edge source="8" target="8">
+  <data key="d0">10.2145</data>
+</edge>
+<edge source="8" target="421">
+  <data key="d0">-10.2145</data>
+</edge>
+<edge source="9" target="9">
+  <data key="d0">277.3766</data>
+</edge>
+<edge source="9" target="204">
+  <data key="d0">-127.2265</data>
+</edge>
+<edge source="9" target="276">
+  <data key="d0">-150.1501</data>
+</edge>
+<edge source="10" target="10">
+  <data key="d0">79.80034</data>
+</edge>
+<edge source="10" target="411">
+  <data key="d0">-50.30181</data>
+</edge>
+<edge source="10" target="435">
+  <data key="d0">-29.49853</data>
+</edge>
+<edge source="11" target="11">
+  <data key="d0">13.01557</data>
+</edge>
+<edge source="11" target="12">
+  <data key="d0">-1.333333</data>
+</edge>
+<edge source="11" target="13">
+  <data key="d0">-2.158429</data>
+</edge>
+<edge source="11" target="15">
+  <data key="d0">-9.523809</data>
+</edge>
+<edge source="12" target="12">
+  <data key="d0">1.333333</data>
+</edge>
+<edge source="13" target="13">
+  <data key="d0">2.158429</data>
+</edge>
+<edge source="14" target="14">
+  <data key="d0">7.012623</data>
+</edge>
+<edge source="14" target="15">
+  <data key="d0">-7.012623</data>
+</edge>
+<edge source="15" target="15">
+  <data key="d0">60.12576</data>
+</edge>
+<edge source="15" target="16">
+  <data key="d0">-21.78649</data>
+</edge>
+<edge source="15" target="18">
+  <data key="d0">-7.037297</data>
+</edge>
+<edge source="15" target="56">
+  <data key="d0">-4.805382</data>
+</edge>
+<edge source="16" target="16">
+  <data key="d0">100.1224</data>
+</edge>
+<edge source="16" target="19">
+  <data key="d0">-17.60563</data>
+</edge>
+<edge source="16" target="20">
+  <data key="d0">-17.60563</data>
+</edge>
+<edge source="16" target="280">
+  <data key="d0">-14.30615</data>
+</edge>
+<edge source="16" target="333">
+  <data key="d0">-28.81845</data>
+</edge>
+<edge source="17" target="17">
+  <data key="d0">0.5</data>
+</edge>
+<edge source="18" target="18">
+  <data key="d0">7.037297</data>
+</edge>
+<edge source="19" target="19">
+  <data key="d0">17.60563</data>
+</edge>
+<edge source="20" target="20">
+  <data key="d0">17.60563</data>
+</edge>
+<edge source="21" target="21">
+  <data key="d0">105.8066</data>
+</edge>
+<edge source="21" target="22">
+  <data key="d0">-37.31343</data>
+</edge>
+<edge source="21" target="139">
+  <data key="d0">-68.49315</data>
+</edge>
+<edge source="22" target="22">
+  <data key="d0">238.1596</data>
+</edge>
+<edge source="22" target="139">
+  <data key="d0">-81.96722</data>
+</edge>
+<edge source="22" target="154">
+  <data key="d0">-108.6956</data>
+</edge>
+<edge source="22" target="196">
+  <data key="d0">-10.1833</data>
+</edge>
+<edge source="23" target="23">
+  <data key="d0">7.806402</data>
+</edge>
+<edge source="23" target="24">
+  <data key="d0">-7.806402</data>
+</edge>
+<edge source="24" target="24">
+  <data key="d0">25.04799</data>
+</edge>
+<edge source="24" target="156">
+  <data key="d0">-4.741584</data>
+</edge>
+<edge source="24" target="169">
+  <data key="d0">-12.5</data>
+</edge>
+<edge source="25" target="25">
+  <data key="d0">72.58436</data>
+</edge>
+<edge source="25" target="98">
+  <data key="d0">-42.37288</data>
+</edge>
+<edge source="25" target="424">
+  <data key="d0">-30.21148</data>
+</edge>
+<edge source="26" target="26">
+  <data key="d0">423.7288</data>
+</edge>
+<edge source="26" target="27">
+  <data key="d0">-423.7288</data>
+</edge>
+<edge source="27" target="27">
+  <data key="d0">1022.734</data>
+</edge>
+<edge source="27" target="84">
+  <data key="d0">-3.767472</data>
+</edge>
+<edge source="27" target="172">
+  <data key="d0">-595.2381</data>
+</edge>
+<edge source="28" target="28">
+  <data key="d0">7.613696</data>
+</edge>
+<edge source="28" target="306">
+  <data key="d0">-4.387889</data>
+</edge>
+<edge source="28" target="315">
+  <data key="d0">-3.225806</data>
+</edge>
+<edge source="29" target="29">
+  <data key="d0">5.428882</data>
+</edge>
+<edge source="29" target="30">
+  <data key="d0">-5.428882</data>
+</edge>
+<edge source="30" target="30">
+  <data key="d0">28.91268</data>
+</edge>
+<edge source="30" target="181">
+  <data key="d0">-17.09402</data>
+</edge>
+<edge source="30" target="185">
+  <data key="d0">-6.389777</data>
+</edge>
+<edge source="31" target="31">
+  <data key="d0">16.37657</data>
+</edge>
+<edge source="31" target="375">
+  <data key="d0">-5.0</data>
+</edge>
+<edge source="31" target="443">
+  <data key="d0">-11.37656</data>
+</edge>
+<edge source="32" target="32">
+  <data key="d0">106.1647</data>
+</edge>
+<edge source="32" target="33">
+  <data key="d0">-62.1118</data>
+</edge>
+<edge source="32" target="238">
+  <data key="d0">-44.05286</data>
+</edge>
+<edge source="33" target="33">
+  <data key="d0">62.1118</data>
+</edge>
+<edge source="34" target="34">
+  <data key="d0">13.60544</data>
+</edge>
+<edge source="34" target="221">
+  <data key="d0">-13.60544</data>
+</edge>
+<edge source="35" target="35">
+  <data key="d0">1122.904</data>
+</edge>
+<edge source="35" target="324">
+  <data key="d0">-1111.111</data>
+</edge>
+<edge source="35" target="418">
+  <data key="d0">-11.79245</data>
+</edge>
+<edge source="36" target="36">
+  <data key="d0">208.5616</data>
+</edge>
+<edge source="36" target="146">
+  <data key="d0">-8.561644</data>
+</edge>
+<edge source="36" target="261">
+  <data key="d0">-200.0</data>
+</edge>
+<edge source="37" target="37">
+  <data key="d0">19.28696</data>
+</edge>
+<edge source="37" target="38">
+  <data key="d0">-11.04972</data>
+</edge>
+<edge source="37" target="397">
+  <data key="d0">-8.237232</data>
+</edge>
+<edge source="38" target="38">
+  <data key="d0">50.42981</data>
+</edge>
+<edge source="38" target="39">
+  <data key="d0">-22.57336</data>
+</edge>
+<edge source="38" target="280">
+  <data key="d0">-16.80672</data>
+</edge>
+<edge source="39" target="39">
+  <data key="d0">107.3191</data>
+</edge>
+<edge source="39" target="416">
+  <data key="d0">-84.74576</data>
+</edge>
+<edge source="40" target="40">
+  <data key="d0">1125.308</data>
+</edge>
+<edge source="40" target="46">
+  <data key="d0">-11.65501</data>
+</edge>
+<edge source="40" target="327">
+  <data key="d0">-1111.111</data>
+</edge>
+<edge source="40" target="412">
+  <data key="d0">-2.541942</data>
+</edge>
+<edge source="41" target="41">
+  <data key="d0">40.63024</data>
+</edge>
+<edge source="41" target="171">
+  <data key="d0">-34.8432</data>
+</edge>
+<edge source="41" target="327">
+  <data key="d0">-5.787037</data>
+</edge>
+<edge source="42" target="42">
+  <data key="d0">32.25806</data>
+</edge>
+<edge source="42" target="174">
+  <data key="d0">-32.25806</data>
+</edge>
+<edge source="43" target="43">
+  <data key="d0">50.45194</data>
+</edge>
+<edge source="43" target="101">
+  <data key="d0">-11.99041</data>
+</edge>
+<edge source="43" target="285">
+  <data key="d0">-38.46154</data>
+</edge>
+<edge source="44" target="44">
+  <data key="d0">21.89011</data>
+</edge>
+<edge source="44" target="173">
+  <data key="d0">-6.293266</data>
+</edge>
+<edge source="44" target="202">
+  <data key="d0">-4.997501</data>
+</edge>
+<edge source="44" target="263">
+  <data key="d0">-5.336179</data>
+</edge>
+<edge source="44" target="284">
+  <data key="d0">-5.263158</data>
+</edge>
+<edge source="45" target="45">
+  <data key="d0">14.95348</data>
+</edge>
+<edge source="45" target="252">
+  <data key="d0">-6.756757</data>
+</edge>
+<edge source="46" target="46">
+  <data key="d0">29.27953</data>
+</edge>
+<edge source="46" target="152">
+  <data key="d0">-3.419973</data>
+</edge>
+<edge source="46" target="284">
+  <data key="d0">-14.20455</data>
+</edge>
+<edge source="47" target="47">
+  <data key="d0">1682.986</data>
+</edge>
+<edge source="47" target="204">
+  <data key="d0">-114.0251</data>
+</edge>
+<edge source="47" target="270">
+  <data key="d0">-1333.333</data>
+</edge>
+<edge source="47" target="282">
+  <data key="d0">-180.1802</data>
+</edge>
+<edge source="47" target="305">
+  <data key="d0">-55.44774</data>
+</edge>
+<edge source="48" target="48">
+  <data key="d0">65.39337</data>
+</edge>
+<edge source="48" target="49">
+  <data key="d0">-47.61905</data>
+</edge>
+<edge source="48" target="113">
+  <data key="d0">-6.009615</data>
+</edge>
+<edge source="48" target="454">
+  <data key="d0">-11.76471</data>
+</edge>
+<edge source="49" target="49">
+  <data key="d0">168.4125</data>
+</edge>
+<edge source="49" target="237">
+  <data key="d0">-111.1111</data>
+</edge>
+<edge source="49" target="330">
+  <data key="d0">-5.076142</data>
+</edge>
+<edge source="49" target="441">
+  <data key="d0">-4.606173</data>
+</edge>
+<edge source="50" target="50">
+  <data key="d0">39.44635</data>
+</edge>
+<edge source="50" target="81">
+  <data key="d0">-24.27184</data>
+</edge>
+<edge source="50" target="408">
+  <data key="d0">-15.17451</data>
+</edge>
+<edge source="51" target="51">
+  <data key="d0">10.485</data>
+</edge>
+<edge source="51" target="396">
+  <data key="d0">-4.819277</data>
+</edge>
+<edge source="52" target="52">
+  <data key="d0">89.16084</data>
+</edge>
+<edge source="52" target="270">
+  <data key="d0">-37.87879</data>
+</edge>
+<edge source="52" target="309">
+  <data key="d0">-51.28205</data>
+</edge>
+<edge source="53" target="53">
+  <data key="d0">14.70295</data>
+</edge>
+<edge source="53" target="161">
+  <data key="d0">-6.896552</data>
+</edge>
+<edge source="53" target="405">
+  <data key="d0">-7.806402</data>
+</edge>
+<edge source="54" target="54">
+  <data key="d0">40.84595</data>
+</edge>
+<edge source="54" target="268">
+  <data key="d0">-21.97802</data>
+</edge>
+<edge source="54" target="362">
+  <data key="d0">-18.86793</data>
+</edge>
+<edge source="55" target="55">
+  <data key="d0">20.84468</data>
+</edge>
+<edge source="55" target="123">
+  <data key="d0">-9.633911</data>
+</edge>
+<edge source="55" target="223">
+  <data key="d0">-11.21076</data>
+</edge>
+<edge source="56" target="56">
+  <data key="d0">19.21461</data>
+</edge>
+<edge source="56" target="83">
+  <data key="d0">-14.40922</data>
+</edge>
+<edge source="57" target="57">
+  <data key="d0">8.290816</data>
+</edge>
+<edge source="57" target="58">
+  <data key="d0">-6.25</data>
+</edge>
+<edge source="57" target="59">
+  <data key="d0">-2.040816</data>
+</edge>
+<edge source="58" target="58">
+  <data key="d0">63.99854</data>
+</edge>
+<edge source="58" target="346">
+  <data key="d0">-13.88889</data>
+</edge>
+<edge source="58" target="376">
+  <data key="d0">-43.85965</data>
+</edge>
+<edge source="59" target="59">
+  <data key="d0">2.040816</data>
+</edge>
+<edge source="60" target="60">
+  <data key="d0">25.70627</data>
+</edge>
+<edge source="60" target="331">
+  <data key="d0">-18.18182</data>
+</edge>
+<edge source="60" target="417">
+  <data key="d0">-7.524455</data>
+</edge>
+<edge source="61" target="61">
+  <data key="d0">8.084074</data>
+</edge>
+<edge source="61" target="437">
+  <data key="d0">-8.084074</data>
+</edge>
+<edge source="62" target="62">
+  <data key="d0">17.00138</data>
+</edge>
+<edge source="62" target="63">
+  <data key="d0">-0.6702413</data>
+</edge>
+<edge source="62" target="88">
+  <data key="d0">-3.34113</data>
+</edge>
+<edge source="62" target="189">
+  <data key="d0">-9.523809</data>
+</edge>
+<edge source="62" target="393">
+  <data key="d0">-3.466204</data>
+</edge>
+<edge source="63" target="63">
+  <data key="d0">0.6702413</data>
+</edge>
+<edge source="64" target="64">
+  <data key="d0">68.63511</data>
+</edge>
+<edge source="64" target="65">
+  <data key="d0">-56.17978</data>
+</edge>
+<edge source="64" target="427">
+  <data key="d0">-5.643341</data>
+</edge>
+<edge source="64" target="435">
+  <data key="d0">-6.811989</data>
+</edge>
+<edge source="65" target="65">
+  <data key="d0">56.17978</data>
+</edge>
+<edge source="66" target="66">
+  <data key="d0">794.4359</data>
+</edge>
+<edge source="66" target="68">
+  <data key="d0">-9.727627</data>
+</edge>
+<edge source="66" target="69">
+  <data key="d0">-714.2858</data>
+</edge>
+<edge source="66" target="70">
+  <data key="d0">-70.42253</data>
+</edge>
+<edge source="67" target="67">
+  <data key="d0">63.74079</data>
+</edge>
+<edge source="67" target="69">
+  <data key="d0">-23.4192</data>
+</edge>
+<edge source="67" target="71">
+  <data key="d0">-15.07614</data>
+</edge>
+<edge source="67" target="72">
+  <data key="d0">-10.75269</data>
+</edge>
+<edge source="67" target="213">
+  <data key="d0">-14.49275</data>
+</edge>
+<edge source="68" target="68">
+  <data key="d0">9.727627</data>
+</edge>
+<edge source="69" target="69">
+  <data key="d0">898.1736</data>
+</edge>
+<edge source="69" target="70">
+  <data key="d0">-64.10257</data>
+</edge>
+<edge source="69" target="71">
+  <data key="d0">-8.467401</data>
+</edge>
+<edge source="69" target="141">
+  <data key="d0">-49.62779</data>
+</edge>
+<edge source="69" target="310">
+  <data key="d0">-15.01501</data>
+</edge>
+<edge source="69" target="319">
+  <data key="d0">-23.25581</data>
+</edge>
+<edge source="70" target="70">
+  <data key="d0">309.7514</data>
+</edge>
+<edge source="70" target="73">
+  <data key="d0">-22.52252</data>
+</edge>
+<edge source="70" target="74">
+  <data key="d0">-22.52252</data>
+</edge>
+<edge source="70" target="75">
+  <data key="d0">-27.02703</data>
+</edge>
+<edge source="70" target="90">
+  <data key="d0">-57.47126</data>
+</edge>
+<edge source="70" target="352">
+  <data key="d0">-45.68296</data>
+</edge>
+<edge source="71" target="71">
+  <data key="d0">44.65961</data>
+</edge>
+<edge source="71" target="211">
+  <data key="d0">-8.291874</data>
+</edge>
+<edge source="71" target="212">
+  <data key="d0">-8.4246</data>
+</edge>
+<edge source="71" target="439">
+  <data key="d0">-2.173913</data>
+</edge>
+<edge source="71" target="463">
+  <data key="d0">-2.225684</data>
+</edge>
+<edge source="72" target="72">
+  <data key="d0">10.75269</data>
+</edge>
+<edge source="73" target="73">
+  <data key="d0">22.52252</data>
+</edge>
+<edge source="74" target="74">
+  <data key="d0">22.52252</data>
+</edge>
+<edge source="75" target="75">
+  <data key="d0">27.02703</data>
+</edge>
+<edge source="76" target="76">
+  <data key="d0">43.25696</data>
+</edge>
+<edge source="76" target="77">
+  <data key="d0">-11.62791</data>
+</edge>
+<edge source="76" target="186">
+  <data key="d0">-25.64103</data>
+</edge>
+<edge source="76" target="263">
+  <data key="d0">-5.988024</data>
+</edge>
+<edge source="77" target="77">
+  <data key="d0">14.95486</data>
+</edge>
+<edge source="77" target="122">
+  <data key="d0">-1.324152</data>
+</edge>
+<edge source="77" target="264">
+  <data key="d0">-2.002804</data>
+</edge>
+<edge source="78" target="78">
+  <data key="d0">59.78359</data>
+</edge>
+<edge source="78" target="79">
+  <data key="d0">-18.99335</data>
+</edge>
+<edge source="78" target="213">
+  <data key="d0">-18.51852</data>
+</edge>
+<edge source="78" target="420">
+  <data key="d0">-22.27172</data>
+</edge>
+<edge source="79" target="79">
+  <data key="d0">76.98932</data>
+</edge>
+<edge source="79" target="146">
+  <data key="d0">-9.765625</data>
+</edge>
+<edge source="79" target="251">
+  <data key="d0">-3.332223</data>
+</edge>
+<edge source="79" target="354">
+  <data key="d0">-9.661836</data>
+</edge>
+<edge source="79" target="392">
+  <data key="d0">-33.33334</data>
+</edge>
+<edge source="79" target="436">
+  <data key="d0">-1.90295</data>
+</edge>
+<edge source="80" target="80">
+  <data key="d0">54.86513</data>
+</edge>
+<edge source="80" target="395">
+  <data key="d0">-34.24657</data>
+</edge>
+<edge source="80" target="456">
+  <data key="d0">-20.61856</data>
+</edge>
+<edge source="81" target="81">
+  <data key="d0">130.6548</data>
+</edge>
+<edge source="81" target="286">
+  <data key="d0">-106.383</data>
+</edge>
+<edge source="82" target="82">
+  <data key="d0">8.651169</data>
+</edge>
+<edge source="82" target="386">
+  <data key="d0">-4.88043</data>
+</edge>
+<edge source="82" target="422">
+  <data key="d0">-3.770739</data>
+</edge>
+<edge source="83" target="83">
+  <data key="d0">18.52954</data>
+</edge>
+<edge source="83" target="172">
+  <data key="d0">-4.120313</data>
+</edge>
+<edge source="84" target="84">
+  <data key="d0">318.4947</data>
+</edge>
+<edge source="84" target="87">
+  <data key="d0">-294.1176</data>
+</edge>
+<edge source="84" target="115">
+  <data key="d0">-14.02525</data>
+</edge>
+<edge source="84" target="274">
+  <data key="d0">-3.544842</data>
+</edge>
+<edge source="84" target="453">
+  <data key="d0">-3.039514</data>
+</edge>
+<edge source="85" target="85">
+  <data key="d0">11.6144</data>
+</edge>
+<edge source="85" target="87">
+  <data key="d0">-11.6144</data>
+</edge>
+<edge source="86" target="86">
+  <data key="d0">55.87302</data>
+</edge>
+<edge source="86" target="87">
+  <data key="d0">-40.0</data>
+</edge>
+<edge source="86" target="235">
+  <data key="d0">-15.87302</data>
+</edge>
+<edge source="87" target="87">
+  <data key="d0">345.7321</data>
+</edge>
+<edge source="88" target="88">
+  <data key="d0">8.151134</data>
+</edge>
+<edge source="88" target="325">
+  <data key="d0">-4.810005</data>
+</edge>
+<edge source="89" target="89">
+  <data key="d0">215.0901</data>
+</edge>
+<edge source="89" target="90">
+  <data key="d0">-125.0</data>
+</edge>
+<edge source="89" target="385">
+  <data key="d0">-90.0901</data>
+</edge>
+<edge source="90" target="90">
+  <data key="d0">295.4285</data>
+</edge>
+<edge source="90" target="92">
+  <data key="d0">-38.75969</data>
+</edge>
+<edge source="90" target="93">
+  <data key="d0">-38.91051</data>
+</edge>
+<edge source="90" target="94">
+  <data key="d0">-11.53403</data>
+</edge>
+<edge source="90" target="370">
+  <data key="d0">-23.75297</data>
+</edge>
+<edge source="91" target="91">
+  <data key="d0">79.78151</data>
+</edge>
+<edge source="91" target="94">
+  <data key="d0">-74.62687</data>
+</edge>
+<edge source="91" target="386">
+  <data key="d0">-5.154639</data>
+</edge>
+<edge source="92" target="92">
+  <data key="d0">38.75969</data>
+</edge>
+<edge source="93" target="93">
+  <data key="d0">38.91051</data>
+</edge>
+<edge source="94" target="94">
+  <data key="d0">94.05356</data>
+</edge>
+<edge source="94" target="95">
+  <data key="d0">-7.89266</data>
+</edge>
+<edge source="95" target="95">
+  <data key="d0">7.89266</data>
+</edge>
+<edge source="96" target="96">
+  <data key="d0">17.55133</data>
+</edge>
+<edge source="96" target="325">
+  <data key="d0">-10.79914</data>
+</edge>
+<edge source="96" target="421">
+  <data key="d0">-6.752194</data>
+</edge>
+<edge source="97" target="97">
+  <data key="d0">15.57329</data>
+</edge>
+<edge source="97" target="149">
+  <data key="d0">-5.892752</data>
+</edge>
+<edge source="97" target="155">
+  <data key="d0">-9.680542</data>
+</edge>
+<edge source="98" target="98">
+  <data key="d0">76.27119</data>
+</edge>
+<edge source="98" target="223">
+  <data key="d0">-33.8983</data>
+</edge>
+<edge source="99" target="99">
+  <data key="d0">1230.337</data>
+</edge>
+<edge source="99" target="157">
+  <data key="d0">-116.2791</data>
+</edge>
+<edge source="99" target="219">
+  <data key="d0">-769.2308</data>
+</edge>
+<edge source="99" target="390">
+  <data key="d0">-344.8276</data>
+</edge>
+<edge source="100" target="100">
+  <data key="d0">26.04167</data>
+</edge>
+<edge source="100" target="101">
+  <data key="d0">-26.04167</data>
+</edge>
+<edge source="101" target="101">
+  <data key="d0">79.66989</data>
+</edge>
+<edge source="101" target="177">
+  <data key="d0">-22.47191</data>
+</edge>
+<edge source="101" target="232">
+  <data key="d0">-10.0</data>
+</edge>
+<edge source="101" target="285">
+  <data key="d0">-9.165903</data>
+</edge>
+<edge source="102" target="102">
+  <data key="d0">104.405</data>
+</edge>
+<edge source="102" target="305">
+  <data key="d0">-55.6483</data>
+</edge>
+<edge source="102" target="428">
+  <data key="d0">-48.75671</data>
+</edge>
+<edge source="103" target="103">
+  <data key="d0">85.53579</data>
+</edge>
+<edge source="103" target="104">
+  <data key="d0">-4.716981</data>
+</edge>
+<edge source="103" target="190">
+  <data key="d0">-17.79359</data>
+</edge>
+<edge source="103" target="256">
+  <data key="d0">-18.38235</data>
+</edge>
+<edge source="103" target="262">
+  <data key="d0">-44.64286</data>
+</edge>
+<edge source="104" target="104">
+  <data key="d0">4.716981</data>
+</edge>
+<edge source="105" target="105">
+  <data key="d0">14.40922</data>
+</edge>
+<edge source="105" target="254">
+  <data key="d0">-14.40922</data>
+</edge>
+<edge source="106" target="106">
+  <data key="d0">41.13295</data>
+</edge>
+<edge source="106" target="245">
+  <data key="d0">-20.08032</data>
+</edge>
+<edge source="106" target="333">
+  <data key="d0">-21.05263</data>
+</edge>
+<edge source="107" target="107">
+  <data key="d0">91.69453</data>
+</edge>
+<edge source="107" target="190">
+  <data key="d0">-72.46377</data>
+</edge>
+<edge source="107" target="379">
+  <data key="d0">-19.23077</data>
+</edge>
+<edge source="108" target="108">
+  <data key="d0">9.784736</data>
+</edge>
+<edge source="108" target="111">
+  <data key="d0">-9.784736</data>
+</edge>
+<edge source="109" target="109">
+  <data key="d0">1.029866</data>
+</edge>
+<edge source="109" target="111">
+  <data key="d0">-1.029866</data>
+</edge>
+<edge source="110" target="110">
+  <data key="d0">2.164502</data>
+</edge>
+<edge source="110" target="111">
+  <data key="d0">-2.164502</data>
+</edge>
+<edge source="111" target="111">
+  <data key="d0">26.68996</data>
+</edge>
+<edge source="111" target="122">
+  <data key="d0">-3.49284</data>
+</edge>
+<edge source="111" target="178">
+  <data key="d0">-6.802721</data>
+</edge>
+<edge source="111" target="297">
+  <data key="d0">-3.4153</data>
+</edge>
+<edge source="112" target="112">
+  <data key="d0">140.1105</data>
+</edge>
+<edge source="112" target="262">
+  <data key="d0">-36.76471</data>
+</edge>
+<edge source="112" target="336">
+  <data key="d0">-37.31343</data>
+</edge>
+<edge source="112" target="377">
+  <data key="d0">-46.94836</data>
+</edge>
+<edge source="112" target="415">
+  <data key="d0">-19.08397</data>
+</edge>
+<edge source="113" target="113">
+  <data key="d0">14.01044</data>
+</edge>
+<edge source="113" target="114">
+  <data key="d0">-2.604167</data>
+</edge>
+<edge source="113" target="284">
+  <data key="d0">-5.396654</data>
+</edge>
+<edge source="114" target="114">
+  <data key="d0">13.98483</data>
+</edge>
+<edge source="114" target="353">
+  <data key="d0">-3.380663</data>
+</edge>
+<edge source="115" target="115">
+  <data key="d0">32.24018</data>
+</edge>
+<edge source="115" target="116">
+  <data key="d0">-18.21494</data>
+</edge>
+<edge source="116" target="116">
+  <data key="d0">36.76781</data>
+</edge>
+<edge source="116" target="118">
+  <data key="d0">-18.55288</data>
+</edge>
+<edge source="117" target="117">
+  <data key="d0">29.75633</data>
+</edge>
+<edge source="117" target="123">
+  <data key="d0">-19.08397</data>
+</edge>
+<edge source="117" target="345">
+  <data key="d0">-10.67236</data>
+</edge>
+<edge source="118" target="118">
+  <data key="d0">28.71548</data>
+</edge>
+<edge source="118" target="345">
+  <data key="d0">-10.1626</data>
+</edge>
+<edge source="119" target="119">
+  <data key="d0">176.9231</data>
+</edge>
+<edge source="119" target="428">
+  <data key="d0">-76.92307</data>
+</edge>
+<edge source="120" target="120">
+  <data key="d0">16.94915</data>
+</edge>
+<edge source="120" target="122">
+  <data key="d0">-16.94915</data>
+</edge>
+<edge source="121" target="121">
+  <data key="d0">33.94196</data>
+</edge>
+<edge source="121" target="122">
+  <data key="d0">-5.78369</data>
+</edge>
+<edge source="121" target="186">
+  <data key="d0">-12.90323</data>
+</edge>
+<edge source="121" target="263">
+  <data key="d0">-9.633911</data>
+</edge>
+<edge source="121" target="296">
+  <data key="d0">-5.621135</data>
+</edge>
+<edge source="122" target="122">
+  <data key="d0">38.08705</data>
+</edge>
+<edge source="122" target="178">
+  <data key="d0">-7.518797</data>
+</edge>
+<edge source="122" target="264">
+  <data key="d0">-3.018412</data>
+</edge>
+<edge source="123" target="123">
+  <data key="d0">28.71788</data>
+</edge>
+<edge source="124" target="124">
+  <data key="d0">3.294893</data>
+</edge>
+<edge source="124" target="125">
+  <data key="d0">-3.294893</data>
+</edge>
+<edge source="125" target="125">
+  <data key="d0">10.28301</data>
+</edge>
+<edge source="125" target="384">
+  <data key="d0">-6.988121</data>
+</edge>
+<edge source="126" target="126">
+  <data key="d0">39.10909</data>
+</edge>
+<edge source="126" target="128">
+  <data key="d0">-19.84127</data>
+</edge>
+<edge source="126" target="225">
+  <data key="d0">-19.26782</data>
+</edge>
+<edge source="127" target="127">
+  <data key="d0">56.25283</data>
+</edge>
+<edge source="127" target="224">
+  <data key="d0">-18.93939</data>
+</edge>
+<edge source="127" target="437">
+  <data key="d0">-37.31343</data>
+</edge>
+<edge source="128" target="128">
+  <data key="d0">19.84127</data>
+</edge>
+<edge source="129" target="129">
+  <data key="d0">15.97444</data>
+</edge>
+<edge source="129" target="140">
+  <data key="d0">-15.97444</data>
+</edge>
+<edge source="130" target="130">
+  <data key="d0">15.97444</data>
+</edge>
+<edge source="130" target="140">
+  <data key="d0">-15.97444</data>
+</edge>
+<edge source="131" target="131">
+  <data key="d0">18.38235</data>
+</edge>
+<edge source="131" target="140">
+  <data key="d0">-18.38235</data>
+</edge>
+<edge source="132" target="132">
+  <data key="d0">62.1118</data>
+</edge>
+<edge source="132" target="141">
+  <data key="d0">-62.1118</data>
+</edge>
+<edge source="133" target="133">
+  <data key="d0">54.34782</data>
+</edge>
+<edge source="133" target="142">
+  <data key="d0">-54.34782</data>
+</edge>
+<edge source="134" target="134">
+  <data key="d0">22.57336</data>
+</edge>
+<edge source="134" target="139">
+  <data key="d0">-22.57336</data>
+</edge>
+<edge source="135" target="135">
+  <data key="d0">405.7852</data>
+</edge>
+<edge source="135" target="140">
+  <data key="d0">-333.3333</data>
+</edge>
+<edge source="135" target="141">
+  <data key="d0">-59.1716</data>
+</edge>
+<edge source="135" target="143">
+  <data key="d0">-13.28021</data>
+</edge>
+<edge source="136" target="136">
+  <data key="d0">444.0341</data>
+</edge>
+<edge source="136" target="140">
+  <data key="d0">-370.3704</data>
+</edge>
+<edge source="136" target="141">
+  <data key="d0">-60.24096</data>
+</edge>
+<edge source="136" target="144">
+  <data key="d0">-13.42282</data>
+</edge>
+<edge source="137" target="137">
+  <data key="d0">125.4902</data>
+</edge>
+<edge source="137" target="198">
+  <data key="d0">-58.82352</data>
+</edge>
+<edge source="137" target="339">
+  <data key="d0">-66.66667</data>
+</edge>
+<edge source="138" target="138">
+  <data key="d0">13.56852</data>
+</edge>
+<edge source="138" target="146">
+  <data key="d0">-13.56852</data>
+</edge>
+<edge source="139" target="139">
+  <data key="d0">173.0337</data>
+</edge>
+<edge source="140" target="140">
+  <data key="d0">754.0349</data>
+</edge>
+<edge source="141" target="141">
+  <data key="d0">643.3154</data>
+</edge>
+<edge source="141" target="142">
+  <data key="d0">-188.6792</data>
+</edge>
+<edge source="141" target="472">
+  <data key="d0">-188.6792</data>
+</edge>
+<edge source="141" target="477">
+  <data key="d0">-12.18027</data>
+</edge>
+<edge source="141" target="486">
+  <data key="d0">-22.62444</data>
+</edge>
+<edge source="142" target="142">
+  <data key="d0">274.5828</data>
+</edge>
+<edge source="142" target="241">
+  <data key="d0">-31.55569</data>
+</edge>
+<edge source="143" target="143">
+  <data key="d0">13.28021</data>
+</edge>
+<edge source="144" target="144">
+  <data key="d0">13.42282</data>
+</edge>
+<edge source="145" target="145">
+  <data key="d0">86.17574</data>
+</edge>
+<edge source="145" target="182">
+  <data key="d0">-8.576329</data>
+</edge>
+<edge source="145" target="244">
+  <data key="d0">-6.878052</data>
+</edge>
+<edge source="145" target="338">
+  <data key="d0">-70.72136</data>
+</edge>
+<edge source="146" target="146">
+  <data key="d0">31.89579</data>
+</edge>
+<edge source="147" target="147">
+  <data key="d0">19.60784</data>
+</edge>
+<edge source="147" target="433">
+  <data key="d0">-9.803922</data>
+</edge>
+<edge source="147" target="442">
+  <data key="d0">-9.803922</data>
+</edge>
+<edge source="148" target="148">
+  <data key="d0">36.06135</data>
+</edge>
+<edge source="148" target="149">
+  <data key="d0">-20.60779</data>
+</edge>
+<edge source="148" target="216">
+  <data key="d0">-15.45356</data>
+</edge>
+<edge source="149" target="149">
+  <data key="d0">38.12827</data>
+</edge>
+<edge source="149" target="396">
+  <data key="d0">-10.10101</data>
+</edge>
+<edge source="150" target="150">
+  <data key="d0">52.86848</data>
+</edge>
+<edge source="150" target="152">
+  <data key="d0">-5.371435</data>
+</edge>
+<edge source="150" target="153">
+  <data key="d0">-2.452002</data>
+</edge>
+<edge source="150" target="154">
+  <data key="d0">-45.04505</data>
+</edge>
+<edge source="151" target="151">
+  <data key="d0">55.50949</data>
+</edge>
+<edge source="151" target="152">
+  <data key="d0">-5.443658</data>
+</edge>
+<edge source="151" target="153">
+  <data key="d0">-2.446783</data>
+</edge>
+<edge source="151" target="154">
+  <data key="d0">-47.61905</data>
+</edge>
+<edge source="152" target="152">
+  <data key="d0">29.86007</data>
+</edge>
+<edge source="152" target="202">
+  <data key="d0">-15.625</data>
+</edge>
+<edge source="153" target="153">
+  <data key="d0">4.898785</data>
+</edge>
+<edge source="154" target="154">
+  <data key="d0">218.7209</data>
+</edge>
+<edge source="154" target="240">
+  <data key="d0">-17.36111</data>
+</edge>
+<edge source="155" target="155">
+  <data key="d0">10009.68</data>
+</edge>
+<edge source="155" target="156">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="156" target="156">
+  <data key="d0">10004.74</data>
+</edge>
+<edge source="157" target="157">
+  <data key="d0">410.3967</data>
+</edge>
+<edge source="158" target="158">
+  <data key="d0">95.74279</data>
+</edge>
+<edge source="158" target="159">
+  <data key="d0">-40.73468</data>
+</edge>
+<edge source="158" target="182">
+  <data key="d0">-10.02305</data>
+</edge>
+<edge source="158" target="247">
+  <data key="d0">-21.1685</data>
+</edge>
+<edge source="158" target="387">
+  <data key="d0">-16.46362</data>
+</edge>
+<edge source="158" target="391">
+  <data key="d0">-7.352941</data>
+</edge>
+<edge source="159" target="159">
+  <data key="d0">202.015</data>
+</edge>
+<edge source="159" target="368">
+  <data key="d0">-19.43635</data>
+</edge>
+<edge source="159" target="398">
+  <data key="d0">-141.844</data>
+</edge>
+<edge source="160" target="160">
+  <data key="d0">2.209945</data>
+</edge>
+<edge source="160" target="409">
+  <data key="d0">-2.209945</data>
+</edge>
+<edge source="161" target="161">
+  <data key="d0">8.668659</data>
+</edge>
+<edge source="161" target="354">
+  <data key="d0">-1.772107</data>
+</edge>
+<edge source="162" target="162">
+  <data key="d0">132.4126</data>
+</edge>
+<edge source="162" target="166">
+  <data key="d0">-22.52252</data>
+</edge>
+<edge source="162" target="245">
+  <data key="d0">-109.8901</data>
+</edge>
+<edge source="163" target="163">
+  <data key="d0">1076.971</data>
+</edge>
+<edge source="163" target="166">
+  <data key="d0">-999.9999</data>
+</edge>
+<edge source="163" target="230">
+  <data key="d0">-15.59819</data>
+</edge>
+<edge source="163" target="416">
+  <data key="d0">-27.35978</data>
+</edge>
+<edge source="163" target="469">
+  <data key="d0">-34.0136</data>
+</edge>
+<edge source="164" target="164">
+  <data key="d0">2.619172</data>
+</edge>
+<edge source="165" target="165">
+  <data key="d0">11.86609</data>
+</edge>
+<edge source="165" target="340">
+  <data key="d0">-8.071025</data>
+</edge>
+<edge source="165" target="422">
+  <data key="d0">-3.795066</data>
+</edge>
+<edge source="166" target="166">
+  <data key="d0">1022.522</data>
+</edge>
+<edge source="167" target="167">
+  <data key="d0">66.80027</data>
+</edge>
+<edge source="167" target="168">
+  <data key="d0">-66.80027</data>
+</edge>
+<edge source="168" target="168">
+  <data key="d0">77.0499</data>
+</edge>
+<edge source="168" target="343">
+  <data key="d0">-4.973145</data>
+</edge>
+<edge source="168" target="399">
+  <data key="d0">-5.276488</data>
+</edge>
+<edge source="169" target="169">
+  <data key="d0">179.1667</data>
+</edge>
+<edge source="169" target="324">
+  <data key="d0">-166.6667</data>
+</edge>
+<edge source="170" target="170">
+  <data key="d0">76.92307</data>
+</edge>
+<edge source="170" target="171">
+  <data key="d0">-76.92307</data>
+</edge>
+<edge source="171" target="171">
+  <data key="d0">111.7663</data>
+</edge>
+<edge source="172" target="172">
+  <data key="d0">618.791</data>
+</edge>
+<edge source="172" target="201">
+  <data key="d0">-19.43257</data>
+</edge>
+<edge source="173" target="173">
+  <data key="d0">41.11085</data>
+</edge>
+<edge source="173" target="174">
+  <data key="d0">-9.242133</data>
+</edge>
+<edge source="173" target="284">
+  <data key="d0">-25.57545</data>
+</edge>
+<edge source="174" target="174">
+  <data key="d0">41.5002</data>
+</edge>
+<edge source="175" target="175">
+  <data key="d0">3.67647</data>
+</edge>
+<edge source="175" target="463">
+  <data key="d0">-3.67647</data>
+</edge>
+<edge source="176" target="176">
+  <data key="d0">5.420054</data>
+</edge>
+<edge source="176" target="225">
+  <data key="d0">-5.420054</data>
+</edge>
+<edge source="177" target="177">
+  <data key="d0">36.94369</data>
+</edge>
+<edge source="177" target="339">
+  <data key="d0">-14.47178</data>
+</edge>
+<edge source="178" target="178">
+  <data key="d0">14.32152</data>
+</edge>
+<edge source="179" target="179">
+  <data key="d0">14.64129</data>
+</edge>
+<edge source="179" target="180">
+  <data key="d0">-14.64129</data>
+</edge>
+<edge source="180" target="180">
+  <data key="d0">89.82926</data>
+</edge>
+<edge source="180" target="232">
+  <data key="d0">-75.18797</data>
+</edge>
+<edge source="181" target="181">
+  <data key="d0">17.09402</data>
+</edge>
+<edge source="182" target="182">
+  <data key="d0">48.70115</data>
+</edge>
+<edge source="182" target="183">
+  <data key="d0">-3.319943</data>
+</edge>
+<edge source="182" target="184">
+  <data key="d0">-10.17605</data>
+</edge>
+<edge source="182" target="247">
+  <data key="d0">-16.60578</data>
+</edge>
+<edge source="183" target="183">
+  <data key="d0">3.319943</data>
+</edge>
+<edge source="184" target="184">
+  <data key="d0">10.17605</data>
+</edge>
+<edge source="185" target="185">
+  <data key="d0">14.29492</data>
+</edge>
+<edge source="186" target="186">
+  <data key="d0">38.54425</data>
+</edge>
+<edge source="187" target="187">
+  <data key="d0">4.097813</data>
+</edge>
+<edge source="187" target="197">
+  <data key="d0">-2.428363</data>
+</edge>
+<edge source="187" target="211">
+  <data key="d0">-1.669449</data>
+</edge>
+<edge source="188" target="188">
+  <data key="d0">0.1703577</data>
+</edge>
+<edge source="188" target="189">
+  <data key="d0">-0.1703577</data>
+</edge>
+<edge source="189" target="189">
+  <data key="d0">12.43916</data>
+</edge>
+<edge source="189" target="400">
+  <data key="d0">-2.74499</data>
+</edge>
+<edge source="190" target="190">
+  <data key="d0">209.3358</data>
+</edge>
+<edge source="190" target="191">
+  <data key="d0">-8.0</data>
+</edge>
+<edge source="190" target="194">
+  <data key="d0">-12.0149</data>
+</edge>
+<edge source="190" target="195">
+  <data key="d0">-17.8444</data>
+</edge>
+<edge source="190" target="373">
+  <data key="d0">-30.4878</data>
+</edge>
+<edge source="190" target="379">
+  <data key="d0">-14.16832</data>
+</edge>
+<edge source="190" target="415">
+  <data key="d0">-36.56307</data>
+</edge>
+<edge source="191" target="191">
+  <data key="d0">29.54783</data>
+</edge>
+<edge source="191" target="192">
+  <data key="d0">-10.20096</data>
+</edge>
+<edge source="191" target="193">
+  <data key="d0">-11.34687</data>
+</edge>
+<edge source="192" target="192">
+  <data key="d0">10.20096</data>
+</edge>
+<edge source="193" target="193">
+  <data key="d0">11.34687</data>
+</edge>
+<edge source="194" target="194">
+  <data key="d0">12.0149</data>
+</edge>
+<edge source="195" target="195">
+  <data key="d0">17.8444</data>
+</edge>
+<edge source="196" target="196">
+  <data key="d0">28.49832</data>
+</edge>
+<edge source="196" target="464">
+  <data key="d0">-18.31502</data>
+</edge>
+<edge source="197" target="197">
+  <data key="d0">10.61167</data>
+</edge>
+<edge source="197" target="200">
+  <data key="d0">-8.183307</data>
+</edge>
+<edge source="198" target="198">
+  <data key="d0">101.3767</data>
+</edge>
+<edge source="198" target="363">
+  <data key="d0">-42.55319</data>
+</edge>
+<edge source="199" target="199">
+  <data key="d0">4.805382</data>
+</edge>
+<edge source="199" target="279">
+  <data key="d0">-4.805382</data>
+</edge>
+<edge source="200" target="200">
+  <data key="d0">8.183307</data>
+</edge>
+<edge source="201" target="201">
+  <data key="d0">40.31376</data>
+</edge>
+<edge source="201" target="246">
+  <data key="d0">-20.88119</data>
+</edge>
+<edge source="202" target="202">
+  <data key="d0">124.7892</data>
+</edge>
+<edge source="202" target="296">
+  <data key="d0">-104.1667</data>
+</edge>
+<edge source="203" target="203">
+  <data key="d0">1214.533</data>
+</edge>
+<edge source="203" target="204">
+  <data key="d0">-1123.595</data>
+</edge>
+<edge source="203" target="205">
+  <data key="d0">-5.758379</data>
+</edge>
+<edge source="203" target="206">
+  <data key="d0">-85.17888</data>
+</edge>
+<edge source="204" target="204">
+  <data key="d0">1543.608</data>
+</edge>
+<edge source="204" target="207">
+  <data key="d0">-15.49871</data>
+</edge>
+<edge source="204" target="282">
+  <data key="d0">-93.28358</data>
+</edge>
+<edge source="204" target="356">
+  <data key="d0">-53.10675</data>
+</edge>
+<edge source="204" target="368">
+  <data key="d0">-16.87194</data>
+</edge>
+<edge source="205" target="205">
+  <data key="d0">5.758379</data>
+</edge>
+<edge source="206" target="206">
+  <data key="d0">149.5704</data>
+</edge>
+<edge source="206" target="277">
+  <data key="d0">-64.39149</data>
+</edge>
+<edge source="207" target="207">
+  <data key="d0">21.77736</data>
+</edge>
+<edge source="207" target="208">
+  <data key="d0">-6.278646</data>
+</edge>
+<edge source="208" target="208">
+  <data key="d0">6.278646</data>
+</edge>
+<edge source="209" target="209">
+  <data key="d0">8.795074</data>
+</edge>
+<edge source="209" target="210">
+  <data key="d0">-8.795074</data>
+</edge>
+<edge source="210" target="210">
+  <data key="d0">45.57015</data>
+</edge>
+<edge source="210" target="456">
+  <data key="d0">-20.87683</data>
+</edge>
+<edge source="210" target="464">
+  <data key="d0">-15.89825</data>
+</edge>
+<edge source="211" target="211">
+  <data key="d0">9.961323</data>
+</edge>
+<edge source="212" target="212">
+  <data key="d0">16.73715</data>
+</edge>
+<edge source="212" target="443">
+  <data key="d0">-8.312551</data>
+</edge>
+<edge source="213" target="213">
+  <data key="d0">33.01127</data>
+</edge>
+<edge source="214" target="214">
+  <data key="d0">10.29473</data>
+</edge>
+<edge source="214" target="389">
+  <data key="d0">-5.701254</data>
+</edge>
+<edge source="214" target="439">
+  <data key="d0">-4.593477</data>
+</edge>
+<edge source="215" target="215">
+  <data key="d0">243.9951</data>
+</edge>
+<edge source="215" target="216">
+  <data key="d0">-181.8182</data>
+</edge>
+<edge source="215" target="217">
+  <data key="d0">-11.41553</data>
+</edge>
+<edge source="215" target="218">
+  <data key="d0">-50.76142</data>
+</edge>
+<edge source="216" target="216">
+  <data key="d0">278.1384</data>
+</edge>
+<edge source="216" target="276">
+  <data key="d0">-46.66356</data>
+</edge>
+<edge source="216" target="285">
+  <data key="d0">-5.467469</data>
+</edge>
+<edge source="216" target="428">
+  <data key="d0">-28.73563</data>
+</edge>
+<edge source="217" target="217">
+  <data key="d0">11.41553</data>
+</edge>
+<edge source="218" target="218">
+  <data key="d0">77.57108</data>
+</edge>
+<edge source="218" target="234">
+  <data key="d0">-26.80965</data>
+</edge>
+<edge source="219" target="219">
+  <data key="d0">978.0083</data>
+</edge>
+<edge source="219" target="270">
+  <data key="d0">-59.52381</data>
+</edge>
+<edge source="219" target="448">
+  <data key="d0">-149.2537</data>
+</edge>
+<edge source="220" target="220">
+  <data key="d0">14.17527</data>
+</edge>
+<edge source="220" target="366">
+  <data key="d0">-10.5042</data>
+</edge>
+<edge source="220" target="463">
+  <data key="d0">-3.671072</data>
+</edge>
+<edge source="221" target="221">
+  <data key="d0">24.75213</data>
+</edge>
+<edge source="221" target="239">
+  <data key="d0">-3.99361</data>
+</edge>
+<edge source="221" target="435">
+  <data key="d0">-7.153076</data>
+</edge>
+<edge source="222" target="222">
+  <data key="d0">27.51414</data>
+</edge>
+<edge source="222" target="344">
+  <data key="d0">-14.70588</data>
+</edge>
+<edge source="222" target="397">
+  <data key="d0">-5.711022</data>
+</edge>
+<edge source="222" target="406">
+  <data key="d0">-7.097232</data>
+</edge>
+<edge source="223" target="223">
+  <data key="d0">74.144</data>
+</edge>
+<edge source="223" target="376">
+  <data key="d0">-24.39024</data>
+</edge>
+<edge source="223" target="453">
+  <data key="d0">-4.644682</data>
+</edge>
+<edge source="224" target="224">
+  <data key="d0">238.1674</data>
+</edge>
+<edge source="224" target="225">
+  <data key="d0">-200.0</data>
+</edge>
+<edge source="224" target="281">
+  <data key="d0">-8.116883</data>
+</edge>
+<edge source="224" target="376">
+  <data key="d0">-11.11111</data>
+</edge>
+<edge source="225" target="225">
+  <data key="d0">224.6879</data>
+</edge>
+<edge source="226" target="226">
+  <data key="d0">15.2439</data>
+</edge>
+<edge source="226" target="227">
+  <data key="d0">-15.2439</data>
+</edge>
+<edge source="227" target="227">
+  <data key="d0">19.75858</data>
+</edge>
+<edge source="227" target="419">
+  <data key="d0">-4.514673</data>
+</edge>
+<edge source="228" target="228">
+  <data key="d0">36.49635</data>
+</edge>
+<edge source="228" target="229">
+  <data key="d0">-36.49635</data>
+</edge>
+<edge source="229" target="229">
+  <data key="d0">95.45416</data>
+</edge>
+<edge source="229" target="314">
+  <data key="d0">-55.24862</data>
+</edge>
+<edge source="229" target="435">
+  <data key="d0">-3.709199</data>
+</edge>
+<edge source="230" target="230">
+  <data key="d0">100.6927</data>
+</edge>
+<edge source="230" target="385">
+  <data key="d0">-19.30502</data>
+</edge>
+<edge source="230" target="472">
+  <data key="d0">-65.78947</data>
+</edge>
+<edge source="231" target="231">
+  <data key="d0">329.6231</data>
+</edge>
+<edge source="231" target="232">
+  <data key="d0">-200.0</data>
+</edge>
+<edge source="231" target="233">
+  <data key="d0">-11.97605</data>
+</edge>
+<edge source="231" target="234">
+  <data key="d0">-117.647</data>
+</edge>
+<edge source="232" target="232">
+  <data key="d0">285.188</data>
+</edge>
+<edge source="233" target="233">
+  <data key="d0">11.97605</data>
+</edge>
+<edge source="234" target="234">
+  <data key="d0">144.4567</data>
+</edge>
+<edge source="235" target="235">
+  <data key="d0">165.7238</data>
+</edge>
+<edge source="235" target="300">
+  <data key="d0">-62.2084</data>
+</edge>
+<edge source="235" target="398">
+  <data key="d0">-87.64242</data>
+</edge>
+<edge source="236" target="236">
+  <data key="d0">82.18844</data>
+</edge>
+<edge source="236" target="299">
+  <data key="d0">-58.00464</data>
+</edge>
+<edge source="236" target="307">
+  <data key="d0">-24.1838</data>
+</edge>
+<edge source="237" target="237">
+  <data key="d0">151.4337</data>
+</edge>
+<edge source="237" target="293">
+  <data key="d0">-40.32258</data>
+</edge>
+<edge source="238" target="238">
+  <data key="d0">48.51516</data>
+</edge>
+<edge source="238" target="321">
+  <data key="d0">-4.462294</data>
+</edge>
+<edge source="239" target="239">
+  <data key="d0">8.230898</data>
+</edge>
+<edge source="239" target="421">
+  <data key="d0">-4.237288</data>
+</edge>
+<edge source="240" target="240">
+  <data key="d0">26.75078</data>
+</edge>
+<edge source="240" target="328">
+  <data key="d0">-9.389671</data>
+</edge>
+<edge source="241" target="241">
+  <data key="d0">329.2194</data>
+</edge>
+<edge source="241" target="257">
+  <data key="d0">-186.5672</data>
+</edge>
+<edge source="241" target="430">
+  <data key="d0">-38.58025</data>
+</edge>
+<edge source="241" target="479">
+  <data key="d0">-72.51631</data>
+</edge>
+<edge source="242" target="242">
+  <data key="d0">28.62424</data>
+</edge>
+<edge source="242" target="243">
+  <data key="d0">-27.17391</data>
+</edge>
+<edge source="242" target="308">
+  <data key="d0">-1.450326</data>
+</edge>
+<edge source="243" target="243">
+  <data key="d0">27.17391</data>
+</edge>
+<edge source="244" target="244">
+  <data key="d0">36.9804</data>
+</edge>
+<edge source="244" target="299">
+  <data key="d0">-30.10235</data>
+</edge>
+<edge source="245" target="245">
+  <data key="d0">129.9704</data>
+</edge>
+<edge source="246" target="246">
+  <data key="d0">99.00619</data>
+</edge>
+<edge source="246" target="332">
+  <data key="d0">-78.125</data>
+</edge>
+<edge source="247" target="247">
+  <data key="d0">45.48676</data>
+</edge>
+<edge source="247" target="248">
+  <data key="d0">-7.712479</data>
+</edge>
+<edge source="248" target="248">
+  <data key="d0">20007.71</data>
+</edge>
+<edge source="248" target="249">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="248" target="250">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="249" target="249">
+  <data key="d0">10000.0</data>
+</edge>
+<edge source="250" target="250">
+  <data key="d0">10000.0</data>
+</edge>
+<edge source="251" target="251">
+  <data key="d0">10.84537</data>
+</edge>
+<edge source="251" target="362">
+  <data key="d0">-7.513148</data>
+</edge>
+<edge source="252" target="252">
+  <data key="d0">14.75676</data>
+</edge>
+<edge source="252" target="255">
+  <data key="d0">-8.0</data>
+</edge>
+<edge source="253" target="253">
+  <data key="d0">1.459854</data>
+</edge>
+<edge source="253" target="255">
+  <data key="d0">-1.459854</data>
+</edge>
+<edge source="254" target="254">
+  <data key="d0">103.4288</data>
+</edge>
+<edge source="254" target="255">
+  <data key="d0">-40.0</data>
+</edge>
+<edge source="254" target="384">
+  <data key="d0">-49.01961</data>
+</edge>
+<edge source="255" target="255">
+  <data key="d0">49.45985</data>
+</edge>
+<edge source="256" target="256">
+  <data key="d0">141.7923</data>
+</edge>
+<edge source="256" target="265">
+  <data key="d0">-10.96732</data>
+</edge>
+<edge source="256" target="335">
+  <data key="d0">-22.27172</data>
+</edge>
+<edge source="256" target="401">
+  <data key="d0">-48.15409</data>
+</edge>
+<edge source="256" target="426">
+  <data key="d0">-42.01681</data>
+</edge>
+<edge source="257" target="257">
+  <data key="d0">545.1684</data>
+</edge>
+<edge source="257" target="258">
+  <data key="d0">-90.7441</data>
+</edge>
+<edge source="257" target="259">
+  <data key="d0">-90.009</data>
+</edge>
+<edge source="257" target="260">
+  <data key="d0">-89.12656</data>
+</edge>
+<edge source="257" target="430">
+  <data key="d0">-28.66151</data>
+</edge>
+<edge source="257" target="465">
+  <data key="d0">-60.06006</data>
+</edge>
+<edge source="258" target="258">
+  <data key="d0">90.7441</data>
+</edge>
+<edge source="259" target="259">
+  <data key="d0">90.009</data>
+</edge>
+<edge source="260" target="260">
+  <data key="d0">89.12656</data>
+</edge>
+<edge source="261" target="261">
+  <data key="d0">204.9044</data>
+</edge>
+<edge source="261" target="442">
+  <data key="d0">-4.904365</data>
+</edge>
+<edge source="262" target="262">
+  <data key="d0">172.7262</data>
+</edge>
+<edge source="262" target="335">
+  <data key="d0">-63.69427</data>
+</edge>
+<edge source="262" target="377">
+  <data key="d0">-27.62431</data>
+</edge>
+<edge source="263" target="263">
+  <data key="d0">26.7418</data>
+</edge>
+<edge source="263" target="264">
+  <data key="d0">-5.78369</data>
+</edge>
+<edge source="264" target="264">
+  <data key="d0">10.80491</data>
+</edge>
+<edge source="265" target="265">
+  <data key="d0">10.96732</data>
+</edge>
+<edge source="266" target="266">
+  <data key="d0">12.33001</data>
+</edge>
+<edge source="266" target="406">
+  <data key="d0">-8.278146</data>
+</edge>
+<edge source="267" target="267">
+  <data key="d0">6.802721</data>
+</edge>
+<edge source="267" target="268">
+  <data key="d0">-6.802721</data>
+</edge>
+<edge source="268" target="268">
+  <data key="d0">33.41466</data>
+</edge>
+<edge source="268" target="421">
+  <data key="d0">-4.63392</data>
+</edge>
+<edge source="269" target="269">
+  <data key="d0">146.1642</data>
+</edge>
+<edge source="269" target="371">
+  <data key="d0">-72.25433</data>
+</edge>
+<edge source="269" target="403">
+  <data key="d0">-73.90983</data>
+</edge>
+<edge source="270" target="270">
+  <data key="d0">1493.041</data>
+</edge>
+<edge source="270" target="271">
+  <data key="d0">-17.24138</data>
+</edge>
+<edge source="270" target="309">
+  <data key="d0">-26.88172</data>
+</edge>
+<edge source="270" target="376">
+  <data key="d0">-18.18182</data>
+</edge>
+<edge source="271" target="271">
+  <data key="d0">43.92595</data>
+</edge>
+<edge source="271" target="272">
+  <data key="d0">-13.31558</data>
+</edge>
+<edge source="271" target="273">
+  <data key="d0">-13.36898</data>
+</edge>
+<edge source="272" target="272">
+  <data key="d0">13.31558</data>
+</edge>
+<edge source="273" target="273">
+  <data key="d0">13.36898</data>
+</edge>
+<edge source="274" target="274">
+  <data key="d0">27.82097</data>
+</edge>
+<edge source="274" target="344">
+  <data key="d0">-9.541985</data>
+</edge>
+<edge source="274" target="374">
+  <data key="d0">-8.340283</data>
+</edge>
+<edge source="274" target="406">
+  <data key="d0">-6.393862</data>
+</edge>
+<edge source="275" target="275">
+  <data key="d0">12.32253</data>
+</edge>
+<edge source="275" target="314">
+  <data key="d0">-4.677269</data>
+</edge>
+<edge source="275" target="393">
+  <data key="d0">-7.64526</data>
+</edge>
+<edge source="276" target="276">
+  <data key="d0">278.5131</data>
+</edge>
+<edge source="276" target="431">
+  <data key="d0">-81.69935</data>
+</edge>
+<edge source="277" target="277">
+  <data key="d0">273.0466</data>
+</edge>
+<edge source="277" target="278">
+  <data key="d0">-86.20689</data>
+</edge>
+<edge source="277" target="430">
+  <data key="d0">-104.1667</data>
+</edge>
+<edge source="277" target="478">
+  <data key="d0">-18.28154</data>
+</edge>
+<edge source="278" target="278">
+  <data key="d0">86.20689</data>
+</edge>
+<edge source="279" target="279">
+  <data key="d0">15.75828</data>
+</edge>
+<edge source="279" target="280">
+  <data key="d0">-10.9529</data>
+</edge>
+<edge source="280" target="280">
+  <data key="d0">42.06578</data>
+</edge>
+<edge source="281" target="281">
+  <data key="d0">8.116883</data>
+</edge>
+<edge source="282" target="282">
+  <data key="d0">273.4638</data>
+</edge>
+<edge source="283" target="283">
+  <data key="d0">39.02803</data>
+</edge>
+<edge source="283" target="284">
+  <data key="d0">-3.49284</data>
+</edge>
+<edge source="283" target="286">
+  <data key="d0">-18.08318</data>
+</edge>
+<edge source="283" target="287">
+  <data key="d0">-17.45201</data>
+</edge>
+<edge source="284" target="284">
+  <data key="d0">151.9719</data>
+</edge>
+<edge source="284" target="288">
+  <data key="d0">-49.01961</data>
+</edge>
+<edge source="284" target="289">
+  <data key="d0">-49.01961</data>
+</edge>
+<edge source="285" target="285">
+  <data key="d0">65.02808</data>
+</edge>
+<edge source="285" target="288">
+  <data key="d0">-5.966587</data>
+</edge>
+<edge source="285" target="289">
+  <data key="d0">-5.966587</data>
+</edge>
+<edge source="286" target="286">
+  <data key="d0">124.4662</data>
+</edge>
+<edge source="287" target="287">
+  <data key="d0">17.45201</data>
+</edge>
+<edge source="288" target="288">
+  <data key="d0">59.06783</data>
+</edge>
+<edge source="288" target="290">
+  <data key="d0">-4.081633</data>
+</edge>
+<edge source="289" target="289">
+  <data key="d0">59.06783</data>
+</edge>
+<edge source="289" target="291">
+  <data key="d0">-4.081633</data>
+</edge>
+<edge source="290" target="290">
+  <data key="d0">4.081633</data>
+</edge>
+<edge source="291" target="291">
+  <data key="d0">4.081633</data>
+</edge>
+<edge source="292" target="292">
+  <data key="d0">10.79914</data>
+</edge>
+<edge source="292" target="293">
+  <data key="d0">-10.79914</data>
+</edge>
+<edge source="293" target="293">
+  <data key="d0">81.42474</data>
+</edge>
+<edge source="293" target="418">
+  <data key="d0">-30.30303</data>
+</edge>
+<edge source="294" target="294">
+  <data key="d0">39.0625</data>
+</edge>
+<edge source="294" target="446">
+  <data key="d0">-39.0625</data>
+</edge>
+<edge source="295" target="295">
+  <data key="d0">507.6858</data>
+</edge>
+<edge source="295" target="296">
+  <data key="d0">-5.681818</data>
+</edge>
+<edge source="295" target="297">
+  <data key="d0">-500.0</data>
+</edge>
+<edge source="295" target="298">
+  <data key="d0">-2.004008</data>
+</edge>
+<edge source="296" target="296">
+  <data key="d0">328.2356</data>
+</edge>
+<edge source="296" target="455">
+  <data key="d0">-212.766</data>
+</edge>
+<edge source="297" target="297">
+  <data key="d0">503.4153</data>
+</edge>
+<edge source="298" target="298">
+  <data key="d0">2.004008</data>
+</edge>
+<edge source="299" target="299">
+  <data key="d0">100.9094</data>
+</edge>
+<edge source="299" target="371">
+  <data key="d0">-12.80246</data>
+</edge>
+<edge source="300" target="300">
+  <data key="d0">5112.385</data>
+</edge>
+<edge source="300" target="301">
+  <data key="d0">-2000.0</data>
+</edge>
+<edge source="300" target="303">
+  <data key="d0">-2000.0</data>
+</edge>
+<edge source="300" target="305">
+  <data key="d0">-500.0</data>
+</edge>
+<edge source="300" target="309">
+  <data key="d0">-500.0</data>
+</edge>
+<edge source="300" target="322">
+  <data key="d0">-8.510638</data>
+</edge>
+<edge source="300" target="428">
+  <data key="d0">-41.66667</data>
+</edge>
+<edge source="301" target="301">
+  <data key="d0">2077.786</data>
+</edge>
+<edge source="301" target="302">
+  <data key="d0">-11.56069</data>
+</edge>
+<edge source="301" target="492">
+  <data key="d0">-66.22517</data>
+</edge>
+<edge source="302" target="302">
+  <data key="d0">11.56069</data>
+</edge>
+<edge source="303" target="303">
+  <data key="d0">2077.786</data>
+</edge>
+<edge source="303" target="304">
+  <data key="d0">-11.56069</data>
+</edge>
+<edge source="303" target="493">
+  <data key="d0">-66.22517</data>
+</edge>
+<edge source="304" target="304">
+  <data key="d0">11.56069</data>
+</edge>
+<edge source="305" target="305">
+  <data key="d0">1166.652</data>
+</edge>
+<edge source="305" target="309">
+  <data key="d0">-555.5555</data>
+</edge>
+<edge source="306" target="306">
+  <data key="d0">17.59793</data>
+</edge>
+<edge source="306" target="433">
+  <data key="d0">-13.21004</data>
+</edge>
+<edge source="307" target="307">
+  <data key="d0">57.28542</data>
+</edge>
+<edge source="307" target="372">
+  <data key="d0">-33.10162</data>
+</edge>
+<edge source="308" target="308">
+  <data key="d0">46.6992</data>
+</edge>
+<edge source="308" target="408">
+  <data key="d0">-45.24887</data>
+</edge>
+<edge source="309" target="309">
+  <data key="d0">2286.153</data>
+</edge>
+<edge source="309" target="316">
+  <data key="d0">-370.3704</data>
+</edge>
+<edge source="309" target="317">
+  <data key="d0">-370.3704</data>
+</edge>
+<edge source="309" target="318">
+  <data key="d0">-370.3704</data>
+</edge>
+<edge source="309" target="390">
+  <data key="d0">-41.32232</data>
+</edge>
+<edge source="310" target="310">
+  <data key="d0">238.1108</data>
+</edge>
+<edge source="310" target="316">
+  <data key="d0">-60.24096</data>
+</edge>
+<edge source="310" target="317">
+  <data key="d0">-60.24096</data>
+</edge>
+<edge source="310" target="318">
+  <data key="d0">-60.24096</data>
+</edge>
+<edge source="310" target="319">
+  <data key="d0">-42.37288</data>
+</edge>
+<edge source="311" target="311">
+  <data key="d0">13.42282</data>
+</edge>
+<edge source="311" target="316">
+  <data key="d0">-13.42282</data>
+</edge>
+<edge source="312" target="312">
+  <data key="d0">13.42282</data>
+</edge>
+<edge source="312" target="317">
+  <data key="d0">-13.42282</data>
+</edge>
+<edge source="313" target="313">
+  <data key="d0">13.42282</data>
+</edge>
+<edge source="313" target="318">
+  <data key="d0">-13.42282</data>
+</edge>
+<edge source="314" target="314">
+  <data key="d0">59.92588</data>
+</edge>
+<edge source="315" target="315">
+  <data key="d0">9.660813</data>
+</edge>
+<edge source="315" target="427">
+  <data key="d0">-6.435007</data>
+</edge>
+<edge source="316" target="316">
+  <data key="d0">444.0341</data>
+</edge>
+<edge source="317" target="317">
+  <data key="d0">444.0341</data>
+</edge>
+<edge source="318" target="318">
+  <data key="d0">444.0341</data>
+</edge>
+<edge source="319" target="319">
+  <data key="d0">69.47485</data>
+</edge>
+<edge source="319" target="320">
+  <data key="d0">-3.846154</data>
+</edge>
+<edge source="320" target="320">
+  <data key="d0">13.56433</data>
+</edge>
+<edge source="320" target="400">
+  <data key="d0">-9.718173</data>
+</edge>
+<edge source="321" target="321">
+  <data key="d0">16.51049</data>
+</edge>
+<edge source="321" target="322">
+  <data key="d0">-12.04819</data>
+</edge>
+<edge source="322" target="322">
+  <data key="d0">10029.63</data>
+</edge>
+<edge source="322" target="339">
+  <data key="d0">-9.074409</data>
+</edge>
+<edge source="322" target="434">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="323" target="323">
+  <data key="d0">18.18182</data>
+</edge>
+<edge source="323" target="324">
+  <data key="d0">-18.18182</data>
+</edge>
+<edge source="324" target="324">
+  <data key="d0">1295.959</data>
+</edge>
+<edge source="325" target="325">
+  <data key="d0">15.60914</data>
+</edge>
+<edge source="326" target="326">
+  <data key="d0">3.10559</data>
+</edge>
+<edge source="326" target="327">
+  <data key="d0">-3.10559</data>
+</edge>
+<edge source="327" target="327">
+  <data key="d0">1120.004</data>
+</edge>
+<edge source="328" target="328">
+  <data key="d0">74.32474</data>
+</edge>
+<edge source="328" target="395">
+  <data key="d0">-64.93507</data>
+</edge>
+<edge source="329" target="329">
+  <data key="d0">4.587156</data>
+</edge>
+<edge source="329" target="330">
+  <data key="d0">-4.587156</data>
+</edge>
+<edge source="330" target="330">
+  <data key="d0">9.663299</data>
+</edge>
+<edge source="331" target="331">
+  <data key="d0">23.8961</data>
+</edge>
+<edge source="331" target="334">
+  <data key="d0">-5.714286</data>
+</edge>
+<edge source="332" target="332">
+  <data key="d0">92.80929</data>
+</edge>
+<edge source="332" target="391">
+  <data key="d0">-14.68429</data>
+</edge>
+<edge source="333" target="333">
+  <data key="d0">49.87108</data>
+</edge>
+<edge source="334" target="334">
+  <data key="d0">12.23319</data>
+</edge>
+<edge source="334" target="433">
+  <data key="d0">-6.518905</data>
+</edge>
+<edge source="335" target="335">
+  <data key="d0">85.96599</data>
+</edge>
+<edge source="336" target="336">
+  <data key="d0">81.9563</data>
+</edge>
+<edge source="336" target="342">
+  <data key="d0">-44.64286</data>
+</edge>
+<edge source="337" target="337">
+  <data key="d0">2.164502</data>
+</edge>
+<edge source="337" target="393">
+  <data key="d0">-2.164502</data>
+</edge>
+<edge source="338" target="338">
+  <data key="d0">74.33591</data>
+</edge>
+<edge source="338" target="341">
+  <data key="d0">-3.614545</data>
+</edge>
+<edge source="339" target="339">
+  <data key="d0">90.21286</data>
+</edge>
+<edge source="340" target="340">
+  <data key="d0">10.46911</data>
+</edge>
+<edge source="340" target="422">
+  <data key="d0">-2.398082</data>
+</edge>
+<edge source="341" target="341">
+  <data key="d0">3.614545</data>
+</edge>
+<edge source="342" target="342">
+  <data key="d0">63.83672</data>
+</edge>
+<edge source="342" target="415">
+  <data key="d0">-19.19386</data>
+</edge>
+<edge source="343" target="343">
+  <data key="d0">4.973145</data>
+</edge>
+<edge source="344" target="344">
+  <data key="d0">90.85852</data>
+</edge>
+<edge source="344" target="347">
+  <data key="d0">-3.620565</data>
+</edge>
+<edge source="344" target="349">
+  <data key="d0">-12.03369</data>
+</edge>
+<edge source="344" target="351">
+  <data key="d0">-29.06977</data>
+</edge>
+<edge source="344" target="352">
+  <data key="d0">-21.88663</data>
+</edge>
+<edge source="345" target="345">
+  <data key="d0">86.78369</data>
+</edge>
+<edge source="345" target="346">
+  <data key="d0">-24.21308</data>
+</edge>
+<edge source="345" target="348">
+  <data key="d0">-3.810976</data>
+</edge>
+<edge source="345" target="350">
+  <data key="d0">-12.19512</data>
+</edge>
+<edge source="345" target="352">
+  <data key="d0">-21.73913</data>
+</edge>
+<edge source="345" target="374">
+  <data key="d0">-3.990423</data>
+</edge>
+<edge source="346" target="346">
+  <data key="d0">38.10197</data>
+</edge>
+<edge source="347" target="347">
+  <data key="d0">3.620565</data>
+</edge>
+<edge source="348" target="348">
+  <data key="d0">3.810976</data>
+</edge>
+<edge source="349" target="349">
+  <data key="d0">12.03369</data>
+</edge>
+<edge source="350" target="350">
+  <data key="d0">12.19512</data>
+</edge>
+<edge source="351" target="351">
+  <data key="d0">49.9031</data>
+</edge>
+<edge source="351" target="394">
+  <data key="d0">-20.83333</data>
+</edge>
+<edge source="352" target="352">
+  <data key="d0">10089.31</data>
+</edge>
+<edge source="352" target="402">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="353" target="353">
+  <data key="d0">9.430269</data>
+</edge>
+<edge source="353" target="419">
+  <data key="d0">-6.049607</data>
+</edge>
+<edge source="354" target="354">
+  <data key="d0">11.43394</data>
+</edge>
+<edge source="355" target="355">
+  <data key="d0">192.3077</data>
+</edge>
+<edge source="355" target="384">
+  <data key="d0">-192.3077</data>
+</edge>
+<edge source="356" target="356">
+  <data key="d0">141.2346</data>
+</edge>
+<edge source="356" target="357">
+  <data key="d0">-15.78532</data>
+</edge>
+<edge source="356" target="358">
+  <data key="d0">-7.358893</data>
+</edge>
+<edge source="356" target="360">
+  <data key="d0">-7.873395</data>
+</edge>
+<edge source="356" target="398">
+  <data key="d0">-57.11022</data>
+</edge>
+<edge source="357" target="357">
+  <data key="d0">32.04844</data>
+</edge>
+<edge source="357" target="359">
+  <data key="d0">-8.167265</data>
+</edge>
+<edge source="357" target="361">
+  <data key="d0">-8.095855</data>
+</edge>
+<edge source="358" target="358">
+  <data key="d0">7.358893</data>
+</edge>
+<edge source="359" target="359">
+  <data key="d0">8.167265</data>
+</edge>
+<edge source="360" target="360">
+  <data key="d0">7.873395</data>
+</edge>
+<edge source="361" target="361">
+  <data key="d0">8.095855</data>
+</edge>
+<edge source="362" target="362">
+  <data key="d0">26.38107</data>
+</edge>
+<edge source="363" target="363">
+  <data key="d0">42.55319</data>
+</edge>
+<edge source="364" target="364">
+  <data key="d0">21.23142</data>
+</edge>
+<edge source="364" target="437">
+  <data key="d0">-21.23142</data>
+</edge>
+<edge source="365" target="365">
+  <data key="d0">1.169727</data>
+</edge>
+<edge source="365" target="366">
+  <data key="d0">-1.169727</data>
+</edge>
+<edge source="366" target="366">
+  <data key="d0">30.37397</data>
+</edge>
+<edge source="366" target="375">
+  <data key="d0">-3.522367</data>
+</edge>
+<edge source="366" target="425">
+  <data key="d0">-11.57407</data>
+</edge>
+<edge source="367" target="367">
+  <data key="d0">262.9839</data>
+</edge>
+<edge source="367" target="368">
+  <data key="d0">-188.6792</data>
+</edge>
+<edge source="367" target="369">
+  <data key="d0">-13.69863</data>
+</edge>
+<edge source="367" target="370">
+  <data key="d0">-60.60606</data>
+</edge>
+<edge source="368" target="368">
+  <data key="d0">277.7794</data>
+</edge>
+<edge source="368" target="371">
+  <data key="d0">-26.30886</data>
+</edge>
+<edge source="368" target="372">
+  <data key="d0">-26.48305</data>
+</edge>
+<edge source="369" target="369">
+  <data key="d0">13.69863</data>
+</edge>
+<edge source="370" target="370">
+  <data key="d0">84.35903</data>
+</edge>
+<edge source="371" target="371">
+  <data key="d0">111.3657</data>
+</edge>
+<edge source="372" target="372">
+  <data key="d0">108.6043</data>
+</edge>
+<edge source="372" target="391">
+  <data key="d0">-49.01961</data>
+</edge>
+<edge source="373" target="373">
+  <data key="d0">123.0804</data>
+</edge>
+<edge source="373" target="407">
+  <data key="d0">-92.59259</data>
+</edge>
+<edge source="374" target="374">
+  <data key="d0">12.33071</data>
+</edge>
+<edge source="375" target="375">
+  <data key="d0">8.522367</data>
+</edge>
+<edge source="376" target="376">
+  <data key="d0">121.017</data>
+</edge>
+<edge source="376" target="394">
+  <data key="d0">-23.47418</data>
+</edge>
+<edge source="377" target="377">
+  <data key="d0">74.57267</data>
+</edge>
+<edge source="378" target="378">
+  <data key="d0">127.6412</data>
+</edge>
+<edge source="378" target="379">
+  <data key="d0">-35.21127</data>
+</edge>
+<edge source="378" target="380">
+  <data key="d0">-84.03362</data>
+</edge>
+<edge source="378" target="382">
+  <data key="d0">-8.396306</data>
+</edge>
+<edge source="379" target="379">
+  <data key="d0">78.4239</data>
+</edge>
+<edge source="379" target="383">
+  <data key="d0">-9.813543</data>
+</edge>
+<edge source="380" target="380">
+  <data key="d0">249.7548</data>
+</edge>
+<edge source="380" target="416">
+  <data key="d0">-153.8461</data>
+</edge>
+<edge source="380" target="429">
+  <data key="d0">-11.87507</data>
+</edge>
+<edge source="381" target="381">
+  <data key="d0">123.4568</data>
+</edge>
+<edge source="381" target="383">
+  <data key="d0">-123.4568</data>
+</edge>
+<edge source="382" target="382">
+  <data key="d0">8.396306</data>
+</edge>
+<edge source="383" target="383">
+  <data key="d0">133.2703</data>
+</edge>
+<edge source="384" target="384">
+  <data key="d0">248.3154</data>
+</edge>
+<edge source="385" target="385">
+  <data key="d0">109.3951</data>
+</edge>
+<edge source="386" target="386">
+  <data key="d0">10.03507</data>
+</edge>
+<edge source="387" target="387">
+  <data key="d0">18.11291</data>
+</edge>
+<edge source="387" target="388">
+  <data key="d0">-1.649294</data>
+</edge>
+<edge source="388" target="388">
+  <data key="d0">1.649294</data>
+</edge>
+<edge source="389" target="389">
+  <data key="d0">8.220146</data>
+</edge>
+<edge source="389" target="438">
+  <data key="d0">-2.518892</data>
+</edge>
+<edge source="390" target="390">
+  <data key="d0">386.1499</data>
+</edge>
+<edge source="391" target="391">
+  <data key="d0">209.3694</data>
+</edge>
+<edge source="391" target="403">
+  <data key="d0">-138.3126</data>
+</edge>
+<edge source="392" target="392">
+  <data key="d0">38.33334</data>
+</edge>
+<edge source="392" target="438">
+  <data key="d0">-5.0</data>
+</edge>
+<edge source="393" target="393">
+  <data key="d0">13.27597</data>
+</edge>
+<edge source="394" target="394">
+  <data key="d0">44.30751</data>
+</edge>
+<edge source="395" target="395">
+  <data key="d0">133.2931</data>
+</edge>
+<edge source="395" target="456">
+  <data key="d0">-10.58201</data>
+</edge>
+<edge source="395" target="464">
+  <data key="d0">-23.52941</data>
+</edge>
+<edge source="396" target="396">
+  <data key="d0">14.92029</data>
+</edge>
+<edge source="397" target="397">
+  <data key="d0">13.94825</data>
+</edge>
+<edge source="398" target="398">
+  <data key="d0">286.5966</data>
+</edge>
+<edge source="399" target="399">
+  <data key="d0">19.08864</data>
+</edge>
+<edge source="399" target="441">
+  <data key="d0">-13.81215</data>
+</edge>
+<edge source="400" target="400">
+  <data key="d0">12.46316</data>
+</edge>
+<edge source="401" target="401">
+  <data key="d0">85.60728</data>
+</edge>
+<edge source="401" target="402">
+  <data key="d0">-37.45319</data>
+</edge>
+<edge source="402" target="402">
+  <data key="d0">10037.45</data>
+</edge>
+<edge source="403" target="403">
+  <data key="d0">212.2224</data>
+</edge>
+<edge source="404" target="404">
+  <data key="d0">4.235493</data>
+</edge>
+<edge source="404" target="405">
+  <data key="d0">-4.235493</data>
+</edge>
+<edge source="405" target="405">
+  <data key="d0">12.04189</data>
+</edge>
+<edge source="406" target="406">
+  <data key="d0">21.76924</data>
+</edge>
+<edge source="407" target="407">
+  <data key="d0">117.284</data>
+</edge>
+<edge source="407" target="426">
+  <data key="d0">-24.69136</data>
+</edge>
+<edge source="408" target="408">
+  <data key="d0">60.42338</data>
+</edge>
+<edge source="409" target="409">
+  <data key="d0">12.37255</data>
+</edge>
+<edge source="409" target="417">
+  <data key="d0">-10.1626</data>
+</edge>
+<edge source="410" target="410">
+  <data key="d0">31.56566</data>
+</edge>
+<edge source="410" target="411">
+  <data key="d0">-31.56566</data>
+</edge>
+<edge source="411" target="411">
+  <data key="d0">83.28191</data>
+</edge>
+<edge source="411" target="436">
+  <data key="d0">-1.414447</data>
+</edge>
+<edge source="412" target="412">
+  <data key="d0">2.541942</data>
+</edge>
+<edge source="413" target="413">
+  <data key="d0">119.8663</data>
+</edge>
+<edge source="413" target="414">
+  <data key="d0">-8.333334</data>
+</edge>
+<edge source="413" target="415">
+  <data key="d0">-34.0136</data>
+</edge>
+<edge source="413" target="416">
+  <data key="d0">-77.51938</data>
+</edge>
+<edge source="414" target="414">
+  <data key="d0">8.333334</data>
+</edge>
+<edge source="415" target="415">
+  <data key="d0">108.8545</data>
+</edge>
+<edge source="416" target="416">
+  <data key="d0">343.4711</data>
+</edge>
+<edge source="417" target="417">
+  <data key="d0">17.68706</data>
+</edge>
+<edge source="418" target="418">
+  <data key="d0">42.09548</data>
+</edge>
+<edge source="419" target="419">
+  <data key="d0">19.04604</data>
+</edge>
+<edge source="419" target="423">
+  <data key="d0">-8.481764</data>
+</edge>
+<edge source="420" target="420">
+  <data key="d0">51.32293</data>
+</edge>
+<edge source="420" target="421">
+  <data key="d0">-6.779501</data>
+</edge>
+<edge source="420" target="434">
+  <data key="d0">-22.27172</data>
+</edge>
+<edge source="421" target="421">
+  <data key="d0">32.61741</data>
+</edge>
+<edge source="422" target="422">
+  <data key="d0">9.963887</data>
+</edge>
+<edge source="423" target="423">
+  <data key="d0">8.481764</data>
+</edge>
+<edge source="424" target="424">
+  <data key="d0">30.21148</data>
+</edge>
+<edge source="425" target="425">
+  <data key="d0">17.36111</data>
+</edge>
+<edge source="426" target="426">
+  <data key="d0">66.70817</data>
+</edge>
+<edge source="427" target="427">
+  <data key="d0">12.07835</data>
+</edge>
+<edge source="428" target="428">
+  <data key="d0">490.5505</data>
+</edge>
+<edge source="428" target="430">
+  <data key="d0">-240.9639</data>
+</edge>
+<edge source="429" target="429">
+  <data key="d0">91.87508</data>
+</edge>
+<edge source="429" target="430">
+  <data key="d0">-80.0</data>
+</edge>
+<edge source="430" target="430">
+  <data key="d0">492.3723</data>
+</edge>
+<edge source="431" target="431">
+  <data key="d0">155.0669</data>
+</edge>
+<edge source="432" target="432">
+  <data key="d0">3.724395</data>
+</edge>
+<edge source="433" target="433">
+  <data key="d0">39.50296</data>
+</edge>
+<edge source="433" target="436">
+  <data key="d0">-9.97009</data>
+</edge>
+<edge source="434" target="434">
+  <data key="d0">10032.62</data>
+</edge>
+<edge source="434" target="435">
+  <data key="d0">-10.34485</data>
+</edge>
+<edge source="435" target="435">
+  <data key="d0">57.51764</data>
+</edge>
+<edge source="436" target="436">
+  <data key="d0">13.28749</data>
+</edge>
+<edge source="437" target="437">
+  <data key="d0">66.62894</data>
+</edge>
+<edge source="438" target="438">
+  <data key="d0">7.518892</data>
+</edge>
+<edge source="439" target="439">
+  <data key="d0">6.76739</data>
+</edge>
+<edge source="440" target="440">
+  <data key="d0">7.757952</data>
+</edge>
+<edge source="440" target="441">
+  <data key="d0">-7.757952</data>
+</edge>
+<edge source="441" target="441">
+  <data key="d0">26.17628</data>
+</edge>
+<edge source="442" target="442">
+  <data key="d0">14.70829</data>
+</edge>
+<edge source="443" target="443">
+  <data key="d0">19.68912</data>
+</edge>
+<edge source="444" target="444">
+  <data key="d0">69.85807</data>
+</edge>
+<edge source="444" target="445">
+  <data key="d0">-27.24796</data>
+</edge>
+<edge source="444" target="446">
+  <data key="d0">-26.45503</data>
+</edge>
+<edge source="444" target="448">
+  <data key="d0">-16.15509</data>
+</edge>
+<edge source="445" target="445">
+  <data key="d0">83.55183</data>
+</edge>
+<edge source="445" target="449">
+  <data key="d0">-39.0625</data>
+</edge>
+<edge source="445" target="454">
+  <data key="d0">-17.24138</data>
+</edge>
+<edge source="446" target="446">
+  <data key="d0">82.7589</data>
+</edge>
+<edge source="446" target="454">
+  <data key="d0">-17.24138</data>
+</edge>
+<edge source="447" target="447">
+  <data key="d0">10000.0</data>
+</edge>
+<edge source="447" target="449">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="448" target="448">
+  <data key="d0">185.1032</data>
+</edge>
+<edge source="448" target="450">
+  <data key="d0">-6.622517</data>
+</edge>
+<edge source="448" target="451">
+  <data key="d0">-6.535948</data>
+</edge>
+<edge source="448" target="452">
+  <data key="d0">-6.535948</data>
+</edge>
+<edge source="449" target="449">
+  <data key="d0">10039.06</data>
+</edge>
+<edge source="450" target="450">
+  <data key="d0">6.622517</data>
+</edge>
+<edge source="451" target="451">
+  <data key="d0">6.535948</data>
+</edge>
+<edge source="452" target="452">
+  <data key="d0">6.535948</data>
+</edge>
+<edge source="453" target="453">
+  <data key="d0">73.47367</data>
+</edge>
+<edge source="453" target="454">
+  <data key="d0">-65.78947</data>
+</edge>
+<edge source="454" target="454">
+  <data key="d0">112.0369</data>
+</edge>
+<edge source="455" target="455">
+  <data key="d0">10219.71</data>
+</edge>
+<edge source="455" target="456">
+  <data key="d0">-6.944445</data>
+</edge>
+<edge source="455" target="457">
+  <data key="d0">-10000.0</data>
+</edge>
+<edge source="456" target="456">
+  <data key="d0">80.4968</data>
+</edge>
+<edge source="456" target="458">
+  <data key="d0">-9.259259</data>
+</edge>
+<edge source="456" target="459">
+  <data key="d0">-2.272727</data>
+</edge>
+<edge source="456" target="460">
+  <data key="d0">-2.272727</data>
+</edge>
+<edge source="456" target="461">
+  <data key="d0">-3.780719</data>
+</edge>
+<edge source="456" target="462">
+  <data key="d0">-3.889537</data>
+</edge>
+<edge source="457" target="457">
+  <data key="d0">10000.0</data>
+</edge>
+<edge source="458" target="458">
+  <data key="d0">9.259259</data>
+</edge>
+<edge source="459" target="459">
+  <data key="d0">2.272727</data>
+</edge>
+<edge source="460" target="460">
+  <data key="d0">2.272727</data>
+</edge>
+<edge source="461" target="461">
+  <data key="d0">3.780719</data>
+</edge>
+<edge source="462" target="462">
+  <data key="d0">3.889537</data>
+</edge>
+<edge source="463" target="463">
+  <data key="d0">9.573227</data>
+</edge>
+<edge source="464" target="464">
+  <data key="d0">57.74268</data>
+</edge>
+<edge source="465" target="465">
+  <data key="d0">6796.34</data>
+</edge>
+<edge source="465" target="466">
+  <data key="d0">-69.61365</data>
+</edge>
+<edge source="465" target="479">
+  <data key="d0">-6666.667</data>
+</edge>
+<edge source="466" target="466">
+  <data key="d0">313.5161</data>
+</edge>
+<edge source="466" target="480">
+  <data key="d0">-243.9024</data>
+</edge>
+<edge source="467" target="467">
+  <data key="d0">78.33649</data>
+</edge>
+<edge source="467" target="471">
+  <data key="d0">-68.02721</data>
+</edge>
+<edge source="467" target="477">
+  <data key="d0">-10.30928</data>
+</edge>
+<edge source="468" target="468">
+  <data key="d0">56.02891</data>
+</edge>
+<edge source="468" target="472">
+  <data key="d0">-11.97605</data>
+</edge>
+<edge source="468" target="477">
+  <data key="d0">-44.05286</data>
+</edge>
+<edge source="469" target="469">
+  <data key="d0">69.98483</data>
+</edge>
+<edge source="469" target="470">
+  <data key="d0">-35.97123</data>
+</edge>
+<edge source="470" target="470">
+  <data key="d0">60.12582</data>
+</edge>
+<edge source="470" target="471">
+  <data key="d0">-24.15459</data>
+</edge>
+<edge source="471" target="471">
+  <data key="d0">92.18179</data>
+</edge>
+<edge source="472" target="472">
+  <data key="d0">418.9939</data>
+</edge>
+<edge source="472" target="473">
+  <data key="d0">-33.8983</data>
+</edge>
+<edge source="472" target="474">
+  <data key="d0">-29.76191</data>
+</edge>
+<edge source="472" target="475">
+  <data key="d0">-44.44444</data>
+</edge>
+<edge source="472" target="476">
+  <data key="d0">-44.44444</data>
+</edge>
+<edge source="473" target="473">
+  <data key="d0">33.8983</data>
+</edge>
+<edge source="474" target="474">
+  <data key="d0">29.76191</data>
+</edge>
+<edge source="475" target="475">
+  <data key="d0">44.44444</data>
+</edge>
+<edge source="476" target="476">
+  <data key="d0">44.44444</data>
+</edge>
+<edge source="477" target="477">
+  <data key="d0">66.54241</data>
+</edge>
+<edge source="478" target="478">
+  <data key="d0">18.28154</data>
+</edge>
+<edge source="479" target="479">
+  <data key="d0">6841.905</data>
+</edge>
+<edge source="479" target="480">
+  <data key="d0">-32.05128</data>
+</edge>
+<edge source="479" target="482">
+  <data key="d0">-70.67138</data>
+</edge>
+<edge source="480" target="480">
+  <data key="d0">662.705</data>
+</edge>
+<edge source="480" target="481">
+  <data key="d0">-265.6042</data>
+</edge>
+<edge source="480" target="482">
+  <data key="d0">-32.25806</data>
+</edge>
+<edge source="480" target="485">
+  <data key="d0">-88.88889</data>
+</edge>
+<edge source="481" target="481">
+  <data key="d0">318.8808</data>
+</edge>
+<edge source="481" target="485">
+  <data key="d0">-53.2765</data>
+</edge>
+<edge source="482" target="482">
+  <data key="d0">204.9703</data>
+</edge>
+<edge source="482" target="483">
+  <data key="d0">-51.02041</data>
+</edge>
+<edge source="482" target="484">
+  <data key="d0">-51.02041</data>
+</edge>
+<edge source="483" target="483">
+  <data key="d0">51.02041</data>
+</edge>
+<edge source="484" target="484">
+  <data key="d0">51.02041</data>
+</edge>
+<edge source="485" target="485">
+  <data key="d0">142.1654</data>
+</edge>
+<edge source="486" target="486">
+  <data key="d0">22.62444</data>
+</edge>
+<edge source="487" target="487">
+  <data key="d0">162.3038</data>
+</edge>
+<edge source="487" target="489">
+  <data key="d0">-72.16785</data>
+</edge>
+<edge source="487" target="492">
+  <data key="d0">-45.41326</data>
+</edge>
+<edge source="487" target="493">
+  <data key="d0">-44.72272</data>
+</edge>
+<edge source="488" target="488">
+  <data key="d0">64.79975</data>
+</edge>
+<edge source="488" target="489">
+  <data key="d0">-44.05286</data>
+</edge>
+<edge source="488" target="490">
+  <data key="d0">-20.74689</data>
+</edge>
+<edge source="489" target="489">
+  <data key="d0">170.2748</data>
+</edge>
+<edge source="489" target="491">
+  <data key="d0">-54.05405</data>
+</edge>
+<edge source="490" target="490">
+  <data key="d0">20.74689</data>
+</edge>
+<edge source="491" target="491">
+  <data key="d0">54.05405</data>
+</edge>
+<edge source="492" target="492">
+  <data key="d0">111.6384</data>
+</edge>
+<edge source="493" target="493">
+  <data key="d0">110.9479</data>
+</edge>
+</graph></graphml>
