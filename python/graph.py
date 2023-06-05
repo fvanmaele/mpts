@@ -191,18 +191,13 @@ class gmres_counter(object):
 def run_trial(mtx, x, M=None, maxiter=1000, restart=20):
     # Right-hand side from exact solution
     b = mtx * x
-    
-    # Perform a tixed number of iterations
-    float_min = sys.float_info.min
-    tol  = float_min
-    atol = float_min
-    
+
     # Keep track of GMRES (inner) iterations
     counter = gmres_counter()
     
     # callback_type='x' to compare FRE in each iteration
     x_gmres, ec = sparse.linalg.gmres(mtx, b, M=M, callback=counter, callback_type='x', 
-                                      maxiter=maxiter, restart=restart, tol=tol, atol=atol)
+                                      maxiter=maxiter, restart=restart, tol=0, atol=0)
     return { 'x': x, 'x_k': counter.xk, 'exit_code': ec, 'iters': counter.niter }
 
 
