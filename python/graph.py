@@ -208,7 +208,7 @@ def run_trial(mtx, x, M=None, maxiter=100, restart=20):
     }
 
 
-def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=False, precond_custom=None):
+def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=False, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
     ST = compute_spanning_trees(mtx, symmetrize=symmetrize)
@@ -234,8 +234,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=
     preconds = [None, M1, M2, M3]
 
     # Custom preconditioner    
-    if precond_custom is not None:
-        P4 = mmread(precond_custom)
+    if custom is not None:
+        P4 = mmread(custom)
         M4 = lu_sparse_operator(P4)
         
         preconds.append(M4)
@@ -292,29 +292,29 @@ def main(mtx_path, seed, restart, maxiter, symmetrize, precond=None):
     # TODO: handle runtime errors (singular preconditioner)
     print(f'{title}, rhs: normally distributed')
     run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', 
-                      symmetrize=symmetrize, precond=precond)
+                      symmetrize=symmetrize, custom=precond)
     print(f'\n{title}, rhs: ones')
     run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', 
-                      symmetrize=symmetrize, precond=precond)
+                      symmetrize=symmetrize, custom=precond)
     print(f'\n{title}, rhs: sine')
     run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', 
-                      symmetrize=symmetrize, precond=precond)
+                      symmetrize=symmetrize, custom=precond)
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(prog='mst_precond', description='trials for spanning tree preconditioner')
     parser.add_argument('--seed',    type=int, default=42, 
-                        description='seed for random numbers')
+                        help='seed for random numbers')
     parser.add_argument('--restart', type=int, default=20, 
-                        description='dimension of GMRES subspace')
+                        help='dimension of GMRES subspace')
     parser.add_argument('--maxiter', type=int, default=100, 
-                        description='number of GMRES iterations')
+                        help='number of GMRES iterations')
     parser.add_argument('--no-symmetrize', dest='symmetrize', action='store_false', 
-                        description='use directed spanning tree algorithms instead of symmetrization (slow)')
+                        help='use directed spanning tree algorithms instead of symmetrization (slow)')
     parser.add_argument('--precond', type=str, 
-                        description='path to preconditioning matrix, to be solved with SuperLU')
-    parser.add_argument('mtx', nargs=1)
+                        help='path to preconditioning matrix, to be solved with SuperLU')
+    parser.add_argument('mtx', type=str)
     
     args = parser.parse_args()
     main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.symmetrize, args.precond)
