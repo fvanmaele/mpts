@@ -162,11 +162,19 @@ def s_coverage(mtx, mtx_pruned):
     return sc
 
 
-def ilu_to_linear_operator(iLU):
-    """ Construct a linear operator for preconditioned GMRES
+def lu_sparse_operator(P, inexact=False):
+    """ SuperLU based preconditioner for use with GMRES
     """
-    nrows, ncols = iLU.shape
-    return sparse.linalg.LinearOperator((nrows, ncols), iLU.solve)
+    assert sparse.issparse(P)
+    nrows, ncols = P.shape
+    
+    # TODO: handle runtime errors (singular preconditioner)
+    if inexact:
+        M = sparse.linalg.splu(P)
+    else:
+        M = sparse.linalg.spilu(P, drop_tol=0)  # iLU(0)
+
+    return sparse.linalg.LinearOperator((nrows, ncols), M.solve)
 
 
 class gmres_counter(object):
@@ -183,6 +191,8 @@ class gmres_counter(object):
 
 # %%
 def run_trial(mtx, x, M=None, maxiter=100, restart=20):
+    """ Solve a preconditioned linear system with a fixed number of GMRES iterations
+    """
     # Right-hand side from exact solution
     b = mtx * x
     counter = gmres_counter()
@@ -198,32 +208,43 @@ def run_trial(mtx, x, M=None, maxiter=100, restart=20):
     }
 
 
-def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=False):
-    # Maximum spanning tree preconditioner
+def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=False, precond_custom=None):
+    """ Compare the performance of spanning tree preconditioners
+    """
     ST = compute_spanning_trees(mtx, symmetrize=symmetrize)
+    
+    # Maximum spanning tree preconditioner
+    # TODO: handle runtime errors (singular preconditioner)
     P1 = ST['max_spanning_tree_adj']
     P1_sc = s_coverage(mtx, P1)
+    M1 = lu_sparse_operator(P1)
 
     # LU (with the correct permutation) applied to a spanning tree does
     # not result in fill-in.
-    # TODO: factorize the spanning tree conditioner "layer by layer"
-    M1 = ilu_to_linear_operator(sparse.linalg.splu(P1))    
-    
+    # TODO: factorize the spanning tree conditioner "layer by layer
+
     # Minimum spanning tree preconditioner
     P2 = ST['min_spanning_tree_adj']
     P2_sc = s_coverage(mtx, P2)
-    M2 = ilu_to_linear_operator(sparse.linalg.splu(P2))
+    M2 = lu_sparse_operator(P2)
 
     # iLU(0)
-    M3 = ilu_to_linear_operator(sparse.linalg.spilu(mtx, drop_tol=0))
+    M3 = lu_sparse_operator(mtx, inexact=True)
     sc = [None, P1_sc, P2_sc, None]
     preconds = [None, M1, M2, M3]
-    
+
+    # Custom preconditioner    
+    if precond_custom is not None:
+        P4 = mmread(precond_custom)
+        M4 = lu_sparse_operator(P4)
+        
+        preconds.append(M4)
+        sc.append(None)
+
     # Use logarithmic scale for relative residual (y-scale)
     fig, ax = plt.subplots()
     fig.set_size_inches(8, 6)
     fig.set_dpi(300)
-
     ax.set_yscale('log')
     ax.set_xlabel('iterations')
     ax.set_ylabel('relres')
@@ -242,6 +263,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=
             label = 'minST'
         if i == 3:
             label = 'iLU'
+        if i == 4:
+            label = 'custom'
 
         print("{}, {} iters, s_coverage: {}, iters, relres: {}".format(
             label, result['iters'], sc[i], relres[-1]))
@@ -255,7 +278,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=
     
 
 # %%
-def main(mtx_path, seed, restart, maxiter, symmetrize):
+def main(mtx_path, seed, restart, maxiter, symmetrize, precond=None):
     np.random.seed(seed)
     mtx   = mmread(mtx_path)
     n, m  = mtx.shape
@@ -266,25 +289,32 @@ def main(mtx_path, seed, restart, maxiter, symmetrize):
     x2 = np.ones((n, 1))
     x3 = np.sin(np.linspace(0, 100*np.pi, n))
 
+    # TODO: handle runtime errors (singular preconditioner)
     print(f'{title}, rhs: normally distributed')
-    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', symmetrize=symmetrize)
-
+    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', 
+                      symmetrize=symmetrize, precond=precond)
     print(f'\n{title}, rhs: ones')
-    run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', symmetrize=symmetrize)
-
+    run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', 
+                      symmetrize=symmetrize, precond=precond)
     print(f'\n{title}, rhs: sine')
-    run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', symmetrize=symmetrize)
+    run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', 
+                      symmetrize=symmetrize, precond=precond)
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(prog='mst_precond', description='trials for spanning tree preconditioner')
-    parser.add_argument('--seed', type=int, default=42, description='seed for random numbers')
-    parser.add_argument('--restart', type=int, default=20, description='dimension of GMRES subspace')
-    parser.add_argument('--maxiter', type=int, default=100, description='number of GMRES iterations')
+    parser.add_argument('--seed',    type=int, default=42, 
+                        description='seed for random numbers')
+    parser.add_argument('--restart', type=int, default=20, 
+                        description='dimension of GMRES subspace')
+    parser.add_argument('--maxiter', type=int, default=100, 
+                        description='number of GMRES iterations')
     parser.add_argument('--no-symmetrize', dest='symmetrize', action='store_false', 
                         description='use directed spanning tree algorithms instead of symmetrization (slow)')
+    parser.add_argument('--precond', type=str, 
+                        description='path to preconditioning matrix, to be solved with SuperLU')
     parser.add_argument('mtx', nargs=1)
     
     args = parser.parse_args()
-    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.symmetrize)
+    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.symmetrize, args.precond)
