@@ -1,0 +1,225 @@
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+add20, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 2.6334779723743586e-08
+maxST, 250 iters, s_coverage: 0.9997430659197234, iters, relres: 1.7751734933235217e-16
+minST, 250 iters, s_coverage: 0.6480252233964147, iters, relres: 6.764394018167152e-16
+maxLF, 250 iters, s_coverage: 0.9495548562213899, iters, relres: 4.501417480646024e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 6.635730242509342e-22
+
+add20, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.1024443099254534e-07
+maxST, 250 iters, s_coverage: 0.9997430659197234, iters, relres: 2.01006318804983e-15
+minST, 250 iters, s_coverage: 0.6480252233964147, iters, relres: 3.6072844328513114e-15
+maxLF, 250 iters, s_coverage: 0.9495548562213899, iters, relres: 2.8450935954579495e-15
+iLU, 250 iters, s_coverage: None, iters, relres: 1.6196897807558803e-18
+
+add20, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 3.091454367555178e-08
+maxST, 250 iters, s_coverage: 0.9997430659197234, iters, relres: 9.642294843159053e-17
+minST, 250 iters, s_coverage: 0.6480252233964147, iters, relres: 1.0021174121840276e-15
+maxLF, 250 iters, s_coverage: 0.9495548562213899, iters, relres: 1.3348126857767805e-15
+iLU, 250 iters, s_coverage: None, iters, relres: 1.3329630653356988e-20
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+c-20, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.4566204356785364e-07
+maxST, 250 iters, s_coverage: 0.9997814928879497, iters, relres: 9.058131997943932e-20
+minST, 250 iters, s_coverage: 0.9995546893462172, iters, relres: 8.667899757028643e-08
+maxLF, 250 iters, s_coverage: 0.9996107497949446, iters, relres: 1.3268971748830707e-10
+iLU, 250 iters, s_coverage: None, iters, relres: 6.814890925361977e-34
+
+c-20, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 9.434994471405398e-08
+maxST, 250 iters, s_coverage: 0.9997814928879497, iters, relres: 1.0822563776809967e-19
+minST, 250 iters, s_coverage: 0.9995546893462172, iters, relres: 1.1282396029450568e-07
+maxLF, 250 iters, s_coverage: 0.9996107497949446, iters, relres: 9.227416500371518e-11
+iLU, 250 iters, s_coverage: None, iters, relres: 1.5393582729853091e-34
+
+c-20, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 9.718091040326323e-08
+maxST, 250 iters, s_coverage: 0.9997814928879497, iters, relres: 5.360657311564469e-19
+minST, 250 iters, s_coverage: 0.9995546893462172, iters, relres: 6.867204436282197e-08
+maxLF, 250 iters, s_coverage: 0.9996107497949446, iters, relres: 1.0976867252116946e-10
+iLU, 250 iters, s_coverage: None, iters, relres: 7.709990629820096e-34
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+cryg2500, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 0.00024076620263120888
+maxST, 250 iters, s_coverage: 0.9063878398783585, iters, relres: 5.844080963934918e-10
+minST, 250 iters, s_coverage: 0.5743664356412677, iters, relres: 1.4335412899670511e-07
+maxLF, 250 iters, s_coverage: 0.9040373171100113, iters, relres: 4.957685969601438e-18
+iLU, 250 iters, s_coverage: None, iters, relres: 3.955146514552092e-24
+
+cryg2500, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 0.0010769896534379598
+maxST, 250 iters, s_coverage: 0.9063878398783585, iters, relres: 1.6653527048840853e-11
+minST, 250 iters, s_coverage: 0.5743664356412677, iters, relres: 6.627707416981583e-06
+maxLF, 250 iters, s_coverage: 0.9040373171100113, iters, relres: 1.5903498752363347e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 9.094856077049923e-21
+
+cryg2500, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 0.0011846366864142793
+maxST, 250 iters, s_coverage: 0.9063878398783585, iters, relres: 7.101981108417071e-12
+minST, 250 iters, s_coverage: 0.5743664356412677, iters, relres: 2.0556233062684043e-06
+maxLF, 250 iters, s_coverage: 0.9040373171100113, iters, relres: 7.719247782092097e-17
+iLU, 250 iters, s_coverage: None, iters, relres: 4.140691719464352e-23
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+dw2048, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 0.0003402001585052752
+maxST, 250 iters, s_coverage: 0.9436565939072113, iters, relres: 1.5531713729044903e-15
+minST, 250 iters, s_coverage: 0.6370538126406647, iters, relres: 0.012137680568443452
+maxLF, 250 iters, s_coverage: 0.9422976585424757, iters, relres: 4.830827880063591e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 1.5143501072710909e-24
+
+dw2048, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.3677573730355177e-05
+maxST, 250 iters, s_coverage: 0.9436565939072113, iters, relres: 2.849472290245628e-16
+minST, 250 iters, s_coverage: 0.6370538126406647, iters, relres: 0.002742600789208574
+maxLF, 250 iters, s_coverage: 0.9422976585424757, iters, relres: 7.440024069215732e-17
+iLU, 250 iters, s_coverage: None, iters, relres: 6.58428081883426e-25
+
+dw2048, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 2.233225222209203e-05
+maxST, 250 iters, s_coverage: 0.9436565939072113, iters, relres: 1.7540234313866847e-16
+minST, 250 iters, s_coverage: 0.6370538126406647, iters, relres: 0.0025029617804522577
+maxLF, 250 iters, s_coverage: 0.9422976585424757, iters, relres: 2.70311081487537e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 7.821507335672996e-25
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+ex28, rhs: normally distributed
+Traceback (most recent call last):
+  File "/home/archie/source/repos/pmst/python/graph.py", line 345, in <module>
+    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 322, in main
+    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', custom=precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 235, in run_trial_precond
+    M1 = lu_sparse_operator(P1)
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/archie/source/repos/pmst/python/graph.py", line 65, in lu_sparse_operator
+    M = sparse.linalg.spilu(P, drop_tol=0)  # iLU(0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py", line 507, in spilu
+    return _superlu.gstrf(N, A.nnz, A.data, A.indices, A.indptr,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: [0]: matrix is singular at line 148 in file ../../scipy/sparse/linalg/_dsolve/SuperLU/SRC/ilu_dpivotL.c
+
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+gre_512, rhs: normally distributed
+Traceback (most recent call last):
+  File "/home/archie/source/repos/pmst/python/graph.py", line 345, in <module>
+    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 322, in main
+    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', custom=precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 235, in run_trial_precond
+    M1 = lu_sparse_operator(P1)
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/archie/source/repos/pmst/python/graph.py", line 65, in lu_sparse_operator
+    M = sparse.linalg.spilu(P, drop_tol=0)  # iLU(0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py", line 507, in spilu
+    return _superlu.gstrf(N, A.nnz, A.data, A.indices, A.indptr,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: [0]: matrix is singular at line 148 in file ../../scipy/sparse/linalg/_dsolve/SuperLU/SRC/ilu_dpivotL.c
+
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+orsreg_1, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 6.026955775888619e-09
+maxST, 250 iters, s_coverage: 0.9954417313235587, iters, relres: 1.2552862324403681e-20
+minST, 250 iters, s_coverage: 0.5017174204461267, iters, relres: 2.6181146204752984e-13
+maxLF, 250 iters, s_coverage: 0.9948234240005688, iters, relres: 6.208198944296013e-21
+iLU, 250 iters, s_coverage: None, iters, relres: 4.175109482679186e-26
+
+orsreg_1, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.5612397998292334e-11
+maxST, 250 iters, s_coverage: 0.9954417313235587, iters, relres: 2.8249076727485177e-17
+minST, 250 iters, s_coverage: 0.5017174204461267, iters, relres: 3.709316046497344e-11
+maxLF, 250 iters, s_coverage: 0.9948234240005688, iters, relres: 2.1079880888289737e-17
+iLU, 250 iters, s_coverage: None, iters, relres: 2.2657061560087138e-23
+
+orsreg_1, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 6.058511818268054e-08
+maxST, 250 iters, s_coverage: 0.9954417313235587, iters, relres: 2.3974988601868984e-19
+minST, 250 iters, s_coverage: 0.5017174204461267, iters, relres: 3.78801663100754e-12
+maxLF, 250 iters, s_coverage: 0.9948234240005688, iters, relres: 1.2845621305172483e-19
+iLU, 250 iters, s_coverage: None, iters, relres: 1.30001883152675e-23
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+pde2961, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.5942812556643433e-13
+maxST, 250 iters, s_coverage: 0.8742203425564791, iters, relres: 1.2164345809458469e-17
+minST, 250 iters, s_coverage: 0.6370203438411862, iters, relres: 5.995962193548169e-17
+maxLF, 250 iters, s_coverage: 0.8729851000554057, iters, relres: 5.187152184695554e-17
+iLU, 250 iters, s_coverage: None, iters, relres: 9.844086653399643e-25
+
+pde2961, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 7.568034457880688e-12
+maxST, 250 iters, s_coverage: 0.8742203425564791, iters, relres: 6.55719363852309e-16
+minST, 250 iters, s_coverage: 0.6370203438411862, iters, relres: 5.399456701146041e-16
+maxLF, 250 iters, s_coverage: 0.8729851000554057, iters, relres: 5.790483387817085e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 2.2091035096861996e-22
+
+pde2961, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.454920070957914e-14
+maxST, 250 iters, s_coverage: 0.8742203425564791, iters, relres: 1.554980885033535e-17
+minST, 250 iters, s_coverage: 0.6370203438411862, iters, relres: 8.656140989656617e-17
+maxLF, 250 iters, s_coverage: 0.8729851000554057, iters, relres: 6.552361134008246e-17
+iLU, 250 iters, s_coverage: None, iters, relres: 2.599395372703615e-26
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+S40PI_n, rhs: normally distributed
+Traceback (most recent call last):
+  File "/home/archie/source/repos/pmst/python/graph.py", line 345, in <module>
+    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 322, in main
+    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', custom=precond)
+  File "/home/archie/source/repos/pmst/python/graph.py", line 235, in run_trial_precond
+    M1 = lu_sparse_operator(P1)
+         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/archie/source/repos/pmst/python/graph.py", line 65, in lu_sparse_operator
+    M = sparse.linalg.spilu(P, drop_tol=0)  # iLU(0)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py", line 507, in spilu
+    return _superlu.gstrf(N, A.nnz, A.data, A.indices, A.indptr,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: [0]: matrix is singular at line 148 in file ../../scipy/sparse/linalg/_dsolve/SuperLU/SRC/ilu_dpivotL.c
+
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:485: SparseEfficiencyWarning: spilu converted its input to CSC format
+  warn('spilu converted its input to CSC format',
+/usr/lib/python3.11/site-packages/scipy/sparse/linalg/_dsolve/linsolve.py:394: SparseEfficiencyWarning: splu converted its input to CSC format
+  warn('splu converted its input to CSC format', SparseEfficiencyWarning)
+wang1, rhs: normally distributed
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 9.41412337466224e-09
+maxST, 250 iters, s_coverage: 0.8905046471075504, iters, relres: 6.291414997140647e-16
+minST, 250 iters, s_coverage: 0.5316396777229504, iters, relres: 7.974528823428831e-16
+maxLF, 250 iters, s_coverage: 0.8795371918922559, iters, relres: 3.548660332020666e-16
+iLU, 250 iters, s_coverage: None, iters, relres: 5.889541815301285e-23
+
+wang1, rhs: ones
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 3.187345466818957e-08
+maxST, 250 iters, s_coverage: 0.8905046471075504, iters, relres: 1.2222850810394095e-15
+minST, 250 iters, s_coverage: 0.5316396777229504, iters, relres: 3.4867160554642785e-15
+maxLF, 250 iters, s_coverage: 0.8795371918922559, iters, relres: 1.7570329886976985e-15
+iLU, 250 iters, s_coverage: None, iters, relres: 4.37979054335666e-24
+
+wang1, rhs: sine
+unpreconditioned, 250 iters, s_coverage: 1, iters, relres: 1.1796991101950735e-08
+maxST, 250 iters, s_coverage: 0.8905046471075504, iters, relres: 3.4937282213835523e-16
+minST, 250 iters, s_coverage: 0.5316396777229504, iters, relres: 1.819988477360843e-15
+maxLF, 250 iters, s_coverage: 0.8795371918922559, iters, relres: 1.187639318614445e-15
+iLU, 250 iters, s_coverage: None, iters, relres: 5.551950836430936e-26

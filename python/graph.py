@@ -222,7 +222,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
         ST = spanning_tree_precond(mtx)
         LF = linear_forest_precond(mtx)
 
-    sc = []
+    sc = [1]
     preconds = [None]
 
     # 1) Maximum spanning tree preconditioner
@@ -231,32 +231,40 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     # TODO: factorize the spanning tree conditioner "layer by layer"
     P1 = ST['max_spanning_tree_adj']
     sc.append(s_coverage(mtx, P1))
+    
     M1 = lu_sparse_operator(P1)
     preconds.append(M1)
+
 
     # 2) Minimum spanning tree preconditioner
     P2 = ST['min_spanning_tree_adj']
     sc.append(s_coverage(mtx, P2))
+
     M2 = lu_sparse_operator(P2)
     preconds.append(M2)
+
     
     # 3) Maximum linear forest preconditioner
     # Note: not permuted to tridiagonal system
     sc.append(s_coverage(mtx, LF))
     M3 = lu_sparse_operator(LF)
     preconds.append(M3)
+
     
     # 4) iLU(0)
     sc.append(None)
     M4 = lu_sparse_operator(mtx, inexact=True)
     preconds.append(M4)
 
+
     # 5) Custom preconditioner    
     if custom is not None:
         P5 = mmread(custom)
         sc.append(None)
+
         M5 = lu_sparse_operator(P5)
         preconds.append(M5)
+
 
     # Use logarithmic scale for relative residual (y-scale)
     fig, ax = plt.subplots()
@@ -280,9 +288,9 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
         if i == 2:
             label = 'minST'
         if i == 3:
-            label = 'iLU'
-        if i == 4:
             label = 'maxLF'
+        if i == 4:
+            label = 'iLU'
         if i == 5:
             label = 'custom'
 
