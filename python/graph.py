@@ -9,10 +9,6 @@ import os
 import warnings
 from pathlib import Path
 
-home_dir = os.environ['HOME']
-source_dir = '{}/source/repos/pmst'.format(home_dir)
-os.chdir('{}/python'.format(source_dir))
-
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
