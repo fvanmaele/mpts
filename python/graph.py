@@ -5,7 +5,6 @@
 """
 
 # %%
-import os
 import warnings
 from pathlib import Path
 
@@ -17,65 +16,12 @@ from scipy.io import mmread
 from scipy import sparse
 
 
-# %%
-# TODO: return percentage (of numerical, pattern symmetry)
+# %% Sparse matrix helpers
 def sparse_is_symmetric(mtx, tol=1e-10):
-    """ Check if a matrix is symmetric up to a certain tolerance
+    """ Check a matrix for numerical symmetry
     """
+    # XXX: does networkx use any tolerances when constructing an (undirected) graph from a matrix?
     return (abs(mtx-mtx.T) > tol).nnz == 0
-
-
-def digraph_find_roots(G):
-    """ Find roots (no incoming edges) of directed graph.
-    """
-    assert G.is_directed()
-    roots = []
-
-    for deg in G.in_degree:
-        if deg[1] == 0:
-            roots.append(deg[0])
-
-    return roots, len(roots) == 1
-
-
-def digraph_maximum_spanning_forest(G):
-    """ Find the maximum spanning arboresence for each strongly connected component of a digraph
-    """
-    assert G.is_directed()
-    roots, has_unique_root = digraph_find_roots(G)
-    
-    if has_unique_root:
-        return nx.maximum_spanning_arborescence(G)
-    else:
-        maximum_spanning_forest = nx.DiGraph()
-        strongly_connected_components = nx.strongly_connected_components(G)
-        
-        for component in strongly_connected_components:
-            subgraph = G.subgraph(component)
-            maximum_arborescence = nx.maximum_spanning_arborescence(subgraph, attr='weight')
-            maximum_spanning_forest = nx.compose(maximum_spanning_forest, maximum_arborescence)
-    
-        return maximum_spanning_forest
-
-
-def digraph_minimum_spanning_forest(G):
-    """ Find the minimum spanning arboresence for each strongly connected component of a digraph
-    """
-    assert G.is_directed()
-    roots, has_unique_root = digraph_find_roots(G)
-
-    if has_unique_root:
-        return nx.minimum_spanning_arborescence(G)
-    else:
-        minimum_spanning_forest = nx.DiGraph()
-        strongly_connected_components = nx.strongly_connected_components(G)
-        
-        for component in strongly_connected_components:
-            subgraph = G.subgraph(component)
-            minimum_arborescence = nx.minimum_spanning_arborescence(subgraph, attr='weight')
-            minimum_spanning_forest = nx.compose(minimum_spanning_forest, minimum_arborescence)
-    
-        return minimum_spanning_forest
 
 
 def sparse_mask(mtx, mtx_mask):
@@ -84,6 +30,7 @@ def sparse_mask(mtx, mtx_mask):
     It is assumed that non-zero indices of `mtx_mask` are a subset of 
     non-zero indices of `mtx` (with potentially differing entries).
     """
+    # TODO: do a precondition check on "is a subset of"
     assert mtx.shape == mtx_mask.shape
     assert sparse.issparse(mtx)
     assert sparse.issparse(mtx_mask)
@@ -103,59 +50,6 @@ def sparse_mask(mtx, mtx_mask):
             data.append(v)
 
     return sparse.coo_matrix((data, (rows, cols)))
-
-
-def compute_spanning_trees(mtx, symmetrize=False):
-    """ Compute spanning tree preconditioner for a given sparse matrix.
-    """
-    assert sparse.issparse(mtx)
-    maxST, maxST_pre, minST, minST_pre = None, None, None, None
-
-    # Compute spanning tree on preprocessed matrix. Since we want to compute 
-    # spanning trees based on the highest absolute values (weights), 
-    # `abs(mtx)` is taken over `mtx` in every case.
-    if sparse_is_symmetric(mtx):
-        G_abs = nx.Graph(abs(mtx))
-        maxST_pre = nx.maximum_spanning_tree(G_abs)  # does not contain diagonal
-        minST_pre = nx.minimum_spanning_tree(G_abs)
-    
-    elif symmetrize:
-        G_symm = nx.Graph(abs((mtx + mtx.T) / 2))
-        maxST_pre = nx.maximum_spanning_tree(G_symm)
-        minST_pre = nx.minimum_spanning_tree(G_symm)
-
-    else:
-        G_abs = nx.DiGraph(abs(mtx))
-        maxST_pre = digraph_maximum_spanning_forest(G_abs)
-        minST_pre = digraph_minimum_spanning_forest(G_abs)
-
-    # Construct new sparse matrix based on non-zero weights of spanning tree.
-    # The diagonal is added manually, because `nx` does not include weights
-    # for self-loops.
-    D = sparse.diags(mtx.diagonal())  # DIAgonal
-    maxST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
-    minST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(minST_pre) + D))
-
-    return {
-        'max_spanning_tree': nx.Graph(maxST) if sparse_is_symmetric(maxST) else nx.DiGraph(maxST), 
-        'max_spanning_tree_adj': maxST,
-        'min_spanning_tree': nx.Graph(minST) if sparse_is_symmetric(minST) else nx.DiGraph(minST),
-        'min_spanning_tree_adj': minST
-    }
-
-
-def s_coverage(mtx, mtx_pruned):
-    """ Compute the S-coverage as quality measure for a sparse preconditioner
-    """
-    assert sparse.issparse(mtx)
-    assert sparse.issparse(mtx_pruned)
-    
-    #sc = sparse.linalg.norm(mtx_pruned, ord=1) / sparse.linalg.norm(mtx, ord=1)
-    sc = abs(sparse.csr_matrix(mtx_pruned)).sum() / abs(sparse.csr_matrix(mtx)).sum()
-    if sc > 1:
-        warnings.warn('S coverage is greater than 1')
-
-    return sc
 
 
 def lu_sparse_operator(P, inexact=False):
@@ -185,6 +79,119 @@ class gmres_counter(object):
         self.rk.append(rk)
 
 
+# %% Spanning tree preconditioner
+def s_coverage(mtx, mtx_pruned):
+    """ Compute the S-coverage as quality measure for a sparse preconditioner
+    """
+    assert sparse.issparse(mtx)
+    assert sparse.issparse(mtx_pruned)
+    
+    #sc = sparse.linalg.norm(mtx_pruned, ord=1) / sparse.linalg.norm(mtx, ord=1)
+    sc = abs(sparse.csr_matrix(mtx_pruned)).sum() / abs(sparse.csr_matrix(mtx)).sum()
+    if sc > 1:
+        warnings.warn('S coverage is greater than 1')
+
+    return sc
+
+
+def spanning_tree_precond(mtx, symmetrize=False):
+    """ Compute spanning tree preconditioner for a given sparse matrix.
+    """
+    # Note: networkx uses the actual weights, and not their absolute values, to 
+    # determine the minimum/maximum spanning tree.
+    if symmetrize:
+        G_abs = nx.Graph(abs((mtx + mtx.T) / 2))
+    else:
+        G_abs = nx.Graph(abs(mtx))
+
+    maxST_pre = nx.maximum_spanning_tree(G_abs)  # does not contain diagonal
+    minST_pre = nx.minimum_spanning_tree(G_abs)
+        
+    # Construct new sparse matrix based on non-zero weights of spanning tree.
+    # The diagonal is added manually, because `nx` does not include weights
+    # for self-loops.
+    D = sparse.diags(mtx.diagonal())  # DIAgonal
+    maxST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
+    minST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(minST_pre) + D))
+
+    return {
+        'max_spanning_tree': nx.Graph(maxST), 
+        'max_spanning_tree_adj': maxST,
+        'min_spanning_tree': nx.Graph(minST),
+        'min_spanning_tree_adj': minST
+    }
+
+
+# %% Maximum linear forest preconditioner
+def find_n_factors(mtx, n):
+    """Sequential greedy [0,n]-factor computation on a weighted graph G = (V, E)
+    """
+    assert sparse_is_symmetric(mtx)
+
+    # factors = [[] for _ in range(0, mtx.shape[0])]
+    G = nx.Graph(mtx)  # absolute values for edge weights
+    G.remove_edges_from(nx.selfloop_edges(G))  # ignore self-loops (diagonal elements)
+
+    Gn = nx.Graph()
+    Gn.add_nodes_from(G)
+
+    # Iterate over edges in decreasing (absolute) weight order
+    for v, w, O in sorted(G.edges(data=True), key=lambda t: abs(t[2].get('weight', 1)), reverse=True):
+        assert(v != w)  # sanity check
+
+        # Empty set, one vertex, ..., or n vertices from the neighborhood of a vertex v
+        if Gn.degree[v] < n and Gn.degree[w] < n:
+            Gn.add_edge(v, w, weight=O['weight'])
+
+        # if len(factors[v]) < n and len(factors[w]) < n and v != w:
+        #     factors[v].append(w)  # undirected graph
+        #     factors[w].append(v)
+
+    return Gn  # does not include loops
+
+
+def linear_forest(mtx):
+    assert sparse_is_symmetric(mtx)
+
+    Gn = find_n_factors(mtx, 2)
+    forest = nx.Graph()
+    forest.add_nodes_from(Gn)
+
+    for c in nx.connected_components(Gn):
+        Gc = Gn.subgraph(c).copy()
+        Cb = nx.cycle_basis(Gc)
+        assert len(Cb) < 2
+
+        if len(Cb) == 0:
+            # OK, add to forest
+            forest.update(Gc)
+        else:
+            # Break cycle by removing edge of smallest (absolute) weight
+            e_min = min(Gc.edges(data=True), key=lambda t: abs(t[2].get('weight', 1)))
+            Gc.remove_edge(e_min[0], e_min[1])
+
+            forest.update(Gc)
+
+    # Double check that the linear forest is cycle-free
+    try:
+        nx.find_cycle(forest)
+        raise AssertionError
+    except nx.NetworkXNoCycle:
+        return forest
+    
+
+def linear_forest_precond(mtx, symmetrize=False):
+    # TODO: common logic with spanning_tree_precond()
+    if symmetrize:
+        LF = linear_forest(abs((mtx + mtx.T) / 2))
+    else:
+        LF = linear_forest(abs(mtx))  # Note: abs() already done in linear_forest()
+    
+    D = sparse.diags(mtx.diagonal())  # DIAgonal
+
+    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(LF) + D))
+
+
 # %%
 def run_trial(mtx, x, M=None, maxiter=100, restart=20):
     """ Solve a preconditioned linear system with a fixed number of GMRES iterations
@@ -204,43 +211,58 @@ def run_trial(mtx, x, M=None, maxiter=100, restart=20):
     }
 
 
-def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=False, custom=None):
+def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
-    ST = compute_spanning_trees(mtx, symmetrize=symmetrize)
-    
-    # Maximum spanning tree preconditioner
+    # XXX: move matrix symmetrization here?
+    if not sparse_is_symmetric(mtx):
+        ST = spanning_tree_precond(mtx, symmetrize=True)
+        LF = linear_forest_precond(mtx, symmetrize=True)
+    else:
+        ST = spanning_tree_precond(mtx)
+        LF = linear_forest_precond(mtx)
+
+    sc = []
+    preconds = [None]
+
+    # 1) Maximum spanning tree preconditioner
     # TODO: handle runtime errors (singular preconditioner)
+    # LU (with the correct permutation) applied to a spanning tree has no fill-in.
+    # TODO: factorize the spanning tree conditioner "layer by layer"
     P1 = ST['max_spanning_tree_adj']
-    P1_sc = s_coverage(mtx, P1)
+    sc.append(s_coverage(mtx, P1))
     M1 = lu_sparse_operator(P1)
+    preconds.append(M1)
 
-    # LU (with the correct permutation) applied to a spanning tree does
-    # not result in fill-in.
-    # TODO: factorize the spanning tree conditioner "layer by layer
-
-    # Minimum spanning tree preconditioner
+    # 2) Minimum spanning tree preconditioner
     P2 = ST['min_spanning_tree_adj']
-    P2_sc = s_coverage(mtx, P2)
+    sc.append(s_coverage(mtx, P2))
     M2 = lu_sparse_operator(P2)
+    preconds.append(M2)
+    
+    # 3) Maximum linear forest preconditioner
+    # Note: not permuted to tridiagonal system
+    sc.append(s_coverage(mtx, LF))
+    M3 = lu_sparse_operator(LF)
+    preconds.append(M3)
+    
+    # 4) iLU(0)
+    sc.append(None)
+    M4 = lu_sparse_operator(mtx, inexact=True)
+    preconds.append(M4)
 
-    # iLU(0)
-    M3 = lu_sparse_operator(mtx, inexact=True)
-    sc = [None, P1_sc, P2_sc, None]
-    preconds = [None, M1, M2, M3]
-
-    # Custom preconditioner    
+    # 5) Custom preconditioner    
     if custom is not None:
-        P4 = mmread(custom)
-        M4 = lu_sparse_operator(P4)
-        
-        preconds.append(M4)
+        P5 = mmread(custom)
         sc.append(None)
+        M5 = lu_sparse_operator(P5)
+        preconds.append(M5)
 
     # Use logarithmic scale for relative residual (y-scale)
     fig, ax = plt.subplots()
     fig.set_size_inches(8, 6)
     fig.set_dpi(300)
+    
     ax.set_yscale('log')
     ax.set_xlabel('iterations')
     ax.set_ylabel('relres')
@@ -260,6 +282,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=
         if i == 3:
             label = 'iLU'
         if i == 4:
+            label = 'maxLF'
+        if i == 5:
             label = 'custom'
 
         print("{}, {} iters, s_coverage: {}, iters, relres: {}".format(
@@ -274,7 +298,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, symmetrize=
     
 
 # %%
-def main(mtx_path, seed, restart, maxiter, symmetrize, precond=None):
+def main(mtx_path, seed, restart, maxiter, precond=None):
     np.random.seed(seed)
     mtx   = mmread(mtx_path)
     n, m  = mtx.shape
@@ -287,14 +311,13 @@ def main(mtx_path, seed, restart, maxiter, symmetrize, precond=None):
 
     # TODO: handle runtime errors (singular preconditioner)
     print(f'{title}, rhs: normally distributed')
-    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', 
-                      symmetrize=symmetrize, custom=precond)
+    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', custom=precond)
+    
     print(f'\n{title}, rhs: ones')
-    run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', 
-                      symmetrize=symmetrize, custom=precond)
+    run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', custom=precond)
+    
     print(f'\n{title}, rhs: sine')
-    run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', 
-                      symmetrize=symmetrize, custom=precond)
+    run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', custom=precond)
 
 
 if __name__ == "__main__":
@@ -306,11 +329,9 @@ if __name__ == "__main__":
                         help='dimension of GMRES subspace')
     parser.add_argument('--maxiter', type=int, default=100, 
                         help='number of GMRES iterations')
-    parser.add_argument('--no-symmetrize', dest='symmetrize', action='store_false', 
-                        help='use directed spanning tree algorithms instead of symmetrization (slow)')
     parser.add_argument('--precond', type=str, 
                         help='path to preconditioning matrix, to be solved with SuperLU')
     parser.add_argument('mtx', type=str)
     
     args = parser.parse_args()
-    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.symmetrize, args.precond)
+    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.precond)
