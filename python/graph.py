@@ -226,45 +226,56 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     preconds = [None]
 
     # 1) Maximum spanning tree preconditioner
-    # TODO: handle runtime errors (singular preconditioner)
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
     P1 = ST['max_spanning_tree_adj']
     sc.append(s_coverage(mtx, P1))
+    try:
+        M1 = lu_sparse_operator(P1)
+        preconds.append(M1)
     
-    M1 = lu_sparse_operator(P1)
-    preconds.append(M1)
-
+    except RuntimeError:
+        preconds.append(None)
 
     # 2) Minimum spanning tree preconditioner
     P2 = ST['min_spanning_tree_adj']
     sc.append(s_coverage(mtx, P2))
-
-    M2 = lu_sparse_operator(P2)
-    preconds.append(M2)
-
+    try:
+        M2 = lu_sparse_operator(P2)
+        preconds.append(M2)
+    
+    except RuntimeError:
+        preconds.append(None)
     
     # 3) Maximum linear forest preconditioner
     # Note: not permuted to tridiagonal system
     sc.append(s_coverage(mtx, LF))
-    M3 = lu_sparse_operator(LF)
-    preconds.append(M3)
-
+    try:
+        M3 = lu_sparse_operator(LF)
+        preconds.append(M3)
+    
+    except RuntimeError:
+        preconds.append(None)
     
     # 4) iLU(0)
     sc.append(None)
-    M4 = lu_sparse_operator(mtx, inexact=True)
-    preconds.append(M4)
-
+    try:
+        M4 = lu_sparse_operator(mtx, inexact=True)
+        preconds.append(M4)
+    
+    except RuntimeError:
+        preconds.append(None)
 
     # 5) Custom preconditioner    
     if custom is not None:
         P5 = mmread(custom)
         sc.append(None)
-
-        M5 = lu_sparse_operator(P5)
-        preconds.append(M5)
-
+        try:
+            M5 = lu_sparse_operator(P5)
+            preconds.append(M5)
+    
+        except RuntimeError:
+            preconds.append(None)
 
     # Use logarithmic scale for relative residual (y-scale)
     fig, ax = plt.subplots()
@@ -277,10 +288,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
 
     # Note: preconditioned relres and relres are approximately equal
     for i, M in enumerate(preconds):
-        result = run_trial(mtx, x, M=M, maxiter=maxiter, restart=maxiter)
-        relres = result['rk']
         label = None
-
+        
         if i == 0:
             label = 'unpreconditioned'
         if i == 1:
@@ -293,6 +302,13 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
             label = 'iLU'
         if i == 5:
             label = 'custom'
+
+        if M is None and i > 0:
+            print("{}, s_coverage: {}".format(label, sc[i]))
+            continue
+
+        result = run_trial(mtx, x, M=M, maxiter=maxiter, restart=maxiter)
+        relres = result['rk']
 
         print("{}, {} iters, s_coverage: {}, iters, relres: {}".format(
             label, result['iters'], sc[i], relres[-1]))

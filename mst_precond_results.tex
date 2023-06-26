@@ -5,11 +5,16 @@
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{color}
+\usepackage{footnote}
 \usepackage{graphicx}
 
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+
+\makesavenoteenv{tabular}
+
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
 
@@ -42,6 +47,10 @@ Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Conditi
 \hline 
 \emph{wang1} & 100\% & 80.8\% & No & No & 19,093 & 2,903 & 2.032301e+04\tabularnewline
 \hline 
+\textcolor{red}{ex28}\footnote{Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05 \tabularnewline
+\hline 
+\textcolor{red}{S40PI}\footnote{Preconditioners are singular.} & 100\% & 2.3\% & No & No & 5,341 & 2,182 & 3.851536e+18 \tabularnewline
+\hline 
 \end{tabular}
 
 \section{$S$ coverage}
@@ -64,6 +73,10 @@ Matrix & maxST & minST & maxLF\tabularnewline
 \emph{pde2961} & 0.8742 & 0.6370 & 0.8730\tabularnewline
 \hline 
 \emph{wang1} & 0.8905 & 0.5316 & 0.8795\tabularnewline
+\hline 
+\textcolor{red}{ex28} & \textcolor{red}{0.6588} & \textcolor{red}{0.3239} & \textcolor{red}{0.6349}\tabularnewline
+\hline 
+\textcolor{red}{S40PI} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703}\tabularnewline
 \hline 
 \end{tabular}
 
