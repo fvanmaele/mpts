@@ -1,0 +1,199 @@
+%% LyX 2.3.7 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[landscape]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\usepackage{graphicx}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\@ifundefined{showcaptionsetup}{}{%
+ \PassOptionsToPackage{caption=false}{subfig}}
+\usepackage{subfig}
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\section{Test matrices}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline 
+Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition\tabularnewline
+\hline 
+\hline 
+\emph{add20} & 100\% & 52.7\% & No & No & 13,151 & 2,395 & 1.204710e+04\tabularnewline
+\hline 
+\emph{c-20} & 100\% & 100\% & No & No & 20,445 & 2,921 & 1.049837e+12\tabularnewline
+\hline 
+\emph{cryg2500} & 99.5\% & 0\% & No & No & 12,349 & 2,500 & 3.631392e+16\tabularnewline
+\hline 
+\emph{dw2048} & 98.5\% & 94.8\% & No & No & 10,114 & 2,048 & 2.093210e+03\tabularnewline
+\hline 
+\emph{orsreg\_1} & 100\% & 41.2\% & \textbf{Yes} & No & 14,133 & 2,204 & 6.745269e+03\tabularnewline
+\hline 
+\emph{pde2961} & 100\% & 50.1\% & No & No & 14,585 & 2,961 & 6.424933e+02\tabularnewline
+\hline 
+\emph{wang1} & 100\% & 80.8\% & No & No & 19,093 & 2,903 & 2.032301e+04\tabularnewline
+\hline 
+\end{tabular}
+
+\section{$S$ coverage}
+
+\begin{tabular}{|c|c|c|c|}
+\hline 
+Matrix & maxST & minST & maxLF\tabularnewline
+\hline 
+\hline 
+\emph{add20} & 0.9997 & 0.6480 & 0.9496\tabularnewline
+\hline 
+\emph{c-20} & 0.9998 & 0.9996 & 0.9996\tabularnewline
+\hline 
+\emph{cryg2500} & 0.9064 & 0.5744 & 0.9040\tabularnewline
+\hline 
+\emph{dw2048} & 0.9437 & 0.6371 & 0.9423\tabularnewline
+\hline 
+\emph{orsreg\_1} & 0.9954 & 0.5017 & 0.9949\tabularnewline
+\hline 
+\emph{pde2961} & 0.8742 & 0.6370 & 0.8730\tabularnewline
+\hline 
+\emph{wang1} & 0.8905 & 0.5316 & 0.8795\tabularnewline
+\hline 
+\end{tabular}
+
+\section{Results}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/add20_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/add20_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/add20_xsine}}%
+\end{minipage}
+
+\caption{add20}
+
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/c-20_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/c-20_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/c-20_xsine}}%
+\end{minipage}
+
+\caption{c-20}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/cryg2500_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/cryg2500_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/cryg2500_xsine}}%
+\end{minipage}
+
+\caption{cryg2500}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/dw2048_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/dw2048_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/dw2048_xsine}}%
+\end{minipage}
+
+\caption{dw2048}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/orsreg_1_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/orsreg_1_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/orsreg_1_xsine}}%
+\end{minipage}
+
+\caption{orsreg\_1}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/pde2961_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/pde2961_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/pde2961_xsine}}%
+\end{minipage}
+
+\caption{pde2961}
+\end{figure}
+
+\begin{figure}[h]
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/wang1_xones}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/wang1_xrandn}
+
+}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.33\columnwidth}%
+\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/wang1_xsine}}%
+\end{minipage}
+
+\caption{wang1}
+\end{figure}
+
+\end{document}
