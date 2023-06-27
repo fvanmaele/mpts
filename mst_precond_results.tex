@@ -6,6 +6,8 @@
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
 \usepackage{color}
+\usepackage{array}
+\usepackage{multirow}
 \usepackage{footnote}
 \usepackage{graphicx}
 
@@ -65,6 +67,8 @@ Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Conditi
 \hline 
 \textcolor{red}{ex28}\footnote{Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05 \tabularnewline
 \hline 
+\textcolor{red}{gre512}\footnote{Preconditioners are singular, except for iLU(0).} & 0\% & 0\% & No & No & 1,976 & 512 & 1.58318e+02\tabularnewline
+\hline 
 \textcolor{red}{S40PI}\footnote{Preconditioners are singular.} & 100\% & 2.3\% & No & No & 5,341 & 2,182 & 3.851536e+18 \tabularnewline
 \hline 
 \end{tabular}
@@ -72,54 +76,58 @@ Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Conditi
 \section{$S$ coverage, degree\protect\footnote{$S$ degree := $\max_{i\in[n]}\left|\{j\mid A_{ij}\protect\neq0\}\right|-1$}}
 
 \begin{minipage}[t]{0.5\columnwidth}%
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|}
 \hline 
-Matrix & maxST & minST & maxLF\tabularnewline
+Matrix & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 0.9997 & 0.6480 & 0.9496\tabularnewline
+\emph{add20} & 0.5686 & 0.5698 & 0.9496 & 0.9997 & 0.6480\tabularnewline
 \hline 
-\emph{c-20} & 0.9998 & 0.9996 & 0.9996\tabularnewline
+\emph{c-20} & 0.9994 & 0.9994 & 0.9996 & 0.9998 & 0.9996\tabularnewline
 \hline 
-\emph{cryg2500} & 0.9064 & 0.5744 & 0.9040\tabularnewline
+\emph{cryg2500} & 0.5038 & 0.8796 & 0.9040 & 0.9064 & 0.5744\tabularnewline
 \hline 
-\emph{dw2048} & 0.9437 & 0.6371 & 0.9423\tabularnewline
+\emph{dw2048} & 0.5808 & 0.9140 & 0.9423 & 0.9437 & 0.6371\tabularnewline
 \hline 
-\emph{orsreg\_1} & 0.9954 & 0.5017 & 0.9949\tabularnewline
+\emph{orsreg\_1} & 0.5001 & 0.5003 & 0.9949 & 0.9954 & 0.5017\tabularnewline
 \hline 
-\emph{pde2961} & 0.8742 & 0.6370 & 0.8730\tabularnewline
+\emph{pde2961} & 0.5027 & 0.6310 & 0.8730 & 0.8742 & 0.6370\tabularnewline
 \hline 
-\emph{wang1} & 0.8905 & 0.5316 & 0.8795\tabularnewline
+\emph{wang1} & 0.5008 & 0.7422 & 0.8795 & 0.8905 & 0.5316\tabularnewline
 \hline 
-\textcolor{red}{ex28} & \textcolor{red}{0.6588} & \textcolor{red}{0.3239} & \textcolor{red}{0.6349}\tabularnewline
+\textcolor{red}{ex28} & 0.3236 & 0.3311 & 0.6349 & 0.6588 & 0.3239\tabularnewline
 \hline 
-\textcolor{red}{S40PI} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703}\tabularnewline
+\textcolor{red}{gre512} & 0.1797 & 0.1816 & 0.4165 & 0.4292 & 0.4292\tabularnewline
+\hline 
+\textcolor{red}{S40PI} & 0.0486 & 0.9231 & 0.0703 & 0.0703 & 0.0703\tabularnewline
 \hline 
 \end{tabular}%
 \end{minipage}\hfill{}%
 \begin{minipage}[t]{0.5\columnwidth}%
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|}
 \hline 
-Matrix & maxST & minST & maxLF\tabularnewline
+Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 11 & 27 & 2\tabularnewline
-\hline 
-\emph{c-20} & 148 & 40 & 2\tabularnewline
-\hline 
-\emph{cryg2500} & 3 & 4 & 2\tabularnewline
-\hline 
-\emph{dw2048} & 5 & 4 & 2\tabularnewline
-\hline 
-\emph{orsreg\_1} & 3 & 4 & 2\tabularnewline
-\hline 
-\emph{pde2961} & 3 & 3 & 2\tabularnewline
-\hline 
-\emph{wang1} & 5 & 6 & 2\tabularnewline
-\hline 
-\textcolor{red}{ex28} & 5 & 7 & 2\tabularnewline
-\hline 
-\textcolor{red}{S40PI} & 2 & 2 & 2\tabularnewline
+\emph{add20} & 83 & \multirow{10}{*}{0} & \multirow{10}{*}{2} & \multirow{10}{*}{2} & 11 & 27\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{c-20} & 157 &  &  &  & 148 & 40\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{cryg2500} & 4 &  &  &  & 3 & 4\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{dw2048} & 7 &  &  &  & 5 & 4\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{orsreg\_1} & 6 &  &  &  & 3 & 4\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{pde2961} & 4 &  &  &  & 3 & 3\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\emph{wang1} & 6 &  &  &  & 5 & 6\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\textcolor{red}{ex28} & 61 &  &  &  & 5 & 7\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\textcolor{red}{gre512} & 4 &  &  &  & 2 & 2\tabularnewline
+\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
+\textcolor{red}{S40PI} & 6 &  &  &  & 2 & 2\tabularnewline
 \hline 
 \end{tabular}%
 \end{minipage}

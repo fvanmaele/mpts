@@ -88,7 +88,7 @@ Test matrices
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="10" columns="8">
+<lyxtabular version="3" rows="11" columns="8">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -800,6 +800,92 @@ No
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+gre512
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Preconditioners are singular, except for iLU(0).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0%
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1,976
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+512
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.58318e+02
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -937,8 +1023,10 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="10" columns="4">
+<lyxtabular version="3" rows="11" columns="6">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -957,7 +1045,7 @@ Matrix
 \begin_inset Text
 
 \begin_layout Plain Layout
-maxST
+jacobi
 \end_layout
 
 \end_inset
@@ -966,7 +1054,25 @@ maxST
 \begin_inset Text
 
 \begin_layout Plain Layout
-minST
+tridiag
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+maxLF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+maxST
 \end_layout
 
 \end_inset
@@ -975,7 +1081,7 @@ minST
 \begin_inset Text
 
 \begin_layout Plain Layout
-maxLF
+minST
 \end_layout
 
 \end_inset
@@ -997,7 +1103,7 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9997
+0.5686
 \end_layout
 
 \end_inset
@@ -1006,7 +1112,25 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.6480
+0.5698
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9496
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9997
 \end_layout
 
 \end_inset
@@ -1015,7 +1139,7 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9496
+0.6480
 \end_layout
 
 \end_inset
@@ -1037,7 +1161,16 @@ c-20
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9998
+0.9994
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9994
 \end_layout
 
 \end_inset
@@ -1047,6 +1180,15 @@ c-20
 
 \begin_layout Plain Layout
 0.9996
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9998
 \end_layout
 
 \end_inset
@@ -1077,7 +1219,7 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9064
+0.5038
 \end_layout
 
 \end_inset
@@ -1086,7 +1228,25 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.5744
+0.8796
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9040
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9064
 \end_layout
 
 \end_inset
@@ -1095,7 +1255,7 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9040
+0.5744
 \end_layout
 
 \end_inset
@@ -1117,7 +1277,7 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9437
+0.5808
 \end_layout
 
 \end_inset
@@ -1126,7 +1286,25 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.6371
+0.9140
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9423
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9437
 \end_layout
 
 \end_inset
@@ -1135,7 +1313,7 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9423
+0.6371
 \end_layout
 
 \end_inset
@@ -1157,7 +1335,7 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9954
+0.5001
 \end_layout
 
 \end_inset
@@ -1166,7 +1344,25 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.5017
+0.5003
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9949
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9954
 \end_layout
 
 \end_inset
@@ -1175,7 +1371,7 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.9949
+0.5017
 \end_layout
 
 \end_inset
@@ -1197,7 +1393,7 @@ pde2961
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.8742
+0.5027
 \end_layout
 
 \end_inset
@@ -1206,7 +1402,25 @@ pde2961
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.6370
+0.6310
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8730
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8742
 \end_layout
 
 \end_inset
@@ -1215,7 +1429,7 @@ pde2961
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.8730
+0.6370
 \end_layout
 
 \end_inset
@@ -1237,7 +1451,7 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.8905
+0.5008
 \end_layout
 
 \end_inset
@@ -1246,7 +1460,25 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.5316
+0.7422
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8795
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8905
 \end_layout
 
 \end_inset
@@ -1255,7 +1487,7 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-0.8795
+0.5316
 \end_layout
 
 \end_inset
@@ -1277,9 +1509,7 @@ ex28
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\color red
-0.6588
+0.3236
 \end_layout
 
 \end_inset
@@ -1288,9 +1518,25 @@ ex28
 \begin_inset Text
 
 \begin_layout Plain Layout
+0.3311
+\end_layout
 
-\color red
-0.3239
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6349
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6588
 \end_layout
 
 \end_inset
@@ -1299,9 +1545,65 @@ ex28
 \begin_inset Text
 
 \begin_layout Plain Layout
+0.3239
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \color red
-0.6349
+gre512
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1797
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1816
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4165
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4292
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4292
 \end_layout
 
 \end_inset
@@ -1323,8 +1625,24 @@ S40PI
 \begin_inset Text
 
 \begin_layout Plain Layout
+0.0486
+\end_layout
 
-\color red
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.9231
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 0.0703
 \end_layout
 
@@ -1334,8 +1652,6 @@ S40PI
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\color red
 0.0703
 \end_layout
 
@@ -1345,8 +1661,6 @@ S40PI
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\color red
 0.0703
 \end_layout
 
@@ -1387,8 +1701,11 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="10" columns="4">
+<lyxtabular version="3" rows="11" columns="7">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -1407,7 +1724,7 @@ Matrix
 \begin_inset Text
 
 \begin_layout Plain Layout
-maxST
+orig
 \end_layout
 
 \end_inset
@@ -1416,7 +1733,34 @@ maxST
 \begin_inset Text
 
 \begin_layout Plain Layout
-minST
+jacobi
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tridiag
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+maxLF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+maxST
 \end_layout
 
 \end_inset
@@ -1425,7 +1769,7 @@ minST
 \begin_inset Text
 
 \begin_layout Plain Layout
-maxLF
+minST
 \end_layout
 
 \end_inset
@@ -1447,7 +1791,34 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-11
+83
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
 \end_layout
 
 \end_inset
@@ -1456,7 +1827,7 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-27
+11
 \end_layout
 
 \end_inset
@@ -1465,7 +1836,7 @@ add20
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+27
 \end_layout
 
 \end_inset
@@ -1487,7 +1858,34 @@ c-20
 \begin_inset Text
 
 \begin_layout Plain Layout
-148
+157
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1496,7 +1894,7 @@ c-20
 \begin_inset Text
 
 \begin_layout Plain Layout
-40
+148
 \end_layout
 
 \end_inset
@@ -1505,7 +1903,7 @@ c-20
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+40
 \end_layout
 
 \end_inset
@@ -1527,7 +1925,34 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-3
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1536,7 +1961,7 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-4
+3
 \end_layout
 
 \end_inset
@@ -1545,7 +1970,7 @@ cryg2500
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+4
 \end_layout
 
 \end_inset
@@ -1567,7 +1992,34 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-5
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1576,7 +2028,7 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-4
+5
 \end_layout
 
 \end_inset
@@ -1585,7 +2037,7 @@ dw2048
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+4
 \end_layout
 
 \end_inset
@@ -1607,7 +2059,34 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-3
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1616,7 +2095,7 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-4
+3
 \end_layout
 
 \end_inset
@@ -1625,7 +2104,7 @@ orsreg_1
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+4
 \end_layout
 
 \end_inset
@@ -1647,7 +2126,34 @@ pde2961
 \begin_inset Text
 
 \begin_layout Plain Layout
-3
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1665,7 +2171,7 @@ pde2961
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+3
 \end_layout
 
 \end_inset
@@ -1687,7 +2193,34 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-5
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1696,7 +2229,7 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-6
+5
 \end_layout
 
 \end_inset
@@ -1705,7 +2238,7 @@ wang1
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+6
 \end_layout
 
 \end_inset
@@ -1727,7 +2260,34 @@ ex28
 \begin_inset Text
 
 \begin_layout Plain Layout
-5
+61
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -1736,7 +2296,74 @@ ex28
 \begin_inset Text
 
 \begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+gre512
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
 \end_layout
 
 \end_inset
@@ -1767,7 +2394,34 @@ S40PI
 \begin_inset Text
 
 \begin_layout Plain Layout
-2
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset

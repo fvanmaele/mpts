@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 from scipy.io import mmread
 from scipy import sparse
-
+from scipy.special import seterr
 
 # %% Sparse matrix helpers
 def sparse_is_symmetric(mtx, tol=1e-10):
@@ -234,9 +234,35 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
         ST = spanning_tree_precond(mtx)
         LF = linear_forest_precond(mtx)
 
+    # Unpreconditioned system
     sc = [1]
     sd = [s_degree(mtx)]
     preconds = [None]
+
+    # Jacobi preconditioner
+    PJ = mtx.diagonal()
+    sc.append(s_coverage(mtx, sparse.diags(PJ)))
+    sd.append(s_degree(sparse.diags(PJ)))
+
+    try:
+        MJ = sparse.diags(1. / PJ, format='csc')
+        preconds.append(MJ)
+
+    except FloatingPointError:
+        preconds.append(None)
+
+    # Tridiagonal preconditioner
+    diagonals = [mtx.diagonal(k=-1), mtx.diagonal(k=0), mtx.diagonal(k=1)]
+    PT = sparse.diags(diagonals, [-1, 0, 1])
+    sc.append(s_coverage(mtx, PT))
+    sd.append(s_degree(PT))
+
+    try:
+        MT = lu_sparse_operator(PT)
+        preconds.append(MT)
+    
+    except RuntimeError:
+        preconds.append(None)
 
     # 1) Maximum spanning tree preconditioner
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
@@ -287,8 +313,12 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     except RuntimeError:
         preconds.append(None)
 
+    # Note: preconditioned relres and relres are approximately equal
+    labels = ['unpreconditioned', 'jacobi', 'tridiag', 'maxST', 'minST', 'maxLF', 'iLU']
+
     # 5) Custom preconditioner    
     if custom is not None:
+        labels.append('custom')
         P5 = mmread(custom)
         sc.append(None)
         sd.append(s_degree(P5))
@@ -309,22 +339,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     ax.set_xlabel('iterations')
     ax.set_ylabel('relres')
 
-    # Note: preconditioned relres and relres are approximately equal
-    for i, M in enumerate(preconds):
-        label = None
-        
-        if i == 0:
-            label = 'unpreconditioned'
-        if i == 1:
-            label = 'maxST'
-        if i == 2:
-            label = 'minST'
-        if i == 3:
-            label = 'maxLF'
-        if i == 4:
-            label = 'iLU'
-        if i == 5:
-            label = 'custom'
+    for i, label in enumerate(labels):
+        M = preconds[i]
 
         if M is None and i > 0:
             print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
@@ -346,6 +362,9 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
 
 # %%
 def main(mtx_path, seed, restart, maxiter, precond=None):
+    seterr(all='raise')
+    np.seterr(all='raise')
+    
     np.random.seed(seed)
     mtx   = mmread(mtx_path)
     n, m  = mtx.shape
