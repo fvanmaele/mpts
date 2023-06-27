@@ -15,6 +15,22 @@
 
 \makesavenoteenv{tabular}
 
+%% Special footnote code from the package 'stblftnt.sty'
+%% Author: Robin Fairbairns -- Last revised Dec 13 1996
+\let\SF@@footnote\footnote
+\def\footnote{\ifx\protect\@typeset@protect
+    \expandafter\SF@@footnote
+  \else
+    \expandafter\SF@gobble@opt
+  \fi
+}
+\expandafter\def\csname SF@gobble@opt \endcsname{\@ifnextchar[%]
+  \SF@gobble@twobracket
+  \@gobble
+}
+\edef\SF@gobble@opt{\noexpand\protect
+  \expandafter\noexpand\csname SF@gobble@opt \endcsname}
+\def\SF@gobble@twobracket[#1]#2{}
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
 
@@ -53,8 +69,9 @@ Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Conditi
 \hline 
 \end{tabular}
 
-\section{$S$ coverage}
+\section{$S$ coverage, degree\protect\footnote{$S$ degree := $\max_{i\in[n]}\left|\{j\mid A_{ij}\protect\neq0\}\right|-1$}}
 
+\begin{minipage}[t]{0.5\columnwidth}%
 \begin{tabular}{|c|c|c|c|}
 \hline 
 Matrix & maxST & minST & maxLF\tabularnewline
@@ -78,7 +95,34 @@ Matrix & maxST & minST & maxLF\tabularnewline
 \hline 
 \textcolor{red}{S40PI} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703} & \textcolor{red}{0.0703}\tabularnewline
 \hline 
-\end{tabular}
+\end{tabular}%
+\end{minipage}\hfill{}%
+\begin{minipage}[t]{0.5\columnwidth}%
+\begin{tabular}{|c|c|c|c|}
+\hline 
+Matrix & maxST & minST & maxLF\tabularnewline
+\hline 
+\hline 
+\emph{add20} & 11 & 27 & 2\tabularnewline
+\hline 
+\emph{c-20} & 148 & 40 & 2\tabularnewline
+\hline 
+\emph{cryg2500} & 3 & 4 & 2\tabularnewline
+\hline 
+\emph{dw2048} & 5 & 4 & 2\tabularnewline
+\hline 
+\emph{orsreg\_1} & 3 & 4 & 2\tabularnewline
+\hline 
+\emph{pde2961} & 3 & 3 & 2\tabularnewline
+\hline 
+\emph{wang1} & 5 & 6 & 2\tabularnewline
+\hline 
+\textcolor{red}{ex28} & 5 & 7 & 2\tabularnewline
+\hline 
+\textcolor{red}{S40PI} & 2 & 2 & 2\tabularnewline
+\hline 
+\end{tabular}%
+\end{minipage}
 
 \section{Results}
 

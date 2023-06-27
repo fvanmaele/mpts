@@ -57,8 +57,7 @@ def lu_sparse_operator(P, inexact=False):
     """
     assert sparse.issparse(P)
     nrows, ncols = P.shape
-    
-    # TODO: handle runtime errors (singular preconditioner)
+
     if inexact:
         M = sparse.linalg.splu(P)
     else:
@@ -79,14 +78,12 @@ class gmres_counter(object):
         self.rk.append(rk)
 
 
-# %% Spanning tree preconditioner
 def s_coverage(mtx, mtx_pruned):
     """ Compute the S-coverage as quality measure for a sparse preconditioner
     """
     assert sparse.issparse(mtx)
     assert sparse.issparse(mtx_pruned)
     
-    #sc = sparse.linalg.norm(mtx_pruned, ord=1) / sparse.linalg.norm(mtx, ord=1)
     sc = abs(sparse.csr_matrix(mtx_pruned)).sum() / abs(sparse.csr_matrix(mtx)).sum()
     if sc > 1:
         warnings.warn('S coverage is greater than 1')
@@ -94,6 +91,21 @@ def s_coverage(mtx, mtx_pruned):
     return sc
 
 
+def s_degree(mtx):
+    """Compute the maximum degree for the graph of an adjacency matrix.
+    
+    Self-loops (diagonal elements) are ignored.
+    """
+    assert sparse.issparse(mtx)
+    
+    M = sparse.csr_matrix(mtx - sparse.diags(mtx.diagonal()))
+    M_deg = [M.getrow(i).getnnz() for i in range(M.shape[0])]
+
+    return max(M_deg)
+
+
+# %% Spanning tree preconditioner
+# TODO: allow setting maximum degree (use find_n_factors with n)
 def spanning_tree_precond(mtx, symmetrize=False):
     """ Compute spanning tree preconditioner for a given sparse matrix.
     """
@@ -223,6 +235,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
         LF = linear_forest_precond(mtx)
 
     sc = [1]
+    sd = [s_degree(mtx)]
     preconds = [None]
 
     # 1) Maximum spanning tree preconditioner
@@ -230,6 +243,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     # TODO: factorize the spanning tree conditioner "layer by layer"
     P1 = ST['max_spanning_tree_adj']
     sc.append(s_coverage(mtx, P1))
+    sd.append(s_degree(P1))
+    
     try:
         M1 = lu_sparse_operator(P1)
         preconds.append(M1)
@@ -240,6 +255,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     # 2) Minimum spanning tree preconditioner
     P2 = ST['min_spanning_tree_adj']
     sc.append(s_coverage(mtx, P2))
+    sd.append(s_degree(P2))
+    
     try:
         M2 = lu_sparse_operator(P2)
         preconds.append(M2)
@@ -250,6 +267,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     # 3) Maximum linear forest preconditioner
     # Note: not permuted to tridiagonal system
     sc.append(s_coverage(mtx, LF))
+    sd.append(s_degree(LF))
+    
     try:
         M3 = lu_sparse_operator(LF)
         preconds.append(M3)
@@ -259,6 +278,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     
     # 4) iLU(0)
     sc.append(None)
+    sd.append(None)
+    
     try:
         M4 = lu_sparse_operator(mtx, inexact=True)
         preconds.append(M4)
@@ -270,6 +291,8 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     if custom is not None:
         P5 = mmread(custom)
         sc.append(None)
+        sd.append(s_degree(P5))
+
         try:
             M5 = lu_sparse_operator(P5)
             preconds.append(M5)
@@ -304,14 +327,14 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
             label = 'custom'
 
         if M is None and i > 0:
-            print("{}, s_coverage: {}".format(label, sc[i]))
+            print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
             continue
 
         result = run_trial(mtx, x, M=M, maxiter=maxiter, restart=maxiter)
         relres = result['rk']
 
-        print("{}, {} iters, s_coverage: {}, iters, relres: {}".format(
-            label, result['iters'], sc[i], relres[-1]))
+        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
+            label, result['iters'], sc[i], sd[i], relres[-1]))
 
         # Plot results for specific preconditioner
         ax.plot(range(1, len(relres)+1), relres, label=label)
