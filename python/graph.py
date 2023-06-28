@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 from scipy.io import mmread
 from scipy import sparse
-from scipy.special import seterr
+
 
 # %% Sparse matrix helpers
 def sparse_is_symmetric(mtx, tol=1e-10):
@@ -116,8 +116,8 @@ def spanning_tree_precond(mtx, symmetrize=False):
     else:
         G_abs = nx.Graph(abs(mtx))
 
-    maxST_pre = nx.maximum_spanning_tree(G_abs)  # does not contain diagonal
-    minST_pre = nx.minimum_spanning_tree(G_abs)
+    maxST_pre = nx.maximum_spanning_tree(G_abs)  # maximum spanning forest (if not connected)
+    minST_pre = nx.minimum_spanning_tree(G_abs)  # minimum spanning forest
         
     # Construct new sparse matrix based on non-zero weights of spanning tree.
     # The diagonal is added manually, because `nx` does not include weights
@@ -362,7 +362,6 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
 
 # %%
 def main(mtx_path, seed, restart, maxiter, precond=None):
-    seterr(all='raise')
     np.seterr(all='raise')
     
     np.random.seed(seed)
