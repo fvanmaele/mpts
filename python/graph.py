@@ -205,7 +205,7 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     residuals = []
 
     # Compare relative residual in each iteration
-    x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=0, restrt=k_max_inner, maxiter=k_max_outer,
+    x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=1e-15, restrt=k_max_inner, maxiter=k_max_outer,
                                   callback=counter, residuals=residuals)
     relres = np.array(residuals) / np.linalg.norm(b)
 
@@ -257,7 +257,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
         preconds.append(None)
 
 
-    # 1) Maximum spanning tree preconditioner
+    # Maximum spanning tree preconditioner
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
     if not mtx_is_symmetric:
@@ -275,7 +275,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
         preconds.append(None)
 
     
-    # 2) Maximum linear forest preconditioner
+    # Maximum linear forest preconditioner
     # Note: not permuted to tridiagonal system
     if not mtx_is_symmetric:
         LF = linear_forest_precond(mtx, symmetrize=True)
@@ -292,7 +292,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
         preconds.append(None)
     
 
-    # 3) iLU(0)
+    # iLU(0)
     sc.append(None)
     sd.append(None)
     labels.append('iLU')
@@ -303,7 +303,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
         preconds.append(None)
 
 
-    # 4) Custom preconditioner    
+    # Custom preconditioner    
     if custom is not None:
         PC = mmread(custom)
 
@@ -335,12 +335,14 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
         result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
         relres = result['rk']
-        sols   = result['xk']
-        x_norm = np.linalg.norm(x)
-        fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
 
-        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-            label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
+        # TODO: forward relative error in efficient way
+        #sols   = result['xk']
+        #x_norm = np.linalg.norm(x)
+        #fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
+
+        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
+            label, result['iters'], sc[i], sd[i], relres[-1]))
 
         # Plot results for specific preconditioner
         # TODO: subplot for relres (left) and forward relative error (right)
@@ -367,7 +369,7 @@ def main(mtx_path, seed, max_outer, max_inner, precond=None):
 
     print(f'{title}, rhs: normally distributed')
     run_trial_precond(mtx, x1, k_max_outer=max_outer, k_max_inner=max_inner, 
-                      title_x='randn', custom=precond)
+                      title=title, title_x='randn', custom=precond)
     
     print(f'\n{title}, rhs: ones')
     run_trial_precond(mtx, x2, k_max_outer=max_outer, k_max_inner=max_inner, 
