@@ -116,22 +116,13 @@ def spanning_tree_precond(mtx, symmetrize=False):
     else:
         G_abs = nx.Graph(abs(mtx))
 
-    maxST_pre = nx.maximum_spanning_tree(G_abs)  # maximum spanning forest (if not connected)
-    minST_pre = nx.minimum_spanning_tree(G_abs)  # minimum spanning forest
-
     # Construct new sparse matrix based on non-zero weights of spanning tree.
     # The diagonal is added manually, because `nx` does not include weights
     # for self-loops.
     D = sparse.diags(mtx.diagonal())  # DIAgonal
-    maxST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
-    minST = sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(minST_pre) + D))
-
-    return {
-        'max_spanning_tree': nx.Graph(maxST), 
-        'max_spanning_tree_adj': maxST,
-        'min_spanning_tree': nx.Graph(minST),
-        'min_spanning_tree_adj': minST
-    }
+    maxST_pre = nx.maximum_spanning_tree(G_abs)  # maximum spanning forest (if not connected)
+    
+    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
 
 
 # %% Maximum linear forest preconditioner
@@ -230,112 +221,103 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
 def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
-    # XXX: move matrix symmetrization here?
-    if not sparse_is_symmetric(mtx):
-        ST = spanning_tree_precond(mtx, symmetrize=True)
-        LF = linear_forest_precond(mtx, symmetrize=True)
-    else:
-        ST = spanning_tree_precond(mtx)
-        LF = linear_forest_precond(mtx)
+    mtx_is_symmetric = sparse_is_symmetric(mtx)
 
     # Unpreconditioned system
     sc = [1]
     sd = [s_degree(mtx)]
     preconds = [None]
+    labels = ['unpreconditioned']
 
+    
     # Jacobi preconditioner
     PJ = mtx.diagonal()
+
     sc.append(s_coverage(mtx, sparse.diags(PJ)))
     sd.append(s_degree(sparse.diags(PJ)))
+    labels.append('jacobi')
 
     try:
-        MJ = sparse.diags(1. / PJ, format='csc')
-        preconds.append(MJ)
-
+        preconds.append(sparse.diags(1. / PJ, format='csc'))
     except FloatingPointError:
         preconds.append(None)
+
 
     # Tridiagonal preconditioner
     diagonals = [mtx.diagonal(k=-1), mtx.diagonal(k=0), mtx.diagonal(k=1)]
     PT = sparse.diags(diagonals, [-1, 0, 1])
+    
     sc.append(s_coverage(mtx, PT))
     sd.append(s_degree(PT))
+    labels.append('tridiag')
 
     try:
-        MT = lu_sparse_operator(PT)
-        preconds.append(MT)
-    
+        preconds.append(lu_sparse_operator(PT))
     except RuntimeError:
         preconds.append(None)
+
 
     # 1) Maximum spanning tree preconditioner
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
-    P1 = ST['max_spanning_tree_adj']
-    sc.append(s_coverage(mtx, P1))
-    sd.append(s_degree(P1))
+    if not mtx_is_symmetric:
+        ST = spanning_tree_precond(mtx, symmetrize=True)
+    else:
+        ST = spanning_tree_precond(mtx)
     
+    sc.append(s_coverage(mtx, ST))
+    sd.append(s_degree(ST))
+    labels.append('maxST')
+
     try:
-        M1 = lu_sparse_operator(P1)
-        preconds.append(M1)
-    
+        preconds.append(lu_sparse_operator(ST))
     except RuntimeError:
         preconds.append(None)
 
-    # 2) Minimum spanning tree preconditioner
-    P2 = ST['min_spanning_tree_adj']
-    sc.append(s_coverage(mtx, P2))
-    sd.append(s_degree(P2))
     
-    try:
-        M2 = lu_sparse_operator(P2)
-        preconds.append(M2)
-    
-    except RuntimeError:
-        preconds.append(None)
-    
-    # 3) Maximum linear forest preconditioner
+    # 2) Maximum linear forest preconditioner
     # Note: not permuted to tridiagonal system
+    if not mtx_is_symmetric:
+        LF = linear_forest_precond(mtx, symmetrize=True)
+    else:
+        LF = linear_forest_precond(mtx)
+
     sc.append(s_coverage(mtx, LF))
     sd.append(s_degree(LF))
-    
+    labels.append('maxLF')
+
     try:
-        M3 = lu_sparse_operator(LF)
-        preconds.append(M3)
-    
+        preconds.append(lu_sparse_operator(LF))    
     except RuntimeError:
         preconds.append(None)
     
-    # 4) iLU(0)
+
+    # 3) iLU(0)
     sc.append(None)
     sd.append(None)
-    
+    labels.append('iLU')
+
     try:
-        M4 = lu_sparse_operator(mtx, inexact=True)
-        preconds.append(M4)
-    
+        preconds.append(lu_sparse_operator(mtx, inexact=True))
     except RuntimeError:
         preconds.append(None)
 
-    # Note: preconditioned relres and relres are approximately equal
-    labels = ['unpreconditioned', 'jacobi', 'tridiag', 'maxST', 'minST', 'maxLF', 'iLU']
 
-    # 5) Custom preconditioner    
+    # 4) Custom preconditioner    
     if custom is not None:
-        labels.append('custom')
-        P5 = mmread(custom)
-        sc.append(None)
-        sd.append(s_degree(P5))
+        PC = mmread(custom)
 
+        sc.append(None)
+        sd.append(s_degree(PC))
+        labels.append('custom')
+        
         try:
-            M5 = lu_sparse_operator(P5)
-            preconds.append(M5)
-    
+            preconds.append(lu_sparse_operator(PC))    
         except RuntimeError:
             preconds.append(None)
 
+
     # Use logarithmic scale for relative residual (y-scale)
-    # TODO: subplot for relres (left) and forward relative error (right)
     fig, ax = plt.subplots()
     fig.set_size_inches(8, 6)
     fig.set_dpi(300)
@@ -354,11 +336,14 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
         result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
         relres = result['rk']
         sols   = result['xk']
+        x_norm = np.linalg.norm(x)
+        fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
 
-        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
-            label, result['iters'], sc[i], sd[i], relres[-1]))
+        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+            label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
 
         # Plot results for specific preconditioner
+        # TODO: subplot for relres (left) and forward relative error (right)
         ax.plot(range(1, len(relres)+1), relres, label=label)
 
     ax.legend(title=f'{title}, x{title_x}')
