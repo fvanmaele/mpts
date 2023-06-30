@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 from scipy.io import mmread
 from scipy import sparse
-
+from pyamg import krylov
 
 # %% Sparse matrix helpers
 def sparse_is_symmetric(mtx, tol=1e-10):
@@ -67,15 +67,15 @@ def lu_sparse_operator(P, inexact=False):
 
 
 class gmres_counter(object):
-    """ Class for counting the number of (inner) GMRES iterations
+    """ Class for counting the number of GMRES iterations (inner+outer)
     """
     def __init__(self):
         self.niter = 0
-        self.rk = []  # relative residuals
+        self.xk = []  # relative residuals
 
-    def __call__(self, rk=None):
+    def __call__(self, xk=None):
         self.niter += 1
-        self.rk.append(rk)
+        self.xk.append(xk)
 
 
 def s_coverage(mtx, mtx_pruned):
@@ -118,7 +118,7 @@ def spanning_tree_precond(mtx, symmetrize=False):
 
     maxST_pre = nx.maximum_spanning_tree(G_abs)  # maximum spanning forest (if not connected)
     minST_pre = nx.minimum_spanning_tree(G_abs)  # minimum spanning forest
-        
+
     # Construct new sparse matrix based on non-zero weights of spanning tree.
     # The diagonal is added manually, because `nx` does not include weights
     # for self-loops.
@@ -205,25 +205,29 @@ def linear_forest_precond(mtx, symmetrize=False):
 
 
 # %%
-def run_trial(mtx, x, M=None, maxiter=100, restart=20):
-    """ Solve a preconditioned linear system with a fixed number of GMRES iterations
+def run_trial(mtx, x, M, k_max_outer, k_max_inner):
+    """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
     """
     # Right-hand side from exact solution
     b = mtx * x
     counter = gmres_counter()
-    
-    # Compare (preconditioned) relative residual in each iteration
-    x_gmres, ec = sparse.linalg.gmres(mtx, b, M=M, callback=counter, tol=0, atol=0,
-                                      maxiter=maxiter, restart=restart)
+    residuals = []
+
+    # Compare relative residual in each iteration
+    x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=0, restrt=k_max_inner, maxiter=k_max_outer,
+                                  callback=counter, residuals=residuals)
+    relres = np.array(residuals) / np.linalg.norm(b)
+
     return { 
-        'x': x,
-        'rk': counter.rk,
-        'exit_code': ec, 
+        'x':  x,
+        'xk': counter.xk,
+        'rk': relres,
+        'exit_code': info, 
         'iters': counter.niter 
     }
 
 
-def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None):
+def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
     # XXX: move matrix symmetrization here?
@@ -331,6 +335,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
             preconds.append(None)
 
     # Use logarithmic scale for relative residual (y-scale)
+    # TODO: subplot for relres (left) and forward relative error (right)
     fig, ax = plt.subplots()
     fig.set_size_inches(8, 6)
     fig.set_dpi(300)
@@ -346,8 +351,9 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
             print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
             continue
 
-        result = run_trial(mtx, x, M=M, maxiter=maxiter, restart=maxiter)
+        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
         relres = result['rk']
+        sols   = result['xk']
 
         print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
             label, result['iters'], sc[i], sd[i], relres[-1]))
@@ -361,7 +367,7 @@ def run_trial_precond(mtx, x, maxiter=100, title=None, title_x=None, custom=None
     
 
 # %%
-def main(mtx_path, seed, restart, maxiter, precond=None):
+def main(mtx_path, seed, max_outer, max_inner, precond=None):
     np.seterr(all='raise')
     
     np.random.seed(seed)
@@ -374,29 +380,31 @@ def main(mtx_path, seed, restart, maxiter, precond=None):
     x2 = np.ones((n, 1))
     x3 = np.sin(np.linspace(0, 100*np.pi, n))
 
-    # TODO: handle runtime errors (singular preconditioner)
     print(f'{title}, rhs: normally distributed')
-    run_trial_precond(mtx, x1, maxiter=maxiter, title=title, title_x='randn', custom=precond)
+    run_trial_precond(mtx, x1, k_max_outer=max_outer, k_max_inner=max_inner, 
+                      title_x='randn', custom=precond)
     
     print(f'\n{title}, rhs: ones')
-    run_trial_precond(mtx, x2, maxiter=maxiter, title=title, title_x='ones', custom=precond)
+    run_trial_precond(mtx, x2, k_max_outer=max_outer, k_max_inner=max_inner, 
+                      title=title, title_x='ones', custom=precond)
     
     print(f'\n{title}, rhs: sine')
-    run_trial_precond(mtx, x3, maxiter=maxiter, title=title, title_x='sine', custom=precond)
+    run_trial_precond(mtx, x3, k_max_outer=max_outer, k_max_inner=max_inner, 
+                      title=title, title_x='sine', custom=precond)
 
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(prog='mst_precond', description='trials for spanning tree preconditioner')
-    parser.add_argument('--seed',    type=int, default=42, 
+    parser.add_argument('--seed', type=int, default=42, 
                         help='seed for random numbers')
-    parser.add_argument('--restart', type=int, default=20, 
-                        help='dimension of GMRES subspace')
-    parser.add_argument('--maxiter', type=int, default=100, 
-                        help='number of GMRES iterations')
+    parser.add_argument('--max-outer', type=int, default=15, 
+                        help='maximum number of outer GMRES iterations')
+    parser.add_argument('--max-inner', type=int, default=20,
+                        help='maximum number of inner GMRES iterations')
     parser.add_argument('--precond', type=str, 
                         help='path to preconditioning matrix, to be solved with SuperLU')
     parser.add_argument('mtx', type=str)
     
     args = parser.parse_args()
-    main(Path(args.mtx), args.seed, args.restart, args.maxiter, args.precond)
+    main(Path(args.mtx), args.seed, args.max_outer, args.max_inner, args.precond)
