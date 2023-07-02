@@ -103,38 +103,64 @@ def s_degree(mtx):
     return max(M_deg)
 
 
-# %% Spanning tree preconditioner
-# TODO: allow setting maximum degree (use find_n_factors with n)
-def spanning_tree_precond(mtx, symmetrize=False):
-    """ Compute spanning tree preconditioner for a given sparse matrix.
-    """
-    # Note: networkx uses the actual weights, and not their absolute values, to 
-    # determine the minimum/maximum spanning tree.
+# %% Generalized graph preconditioner
+def graph_precond(mtx, optG, symmetrize=False):
     if symmetrize:
         G_abs = nx.Graph(abs((mtx + mtx.T) / 2))
     else:
         G_abs = nx.Graph(abs(mtx))
 
-    # Construct new sparse matrix based on non-zero weights of spanning tree.
-    # The diagonal is added manually, because `nx` does not include weights
-    # for self-loops.
     D = sparse.diags(mtx.diagonal())  # DIAgonal
-    maxST_pre = nx.maximum_spanning_tree(G_abs)  # maximum spanning forest (if not connected)
+    O = optG(G_abs)  # graph optimization function (spanning tree, linear forest, etc.)
     
-    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
+    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
 
 
-def spanning_tree_precond_m(mtx, m, symmetrize=False):
-    pass
+def graph_precond_add_m(mtx, optG, m, symmetrize=False):
+    # Only consider absolute values for the maximum spanning tree
+    if symmetrize:
+        R = nx.Graph(abs((mtx + mtx.T) / 2))
+    else:
+        R = nx.Graph(abs(mtx))
+
+    # Begin with an empty sparse matrix
+    S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
+
+    # In every iteration, the optimized graph is computed for the remainder 
+    # (excluding self-loops)
+    for k in range(m):
+        Mk = nx.to_scipy_sparse_array(optG(R))
+        
+        # Accumulation of spanning trees (may have any amount of cycles)
+        S = S + Mk
+        
+        # Subtract weights for the next iteration
+        R = nx.Graph(nx.to_scipy_sparse_array(R) - Mk)
+    
+    # Re-add diagonal of input matrix
+    D = sparse.diags(mtx.diagonal())
+
+    return sparse_mask(mtx, sparse.coo_array(S + D))
+
+
+# %% Spanning tree preconditioner
+def spanning_tree_precond(mtx, symmetrize=False):
+    """ Compute spanning tree preconditioner for a given sparse matrix.
+    """
+    return graph_precond(mtx, nx.maximum_spanning_tree, symmetrize=symmetrize)
+
+
+def spanning_tree_precond_add_m(mtx, m, symmetrize=False):
+    """ Compute m spanning tree factors, computed by subtraction from the original graph.
+    """
+    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize)
+
 
 # %% Maximum linear forest preconditioner
-def find_n_factors(mtx, n):
+def find_n_factors(G, n):
     """Sequential greedy [0,n]-factor computation on a weighted graph G = (V, E)
     """
-    assert sparse_is_symmetric(mtx)
-
     # factors = [[] for _ in range(0, mtx.shape[0])]
-    G = nx.Graph(mtx)  # absolute values for edge weights
     G.remove_edges_from(nx.selfloop_edges(G))  # ignore self-loops (diagonal elements)
 
     Gn = nx.Graph()
@@ -155,10 +181,10 @@ def find_n_factors(mtx, n):
     return Gn  # does not include loops
 
 
-def linear_forest(mtx):
-    assert sparse_is_symmetric(mtx)
+def linear_forest(G):
+    assert not G.is_directed()
 
-    Gn = find_n_factors(mtx, 2)
+    Gn = find_n_factors(G, 2)
     forest = nx.Graph()
     forest.add_nodes_from(Gn)
 
@@ -175,30 +201,28 @@ def linear_forest(mtx):
             e_min = min(Gc.edges(data=True), key=lambda t: abs(t[2].get('weight', 1)))
             Gc.remove_edge(e_min[0], e_min[1])
 
+            # Add segment to forest
             forest.update(Gc)
 
     # Double check that the linear forest is cycle-free
     try:
         nx.find_cycle(forest)
         raise AssertionError
+    
     except nx.NetworkXNoCycle:
         return forest
     
 
 def linear_forest_precond(mtx, symmetrize=False):
-    # TODO: common logic with spanning_tree_precond()
-    if symmetrize:
-        LF = linear_forest(abs((mtx + mtx.T) / 2))
-    else:
-        LF = linear_forest(abs(mtx))  # Note: abs() already done in linear_forest()
-    
-    D = sparse.diags(mtx.diagonal())  # DIAgonal
-
-    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(LF) + D))
+    """ Compute spanning tree preconditioner for a given sparse matrix.
+    """
+    return graph_precond(mtx, linear_forest, symmetrize=symmetrize)
 
 
-def linear_forest_precond_m(mtx, m, symmetrize=False):
-    pass
+def linear_forest_precond_add_m(mtx, m, symmetrize=False):
+    """ Compute m spanning tree factors, computed by subtraction from the original graph.
+    """
+    return graph_precond_add_m(mtx, linear_forest, m, symmetrize=symmetrize)
 
 
 # %%
