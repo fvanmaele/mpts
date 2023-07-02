@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import ilupp
 
 from scipy.io import mmread
 from scipy import sparse
@@ -59,12 +60,10 @@ def lu_sparse_operator(P, inexact=False):
     nrows, ncols = P.shape
 
     if inexact:
-        M = sparse.linalg.splu(P)
+        return ilupp.ILU0Preconditioner(sparse.csc_matrix(P))
     else:
-        M = sparse.linalg.spilu(P, drop_tol=0)  # iLU(0)
-
-    return sparse.linalg.LinearOperator((nrows, ncols), M.solve)
-
+        return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
+      
 
 class gmres_counter(object):
     """ Class for counting the number of GMRES iterations (inner+outer)
@@ -124,6 +123,9 @@ def spanning_tree_precond(mtx, symmetrize=False):
     
     return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(maxST_pre) + D))
 
+
+def spanning_tree_precond_m(mtx, m, symmetrize=False):
+    pass
 
 # %% Maximum linear forest preconditioner
 def find_n_factors(mtx, n):
@@ -195,6 +197,10 @@ def linear_forest_precond(mtx, symmetrize=False):
     return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(LF) + D))
 
 
+def linear_forest_precond_m(mtx, m, symmetrize=False):
+    pass
+
+
 # %%
 def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
@@ -205,6 +211,7 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     residuals = []
 
     # Compare relative residual in each iteration
+    # TODO: ValueError: array must not contain infs nor NaNs
     x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=1e-15, restrt=k_max_inner, maxiter=k_max_outer,
                                   callback=counter, residuals=residuals)
     relres = np.array(residuals) / np.linalg.norm(b)
@@ -333,20 +340,24 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
             print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
             continue
 
-        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
-        relres = result['rk']
-
-        # TODO: forward relative error in efficient way
-        #sols   = result['xk']
-        #x_norm = np.linalg.norm(x)
-        #fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
-
-        print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
-            label, result['iters'], sc[i], sd[i], relres[-1]))
-
-        # Plot results for specific preconditioner
-        # TODO: subplot for relres (left) and forward relative error (right)
-        ax.plot(range(1, len(relres)+1), relres, label=label)
+        try:
+            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+            relres = result['rk']
+    
+            # TODO: forward relative error in efficient way
+            #sols   = result['xk']
+            #x_norm = np.linalg.norm(x)
+            #fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
+    
+            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
+                label, result['iters'], sc[i], sd[i], relres[-1]))
+    
+            # Plot results for specific preconditioner
+            # TODO: subplot for relres (left) and forward relative error (right)
+            ax.plot(range(1, len(relres)+1), relres, label=label)
+        
+        except ValueError:
+            warnings.warn(f'could not solve with preconditioner {label}')
 
     ax.legend(title=f'{title}, x{title_x}')
     fig.savefig(f'{title}_x{title_x}.png')
@@ -361,6 +372,9 @@ def main(mtx_path, seed, max_outer, max_inner, precond=None):
     mtx   = mmread(mtx_path)
     n, m  = mtx.shape
     title = mtx_path.stem
+
+    # Remove explicit zeros set in some matrices (in-place)
+    mtx.eliminate_zeros()
 
     # Right-hand sides
     x1 = np.random.randn(n, 1)
