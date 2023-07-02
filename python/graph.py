@@ -53,30 +53,6 @@ def sparse_mask(mtx, mtx_mask):
     return sparse.coo_matrix((data, (rows, cols)))
 
 
-def lu_sparse_operator(P, inexact=False):
-    """ SuperLU based preconditioner for use with GMRES
-    """
-    assert sparse.issparse(P)
-    nrows, ncols = P.shape
-
-    if inexact:
-        return ilupp.ILU0Preconditioner(sparse.csc_matrix(P))
-    else:
-        return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
-      
-
-class gmres_counter(object):
-    """ Class for counting the number of GMRES iterations (inner+outer)
-    """
-    def __init__(self):
-        self.niter = 0
-        self.xk = []  # relative residuals
-
-    def __call__(self, xk=None):
-        self.niter += 1
-        self.xk.append(xk)
-
-
 def s_coverage(mtx, mtx_pruned):
     """ Compute the S-coverage as quality measure for a sparse preconditioner
     """
@@ -226,27 +202,60 @@ def linear_forest_precond_add_m(mtx, m, symmetrize=False):
 
 
 # %%
+def lu_sparse_operator(P, inexact=False):
+    """ SuperLU based preconditioner for use with GMRES
+    """
+    assert sparse.issparse(P)
+    nrows, ncols = P.shape
+
+    if inexact:
+        return ilupp.ILU0Preconditioner(sparse.csc_matrix(P))
+    else:
+        return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
+
+
+class gmres_counter(object):
+    """ Class for counting the number of GMRES iterations (inner+outer)
+    """
+    def __init__(self):
+        self.niter = 0
+        self.xk = []
+
+    def __call__(self, xk=None):
+        self.niter += 1
+        self.xk.append(xk)
+
+
 def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
     """
     # Right-hand side from exact solution
     b = mtx * x
     counter = gmres_counter()
-    residuals = []
+    residuals = []  # input vector for fgmres residuals
 
-    # Compare relative residual in each iteration
-    # TODO: ValueError: array must not contain infs nor NaNs
-    x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=1e-15, restrt=k_max_inner, maxiter=k_max_outer,
-                                  callback=counter, residuals=residuals)
-    relres = np.array(residuals) / np.linalg.norm(b)
+    try:
+        x_gmres, info = krylov.fgmres(mtx, b, M=M, x0=None, tol=1e-15, 
+                                      restrt=k_max_inner, maxiter=k_max_outer,
+                                      callback=counter, residuals=residuals)
 
-    return { 
-        'x':  x,
-        'xk': counter.xk,
-        'rk': relres,
-        'exit_code': info, 
-        'iters': counter.niter 
-    }
+        # Normalize to relative residual
+        relres = np.array(residuals) / np.linalg.norm(b)
+        
+        # Compute forward relative error
+        x_diff = np.matrix(counter.xk) - x.T
+        fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
+        
+        return {
+            'x':  x,
+            'fre': fre.tolist(),
+            'rk': relres,
+            'exit_code': info, 
+            'iters': counter.niter 
+        }
+
+    except ValueError:
+        return None
 
 
 def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
@@ -364,24 +373,21 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
             print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
             continue
 
-        try:
-            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+
+        if result is not None:
             relres = result['rk']
+            fre    = result['fre']
     
-            # TODO: forward relative error in efficient way
-            #sols   = result['xk']
-            #x_norm = np.linalg.norm(x)
-            #fre    = [np.linalg.norm(xk - x) / x_norm for xk in sols]
-    
-            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}".format(
-                label, result['iters'], sc[i], sd[i], relres[-1]))
+            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
     
             # Plot results for specific preconditioner
             # TODO: subplot for relres (left) and forward relative error (right)
             ax.plot(range(1, len(relres)+1), relres, label=label)
-        
-        except ValueError:
-            warnings.warn(f'could not solve with preconditioner {label}')
+
+        else:
+            warnings.warn(f'failed to solve {label} system')
 
     ax.legend(title=f'{title}, x{title_x}')
     fig.savefig(f'{title}_x{title_x}.png')
