@@ -17,6 +17,7 @@ from scipy.io import mmread
 from scipy import sparse
 from pyamg import krylov
 
+
 # %% Sparse matrix helpers
 def sparse_is_symmetric(mtx, tol=1e-10):
     """ Check a matrix for numerical symmetry
@@ -241,11 +242,11 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
 
         # Normalize to relative residual
         relres = np.array(residuals) / np.linalg.norm(b)
-        
+
         # Compute forward relative error
         x_diff = np.matrix(counter.xk) - x.T
         fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
-        
+
         return {
             'x':  x,
             'fre': fre.tolist(),
@@ -358,14 +359,23 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
 
     # Use logarithmic scale for relative residual (y-scale)
-    fig, ax = plt.subplots()
-    fig.set_size_inches(8, 6)
-    fig.set_dpi(300)
-    
-    ax.set_yscale('log')
-    ax.set_xlabel('iterations')
-    ax.set_ylabel('relres')
+    fig1, ax1 = plt.subplots()    
+    fig1.set_size_inches(8, 6)
+    fig1.set_dpi(300)
 
+    ax1.set_yscale('log')
+    ax1.set_xlabel('iterations')
+    ax1.set_ylabel('relres')
+
+    # TODO: subplot for relres (left) and forward relative error (right)
+    fig2, ax2 = plt.subplots()
+    fig2.set_size_inches(8, 6)
+    fig2.set_dpi(300)
+    
+    ax2.set_yscale('log')
+    ax2.set_xlabel('iterations')
+    ax2.set_ylabel('fre')
+    
     for i, label in enumerate(labels):
         M = preconds[i]
 
@@ -383,14 +393,18 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
                 label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
     
             # Plot results for specific preconditioner
-            # TODO: subplot for relres (left) and forward relative error (right)
-            ax.plot(range(1, len(relres)+1), relres, label=label)
+            ax1.plot(range(1, len(relres)+1), relres, label=label)
+            ax2.plot(range(1, len(fre)+1), fre, label=label)
 
         else:
             warnings.warn(f'failed to solve {label} system')
 
-    ax.legend(title=f'{title}, x{title_x}')
-    fig.savefig(f'{title}_x{title_x}.png')
+    ax1.legend(title=f'{title}, x{title_x}')
+    fig1.savefig(f'{title}_x{title_x}.png')
+    
+    ax2.legend(title=f'{title}, x{title_x}')
+    fig2.savefig(f'{title}_x{title_x}_fre.png')
+
     plt.close()
     
 
