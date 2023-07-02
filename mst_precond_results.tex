@@ -46,30 +46,60 @@
 
 \section{Test matrices}
 
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\paragraph{Low-dimensional ($n\approx2^{11})$\medskip{}
+}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline 
-Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition\tabularnewline
+Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition & Conn. comp.\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 100\% & 52.7\% & No & No & 13,151 & 2,395 & 1.204710e+04\tabularnewline
+\emph{add20} & 100\% & 52.7\% & No & No & 13,151 & 2,395 & 1.204710e+04 & 1\tabularnewline
 \hline 
-\emph{c-20} & 100\% & 100\% & No & No & 20,445 & 2,921 & 1.049837e+12\tabularnewline
+\emph{c-20} & 100\% & 100\% & No & No & 20,445 & 2,921 & 1.049837e+12 & 1\tabularnewline
 \hline 
-\emph{cryg2500} & 99.5\% & 0\% & No & No & 12,349 & 2,500 & 3.631392e+16\tabularnewline
+\emph{cryg2500} & 99.5\% & 0\% & No & No & 12,349 & 2,500 & 3.631392e+16 & 1\tabularnewline
 \hline 
-\emph{dw2048} & 98.5\% & 94.8\% & No & No & 10,114 & 2,048 & 2.093210e+03\tabularnewline
+\emph{dw2048} & 98.5\% & 94.8\% & No & No & 10,114 & 2,048 & 2.093210e+03 & 1\tabularnewline
 \hline 
-\emph{orsreg\_1} & 100\% & 41.2\% & \textbf{Yes} & No & 14,133 & 2,204 & 6.745269e+03\tabularnewline
+\emph{orsreg\_1} & 100\% & 41.2\% & \textbf{Yes} & No & 14,133 & 2,204 & 6.745269e+03 & 1\tabularnewline
 \hline 
-\emph{pde2961} & 100\% & 50.1\% & No & No & 14,585 & 2,961 & 6.424933e+02\tabularnewline
+\emph{pde2961} & 100\% & 50.1\% & No & No & 14,585 & 2,961 & 6.424933e+02 & 1\tabularnewline
 \hline 
-\emph{wang1} & 100\% & 80.8\% & No & No & 19,093 & 2,903 & 2.032301e+04\tabularnewline
+\emph{wang1} & 100\% & 80.8\% & No & No & 19,093 & 2,903 & 2.032301e+04 & 1\tabularnewline
 \hline 
-\textcolor{red}{ex28}\footnote{Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05 \tabularnewline
+\textcolor{red}{ex28}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05  & 1\tabularnewline
 \hline 
-\textcolor{red}{gre512}\footnote{Preconditioners are singular, except for iLU(0).} & 0\% & 0\% & No & No & 1,976 & 512 & 1.58318e+02\tabularnewline
+\textcolor{red}{gre512}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 0\% & 0\% & No & No & 1,976 & 512 & 1.58318e+02 & 1\tabularnewline
 \hline 
-\textcolor{red}{S40PI}\footnote{Preconditioners are singular.} & 100\% & 2.3\% & No & No & 5,341 & 2,182 & 3.851536e+18 \tabularnewline
+\textcolor{red}{S40PI}\footnote{Preconditioners are singular.} & 100\% & 2.3\% & No & No & 5,341 & 2,182 & 3.851536e+18  & 1\tabularnewline
+\hline 
+\end{tabular}\medskip{}
+
+
+\paragraph{Medium-dimensional ($n\approx2^{14}$)\medskip{}
+}
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline 
+Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition & Conn. comp.\tabularnewline
+\hline 
+\hline 
+tandem\_vtx & 100\% & 100\% &  & no & 253,350 & 18,454 & 1.676572e+05 & 1\tabularnewline
+\hline 
+bccstk25 &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+vibrobox &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+ex19 &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+memplus &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+poisson3da &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+\textcolor{red}{skirt} &  &  &  &  &  &  &  & \tabularnewline
+\hline 
+\textcolor{red}{barth5} &  &  &  &  &  &  &  & \tabularnewline
 \hline 
 \end{tabular}
 
