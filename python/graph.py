@@ -106,6 +106,9 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False, tolist=False):
     else:
         S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
 
+    # Retrieve diagonal of input matrix for later adding
+    D = sparse.diags(mtx.diagonal())
+
     # In every iteration, the optimized graph is computed for the remainder 
     # (excluding self-loops)
     for k in range(m):
@@ -119,9 +122,6 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False, tolist=False):
         
         # Subtract weights for the next iteration
         R = nx.Graph(nx.to_scipy_sparse_array(R) - Mk)
-    
-    # Re-add diagonal of input matrix
-    D = sparse.diags(mtx.diagonal())
 
     if tolist:
         return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
@@ -232,10 +232,9 @@ class AltLinearOperator(sparse.linalg.LinearOperator):
 
         self.i  = len(Mi)
         self.Mi = Mi
-        self.iter = 0  # current iteration, taken modulo `i`
+        self.iter = 0       # current iteration, taken modulo `i`
         self.shape = shape  # assumed consistent between `Mi`
         self.dtype = None
-
         super().__init__(self.dtype, self.shape)
 
     def _matvec(self, x):
@@ -248,7 +247,6 @@ class AltLinearOperator(sparse.linalg.LinearOperator):
             v = Mk(x)
         else:
             v = Mk @ x
-
         return v
 
 
@@ -371,26 +369,6 @@ def trial_max_st_add_m(mtx, mtx_is_symmetric, m):
     }
 
 
-def trial_max_st_alt_m(mtx, mtx_is_symmetric, m):
-    assert m > 1
-    
-    if not mtx_is_symmetric:
-        Pi = spanning_tree_precond_add_m(mtx, m, tolist=True, symmetrize=True)
-    else:
-        Pi = spanning_tree_precond_add_m(mtx, m, tolist=True)
-
-    try:
-        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
-    except RuntimeError:
-        M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : None,
-        'precond'   : M
-    }
-
-
 def trial_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
         P = linear_forest_precond(mtx, symmetrize=True)
@@ -427,26 +405,6 @@ def trial_max_lf_add_m(mtx, mtx_is_symmetric, m):
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : M
-    }
-
-
-def trial_max_lf_alt_m(mtx, mtx_is_symmetric, m):
-    assert m > 1
-    
-    if not mtx_is_symmetric:
-        Pi = linear_forest_precond_add_m(mtx, m, tolist=True, symmetrize=True)
-    else:
-        Pi = linear_forest_precond_add_m(mtx, m, tolist=True)
-
-    try:
-        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
-    except RuntimeError:
-        M = None
-    
-    return {
-        's_coverage': None,
-        's_degree'  : None,
         'precond'   : M
     }
 
@@ -513,20 +471,28 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds.append(max_st['precond'])
     labels.append('maxST')
     
-    # Maximum spanning tree preconditioner, additive factors (m = 2..5)
-    for m in range(2, 6):
-        max_st_add_m = trial_max_st_add_m(mtx, mtx_is_symmetric, m)
-        sc.append(max_st_add_m['s_coverage'])
-        sd.append(max_st_add_m['s_degree'])
-        preconds.append(max_st_add_m['precond'])
-        labels.append(f'maxST (m = {m})')
-
-    # # Maximum linear forest preconditioner
+    # # Maximum spanning tree preconditioner, additive factors (m = 2..5)
+    # for m in range(2, 6):
+    #     max_st_add_m = trial_max_st_add_m(mtx, mtx_is_symmetric, m)
+    #     sc.append(max_st_add_m['s_coverage'])
+    #     sd.append(max_st_add_m['s_degree'])
+    #     preconds.append(max_st_add_m['precond'])
+    #     labels.append(f'maxST+ (m = {m})')
+    
+    # Maximum linear forest preconditioner
     # max_lf = trial_max_lf(mtx, mtx_is_symmetric)
     # sc.append(max_lf['s_coverage'])
     # sd.append(max_lf['s_degree'])
     # preconds.append(max_lf['precond'])
     # labels.append('maxLF')
+    
+    # Maximum linear forest preconditioner, additive factors (m = 2..5)
+    # for m in range(2, 6):
+    #     max_lf_add_m = trial_max_lf_add_m(mtx, mtx_is_symmetric, m)
+    #     sc.append(max_lf_add_m['s_coverage'])
+    #     sd.append(max_lf_add_m['s_degree'])
+    #     preconds.append(max_lf_add_m['precond'])
+    #     labels.append(f'maxLF+ (m = {m})')
 
     # iLU(0)
     ilu0 = trial_ilu0(mtx)
