@@ -319,15 +319,58 @@ def trial_max_st(mtx, mtx_is_symmetric):
         's_degree'  : s_degree(P),
         'precond'   : precond
     }
+
+
+def trial_max_st_add_m(mtx, mtx_is_symmetric, m):
+    assert m > 1
     
+    if not mtx_is_symmetric:
+        P = spanning_tree_precond_add_m(mtx, m, symmetrize=True)
+    else:
+        P = spanning_tree_precond_add_m(mtx, m)
+
+    # Accumulation of spanning tree factors may result in any amount of cycles.
+    # Use sparse LU decomposition and hope for the best
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+
+    return { 
+        's_coverage': s_coverage(mtx, P),
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+
 
 def trial_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
-        P = linear_forest(mtx, symmetrize=True)
+        P = linear_forest_precond(mtx, symmetrize=True)
     else:
-        P = linear_forest(mtx)
+        P = linear_forest_precond(mtx)
 
     # Note: not permuted to tridiagonal system (tridiagonal solver)
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+
+    return { 
+        's_coverage': s_coverage(mtx, P),
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+
+
+def trial_max_lf_add_m(mtx, mtx_is_symmetric, m):
+    assert m > 1
+    
+    if not mtx_is_symmetric:
+        P = linear_forest_precond_add_m(mtx, m, symmetrize=True)
+    else:
+        P = linear_forest_precond_add_m(mtx, m)
+
+    # Accumulation of (after permutation) tridiagonal factors
     try:
         precond = lu_sparse_operator(P)
     except RuntimeError:
@@ -370,13 +413,17 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     """ Compare the performance of spanning tree preconditioners
     """
     mtx_is_symmetric = sparse_is_symmetric(mtx)
+    sc = []
+    sd = []
+    labels = []
+    preconds = []
 
     # Unpreconditioned system
-    sc = [1]
-    sd = [s_degree(mtx)]
-    preconds = [None]
-    labels = ['unpreconditioned']
-    
+    sc.append(1)
+    sd.append(s_degree(mtx))
+    preconds.append(None)
+    labels.append('unpreconditioned')    
+
     # Jacobi preconditioner
     jacobi = trial_jacobi(mtx)
     sc.append(jacobi['s_coverage'])
@@ -388,7 +435,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     tridiag = trial_tridiag(mtx)
     sc.append(tridiag['s_coverage'])
     sd.append(tridiag['s_degree'])
-    preconds.append(tridiag['tridiag'])
+    preconds.append(tridiag['precond'])
     labels.append('tridiag')
 
     # Maximum spanning tree preconditioner
@@ -397,7 +444,9 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     sd.append(max_st['s_degree'])
     preconds.append(max_st['precond'])
     labels.append('maxST')
-
+    
+    # Maximum spanning tree preconditioner, additive factors (m = 2..5)
+    
     # Maximum linear forest preconditioner
     max_lf = trial_max_lf(mtx, mtx_is_symmetric)
     sc.append(max_lf['s_coverage'])
