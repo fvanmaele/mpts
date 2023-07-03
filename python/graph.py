@@ -224,6 +224,34 @@ def lu_sparse_operator(P, inexact=False):
         return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
 
 
+class AltLinearOperator(sparse.linalg.LinearOperator):
+    """ Class for non-stationary preconditioners, used with FGMRES.
+    """
+    def __init__(self, shape, Mi):
+        assert len(Mi) > 0
+
+        self.i  = len(Mi)
+        self.Mi = Mi
+        self.iter = 0  # current iteration, taken modulo `i`
+        self.shape = shape  # assumed consistent between `Mi`
+        self.dtype = None
+
+        super().__init__(self.dtype, self.shape)
+
+    def _matvec(self, x):
+        # Select preconditioner based on current iteration
+        Mk = self.Mi[self.iter % self.i]
+        self.iter += 1
+
+        # Support objects with `.solve` method and (sparse) matrices
+        if callable(Mk):
+            v = Mk(x)
+        else:
+            v = Mk @ x
+
+        return v
+
+
 class gmres_counter(object):
     """ Class for counting the number of GMRES iterations (inner+outer)
     """
@@ -272,14 +300,14 @@ def trial_jacobi(mtx):
     P = mtx.diagonal()
 
     try:
-        precond = sparse.diags(1. / P, format='csc')
+        M = sparse.diags(1. / P, format='csc')
     except FloatingPointError:
-        precond = None
+        M = None
 
     return { 
         's_coverage': s_coverage(mtx, sparse.diags(P)),
         's_degree'  : s_degree(sparse.diags(P)),
-        'precond'   : precond
+        'precond'   : M
     }
 
 
@@ -290,14 +318,14 @@ def trial_tridiag(mtx):
     P = sparse.diags(diagonals, [-1, 0, 1])
     
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
         
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
     }
 
 
@@ -310,14 +338,14 @@ def trial_max_st(mtx, mtx_is_symmetric):
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
 
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
     }
 
 
@@ -332,14 +360,34 @@ def trial_max_st_add_m(mtx, mtx_is_symmetric, m):
     # Accumulation of spanning tree factors may result in any amount of cycles.
     # Use sparse LU decomposition and hope for the best
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
 
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
+    }
+
+
+def trial_max_st_alt_m(mtx, mtx_is_symmetric, m):
+    assert m > 1
+    
+    if not mtx_is_symmetric:
+        Pi = spanning_tree_precond_add_m(mtx, m, tolist=True, symmetrize=True)
+    else:
+        Pi = spanning_tree_precond_add_m(mtx, m, tolist=True)
+
+    try:
+        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
+    except RuntimeError:
+        M = None
+
+    return {
+        's_coverage': None,
+        's_degree'  : None,
+        'precond'   : M
     }
 
 
@@ -351,14 +399,14 @@ def trial_max_lf(mtx, mtx_is_symmetric):
 
     # Note: not permuted to tridiagonal system (tridiagonal solver)
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
 
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
     }
 
 
@@ -372,40 +420,60 @@ def trial_max_lf_add_m(mtx, mtx_is_symmetric, m):
 
     # Accumulation of (after permutation) tridiagonal factors
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
 
     return { 
         's_coverage': s_coverage(mtx, P),
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
+    }
+
+
+def trial_max_lf_alt_m(mtx, mtx_is_symmetric, m):
+    assert m > 1
+    
+    if not mtx_is_symmetric:
+        Pi = linear_forest_precond_add_m(mtx, m, tolist=True, symmetrize=True)
+    else:
+        Pi = linear_forest_precond_add_m(mtx, m, tolist=True)
+
+    try:
+        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
+    except RuntimeError:
+        M = None
+    
+    return {
+        's_coverage': None,
+        's_degree'  : None,
+        'precond'   : M
     }
 
 
 def trial_ilu0(mtx):
     try:
-        precond = lu_sparse_operator(mtx, inexact=True)
+        M = lu_sparse_operator(mtx, inexact=True)
     except RuntimeError:
-        precond = None
+        M = None
     
     return {
         's_coverage': None,
         's_degree'  : None,
-        'precond'   : precond
+        'precond'   : M
     }
 
 
 def trial_custom(mtx, P):
     try:
-        precond = lu_sparse_operator(P)
+        M = lu_sparse_operator(P)
     except RuntimeError:
-        precond = None
+        M = None
 
     return {
         's_coverage': None,
         's_degree'  : s_degree(P),
-        'precond'   : precond
+        'precond'   : M
     }
 
 
@@ -418,25 +486,25 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     labels = []
     preconds = []
 
-    # Unpreconditioned system
-    sc.append(1)
-    sd.append(s_degree(mtx))
-    preconds.append(None)
-    labels.append('unpreconditioned')    
+    # # Unpreconditioned system
+    # sc.append(1)
+    # sd.append(s_degree(mtx))
+    # preconds.append(None)
+    # labels.append('unpreconditioned')    
 
-    # Jacobi preconditioner
-    jacobi = trial_jacobi(mtx)
-    sc.append(jacobi['s_coverage'])
-    sd.append(jacobi['s_degree'])
-    preconds.append(jacobi['precond'])
-    labels.append('jacobi')
+    # # Jacobi preconditioner
+    # jacobi = trial_jacobi(mtx)
+    # sc.append(jacobi['s_coverage'])
+    # sd.append(jacobi['s_degree'])
+    # preconds.append(jacobi['precond'])
+    # labels.append('jacobi')
 
-    # Tridiagonal preconditioner
-    tridiag = trial_tridiag(mtx)
-    sc.append(tridiag['s_coverage'])
-    sd.append(tridiag['s_degree'])
-    preconds.append(tridiag['precond'])
-    labels.append('tridiag')
+    # # Tridiagonal preconditioner
+    # tridiag = trial_tridiag(mtx)
+    # sc.append(tridiag['s_coverage'])
+    # sd.append(tridiag['s_degree'])
+    # preconds.append(tridiag['precond'])
+    # labels.append('tridiag')
 
     # Maximum spanning tree preconditioner
     max_st = trial_max_st(mtx, mtx_is_symmetric)
@@ -446,13 +514,19 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     labels.append('maxST')
     
     # Maximum spanning tree preconditioner, additive factors (m = 2..5)
-    
-    # Maximum linear forest preconditioner
-    max_lf = trial_max_lf(mtx, mtx_is_symmetric)
-    sc.append(max_lf['s_coverage'])
-    sd.append(max_lf['s_degree'])
-    preconds.append(max_lf['precond'])
-    labels.append('maxLF')
+    for m in range(2, 6):
+        max_st_add_m = trial_max_st_add_m(mtx, mtx_is_symmetric, m)
+        sc.append(max_st_add_m['s_coverage'])
+        sd.append(max_st_add_m['s_degree'])
+        preconds.append(max_st_add_m['precond'])
+        labels.append(f'maxST (m = {m})')
+
+    # # Maximum linear forest preconditioner
+    # max_lf = trial_max_lf(mtx, mtx_is_symmetric)
+    # sc.append(max_lf['s_coverage'])
+    # sd.append(max_lf['s_degree'])
+    # preconds.append(max_lf['precond'])
+    # labels.append('maxLF')
 
     # iLU(0)
     ilu0 = trial_ilu0(mtx)
