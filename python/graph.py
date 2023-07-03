@@ -93,15 +93,18 @@ def graph_precond(mtx, optG, symmetrize=False):
     return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
 
 
-def graph_precond_add_m(mtx, optG, m, symmetrize=False):
+def graph_precond_add_m(mtx, optG, m, symmetrize=False, tolist=False):
     # Only consider absolute values for the maximum spanning tree
     if symmetrize:
         R = nx.Graph(abs((mtx + mtx.T) / 2))
     else:
         R = nx.Graph(abs(mtx))
 
-    # Begin with an empty sparse matrix
-    S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
+    # Begin with an empty sparse matrix or empty collection thereof
+    if tolist:
+        S = []
+    else:
+        S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
 
     # In every iteration, the optimized graph is computed for the remainder 
     # (excluding self-loops)
@@ -109,7 +112,10 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False):
         Mk = nx.to_scipy_sparse_array(optG(R))
         
         # Accumulation of spanning trees (may have any amount of cycles)
-        S = S + Mk
+        if tolist:
+            S.append(Mk)
+        else:
+            S = S + Mk
         
         # Subtract weights for the next iteration
         R = nx.Graph(nx.to_scipy_sparse_array(R) - Mk)
@@ -117,7 +123,10 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False):
     # Re-add diagonal of input matrix
     D = sparse.diags(mtx.diagonal())
 
-    return sparse_mask(mtx, sparse.coo_array(S + D))
+    if tolist:
+        return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
+    else:
+        return sparse_mask(mtx, sparse.coo_array(S + D))
 
 
 # %% Spanning tree preconditioner
@@ -127,10 +136,10 @@ def spanning_tree_precond(mtx, symmetrize=False):
     return graph_precond(mtx, nx.maximum_spanning_tree, symmetrize=symmetrize)
 
 
-def spanning_tree_precond_add_m(mtx, m, symmetrize=False):
+def spanning_tree_precond_add_m(mtx, m, symmetrize=False, tolist=False):
     """ Compute m spanning tree factors, computed by subtraction from the original graph.
     """
-    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize)
+    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize, tolist=tolist)
 
 
 # %% Maximum linear forest preconditioner
@@ -196,10 +205,10 @@ def linear_forest_precond(mtx, symmetrize=False):
     return graph_precond(mtx, linear_forest, symmetrize=symmetrize)
 
 
-def linear_forest_precond_add_m(mtx, m, symmetrize=False):
+def linear_forest_precond_add_m(mtx, m, symmetrize=False, tolist=False):
     """ Compute m spanning tree factors, computed by subtraction from the original graph.
     """
-    return graph_precond_add_m(mtx, linear_forest, m, symmetrize=symmetrize)
+    return graph_precond_add_m(mtx, linear_forest, m, symmetrize=symmetrize, tolist=tolist)
 
 
 # %%
