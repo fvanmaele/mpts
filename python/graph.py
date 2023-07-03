@@ -259,6 +259,104 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
         return None
 
 
+def trial_jacobi(mtx):
+    P = mtx.diagonal()
+
+    try:
+        precond = sparse.diags(1. / P, format='csc')
+    except FloatingPointError:
+        precond = None
+
+    return { 
+        's_coverage': s_coverage(mtx, sparse.diags(P)),
+        's_degree'  : s_degree(sparse.diags(P)),
+        'precond'   : precond
+    }
+
+
+def trial_tridiag(mtx):
+    diagonals = [mtx.diagonal(k=-1), 
+                 mtx.diagonal(k=0), 
+                 mtx.diagonal(k=1)]
+    P = sparse.diags(diagonals, [-1, 0, 1])
+    
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+        
+    return { 
+        's_coverage': s_coverage(mtx, P),
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+
+
+def trial_max_st(mtx, mtx_is_symmetric):
+    if not mtx_is_symmetric:
+        P = spanning_tree_precond(mtx, symmetrize=True)
+    else:
+        P = spanning_tree_precond(mtx)
+
+    # LU (with the correct permutation) applied to a spanning tree has no fill-in.
+    # TODO: factorize the spanning tree conditioner "layer by layer"
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+
+    return { 
+        's_coverage': s_coverage(mtx, P),
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+    
+
+def trial_max_lf(mtx, mtx_is_symmetric):
+    if not mtx_is_symmetric:
+        P = linear_forest(mtx, symmetrize=True)
+    else:
+        P = linear_forest(mtx)
+
+    # Note: not permuted to tridiagonal system (tridiagonal solver)
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+
+    return { 
+        's_coverage': s_coverage(mtx, P),
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+
+
+def trial_ilu0(mtx):
+    try:
+        precond = lu_sparse_operator(mtx, inexact=True)
+    except RuntimeError:
+        precond = None
+    
+    return {
+        's_coverage': None,
+        's_degree'  : None,
+        'precond'   : precond
+    }
+
+
+def trial_custom(mtx, P):
+    try:
+        precond = lu_sparse_operator(P)
+    except RuntimeError:
+        precond = None
+
+    return {
+        's_coverage': None,
+        's_degree'  : s_degree(P),
+        'precond'   : precond
+    }
+
+
 def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
@@ -269,93 +367,48 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     sd = [s_degree(mtx)]
     preconds = [None]
     labels = ['unpreconditioned']
-
     
     # Jacobi preconditioner
-    PJ = mtx.diagonal()
-
-    sc.append(s_coverage(mtx, sparse.diags(PJ)))
-    sd.append(s_degree(sparse.diags(PJ)))
+    jacobi = trial_jacobi(mtx)
+    sc.append(jacobi['s_coverage'])
+    sd.append(jacobi['s_degree'])
+    preconds.append(jacobi['precond'])
     labels.append('jacobi')
 
-    try:
-        preconds.append(sparse.diags(1. / PJ, format='csc'))
-    except FloatingPointError:
-        preconds.append(None)
-
-
     # Tridiagonal preconditioner
-    diagonals = [mtx.diagonal(k=-1), mtx.diagonal(k=0), mtx.diagonal(k=1)]
-    PT = sparse.diags(diagonals, [-1, 0, 1])
-    
-    sc.append(s_coverage(mtx, PT))
-    sd.append(s_degree(PT))
+    tridiag = trial_tridiag(mtx)
+    sc.append(tridiag['s_coverage'])
+    sd.append(tridiag['s_degree'])
+    preconds.append(tridiag['tridiag'])
     labels.append('tridiag')
 
-    try:
-        preconds.append(lu_sparse_operator(PT))
-    except RuntimeError:
-        preconds.append(None)
-
-
     # Maximum spanning tree preconditioner
-    # LU (with the correct permutation) applied to a spanning tree has no fill-in.
-    # TODO: factorize the spanning tree conditioner "layer by layer"
-    if not mtx_is_symmetric:
-        ST = spanning_tree_precond(mtx, symmetrize=True)
-    else:
-        ST = spanning_tree_precond(mtx)
-    
-    sc.append(s_coverage(mtx, ST))
-    sd.append(s_degree(ST))
+    max_st = trial_max_st(mtx, mtx_is_symmetric)
+    sc.append(max_st['s_coverage'])
+    sd.append(max_st['s_degree'])
+    preconds.append(max_st['precond'])
     labels.append('maxST')
 
-    try:
-        preconds.append(lu_sparse_operator(ST))
-    except RuntimeError:
-        preconds.append(None)
-
-    
     # Maximum linear forest preconditioner
-    # Note: not permuted to tridiagonal system
-    if not mtx_is_symmetric:
-        LF = linear_forest_precond(mtx, symmetrize=True)
-    else:
-        LF = linear_forest_precond(mtx)
-
-    sc.append(s_coverage(mtx, LF))
-    sd.append(s_degree(LF))
+    max_lf = trial_max_lf(mtx, mtx_is_symmetric)
+    sc.append(max_lf['s_coverage'])
+    sd.append(max_lf['s_degree'])
+    preconds.append(max_lf['precond'])
     labels.append('maxLF')
 
-    try:
-        preconds.append(lu_sparse_operator(LF))    
-    except RuntimeError:
-        preconds.append(None)
-    
-
     # iLU(0)
+    ilu0 = trial_ilu0(mtx)
     sc.append(None)
     sd.append(None)
+    preconds.append(ilu0['precond'])
     labels.append('iLU')
-
-    try:
-        preconds.append(lu_sparse_operator(mtx, inexact=True))
-    except RuntimeError:
-        preconds.append(None)
-
 
     # Custom preconditioner    
     if custom is not None:
-        PC = mmread(custom)
-
+        trial_custom(mtx, mmread(custom))
         sc.append(None)
-        sd.append(s_degree(PC))
+        sd.append(trial_custom['s_degree'])
         labels.append('custom')
-        
-        try:
-            preconds.append(lu_sparse_operator(PC))    
-        except RuntimeError:
-            preconds.append(None)
 
 
     # Use logarithmic scale for relative residual (y-scale)
@@ -375,7 +428,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     ax2.set_yscale('log')
     ax2.set_xlabel('iterations')
     ax2.set_ylabel('fre')
-    
+
     for i, label in enumerate(labels):
         M = preconds[i]
 
