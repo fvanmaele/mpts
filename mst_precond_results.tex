@@ -4,7 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
-\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=1cm,rmargin=1cm}
 \usepackage{color}
 \usepackage{array}
 \usepackage{multirow}
@@ -46,9 +46,6 @@
 
 \section{Test matrices}
 
-\paragraph{Low-dimensional ($n\approx2^{11})$\medskip{}
-}
-
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline 
 Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition & Conn. comp.\tabularnewline
@@ -71,35 +68,6 @@ Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Conditi
 \textcolor{red}{ex28}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05  & 1\tabularnewline
 \hline 
 \textcolor{red}{gre512}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 0\% & 0\% & No & No & 1,976 & 512 & 1.58318e+02 & 1\tabularnewline
-\hline 
-\textcolor{red}{S40PI}\footnote{Preconditioners are singular.} & 100\% & 2.3\% & No & No & 5,341 & 2,182 & 3.851536e+18  & 1\tabularnewline
-\hline 
-\end{tabular}\medskip{}
-
-
-\paragraph{Medium-dimensional ($n\approx2^{14}$)\medskip{}
-}
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline 
-Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition & Conn. comp.\tabularnewline
-\hline 
-\hline 
-tandem\_vtx & 100\% & 100\% &  & no & 253,350 & 18,454 & 1.676572e+05 & 1\tabularnewline
-\hline 
-bccstk25 &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-vibrobox &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-ex19 &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-memplus &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-poisson3da &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-\textcolor{red}{skirt} &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-\textcolor{red}{barth5} &  &  &  &  &  &  &  & \tabularnewline
 \hline 
 \end{tabular}
 
@@ -129,8 +97,6 @@ Matrix & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \textcolor{red}{gre512} & 0.1797 & 0.1816 & 0.4165 & 0.4292 & 0.4292\tabularnewline
 \hline 
-\textcolor{red}{S40PI} & 0.0486 & 0.9231 & 0.0703 & 0.0703 & 0.0703\tabularnewline
-\hline 
 \end{tabular}%
 \end{minipage}\hfill{}%
 \begin{minipage}[t]{0.5\columnwidth}%
@@ -139,7 +105,7 @@ Matrix & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 83 & \multirow{10}{*}{0} & \multirow{10}{*}{2} & \multirow{10}{*}{2} & 11 & 27\tabularnewline
+\emph{add20} & 83 & \multirow{9}{*}{0} & \multirow{9}{*}{2} & \multirow{9}{*}{2} & 11 & 27\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
 \emph{c-20} & 157 &  &  &  & 148 & 40\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
@@ -156,8 +122,6 @@ Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \textcolor{red}{ex28} & 61 &  &  &  & 5 & 7\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
 \textcolor{red}{gre512} & 4 &  &  &  & 2 & 2\tabularnewline
-\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
-\textcolor{red}{S40PI} & 6 &  &  &  & 2 & 2\tabularnewline
 \hline 
 \end{tabular}%
 \end{minipage}

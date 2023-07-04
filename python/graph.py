@@ -743,10 +743,10 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
             warnings.warn(f'failed to solve {label} system')
 
     ax1.legend(title=f'{title}, x{title_x}')
-    fig1.savefig(f'{title}_x{title_x}.png')
+    fig1.savefig(f'{title}_x{title_x}.png', bbox_inches='tight')
     
     ax2.legend(title=f'{title}, x{title_x}')
-    fig2.savefig(f'{title}_x{title_x}_fre.png')
+    fig2.savefig(f'{title}_x{title_x}_fre.png', bbox_inches='tight')
 
     plt.close()
     
