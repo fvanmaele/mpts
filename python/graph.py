@@ -93,6 +93,37 @@ def s_degree(mtx):
     return max(M_deg)
 
 
+def prune_sparse_matrix(matrix, N):
+    #assert sparse.isspmatrix_csr(matrix)
+    # Find the nonzero elements and their corresponding row indices
+    row_indices, col_indices, values = sparse.find(matrix)
+
+    # Iterate over the unique row indices
+    unique_row_indices = np.unique(row_indices)
+
+    for row_idx in unique_row_indices:
+        # Find the indices of nonzero elements in the current row
+        row_indices_mask = (row_indices == row_idx)
+        row_values = values[row_indices_mask]
+        row_col_indices = col_indices[row_indices_mask]
+
+        if len(row_values) <= N:
+            continue
+
+        # Sort the row values by their absolute values
+        sorted_indices = np.argsort(np.abs(row_values))
+
+        # Prune the row values and indices beyond N
+        pruned_indices = row_col_indices[sorted_indices[:-N]]
+        #pruned_values = row_values[sorted_indices[:-N]]
+
+        # Set the pruned values and indices in the matrix
+        matrix[row_idx, pruned_indices] = 0
+        #matrix[row_idx, pruned_indices] = pruned_values
+
+    return matrix.tocoo()
+
+
 # %% Generalized graph preconditioner
 # In every case, `optG` is assumed to be a graph optimization function that does
 # NOT return self-loops (diagonal elements in the adjacency matrix)
@@ -135,35 +166,51 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False):
     return sparse_mask(mtx, sparse.coo_array(S + D))
 
 
-# TODO: pruning, inversion
-def graph_precond_list_m(mtx, optG, m, symmetrize=False, scale=None, invert=False):
+# TODO: pruning
+def graph_precond_list_m(mtx, optG, m, symmetrize=False, scale=None, prune=None):
     if symmetrize:
         R = nx.Graph(abs((mtx + mtx.T) / 2))
     else:
         R = nx.Graph(abs(mtx))
 
-    M = nx.to_scipy_sparse_array(optG(R))  # no diagonal elements
+    M = nx.to_scipy_sparse_array(optG(nx.Graph(R)))  # no diagonal elements
     S = [M]
 
     # Retrieve diagonal of input matrix for later adding
     D = sparse.diags(mtx.diagonal())
-
+    
     # Apply graph optimization to graph with entries scaled according to indices
     # retrieved in the previous step
-    for k in range(m-1):
+    for k in range(1, m):
         R = nx.Graph(sparse_mask(sparse.coo_array(nx.to_scipy_sparse_array(R)), 
-                        sparse.coo_array(M + D), scale=scale))
-        M = nx.to_scipy_sparse_array(optG(R))
-
-        # TODO: check if `scale` parameter is used for the inversion case
-        # if invert:
-        #     M = nx.to_scipy_sparse_array(optG(nx.Graph(R @ sparse.linalg.inv(S[k-1]))))
-        # else:
-        #     M = nx.to_scipy_sparse_array(optG(nx.Graph(R)))
-        
+                     sparse.coo_array(M + D), scale=scale))
+        M = nx.to_scipy_sparse_array(optG(R))       
         S.append(M)
 
     return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
+
+
+# TODO: check implementation, diagonal factor T
+def graph_precond_inv_m(mtx, m, optG, symmetrize=False, prune=False):
+    assert sparse.issparse(mtx)
+    assert callable(optG)
+
+    if symmetrize:
+        R = sparse.coo_array(abs((mtx + mtx.T) / 2))
+    else:
+        R = sparse.coo_array(abs(mtx))
+
+    D = sparse.diags(mtx.diagonal())
+    P = nx.to_scipy_sparse_array(optG(nx.Graph(R)))
+    M = sparse_mask(mtx, sparse.coo_array(P + D), scale=None)
+    B = mtx.copy()
+
+    for k in range(1, m):
+        P = nx.to_scipy_sparse_array(optG(nx.Graph(B @ sparse.linalg.inv(M))))
+        B = M.copy()
+        M = sparse_mask(mtx, sparse.coo_array(P + D), scale=None)
+    
+    return M
 
 
 # %% Spanning tree preconditioner
@@ -179,10 +226,10 @@ def spanning_tree_precond_add_m(mtx, m, symmetrize=False):
     return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize)
 
 
-def spanning_tree_precond_list_m(mtx, m, symmetrize=False, scale=0, invert=False):
+def spanning_tree_precond_list_m(mtx, m, symmetrize=False, scale=None):
     """ Compute m spanning tree factors, computed by successively scaling of optimal entries
     """
-    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize, scale=scale, invert=invert)
+    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize, scale=scale)
 
 
 # %% Maximum linear forest preconditioner
@@ -254,10 +301,10 @@ def linear_forest_precond_add_m(mtx, m, symmetrize=False):
     return graph_precond_add_m(mtx, linear_forest, m, symmetrize=symmetrize)
 
 
-def linear_forest_precond_list_m(mtx, m, symmetrize=False, scale=0, invert=False):
+def linear_forest_precond_list_m(mtx, m, symmetrize=False, scale=0):
     """ Compute m linear forest factors, computed by successively scaling of optimal entries
     """
-    return graph_precond_list_m(mtx, linear_forest, m, symmetrize=symmetrize, scale=scale, invert=invert)
+    return graph_precond_list_m(mtx, linear_forest, m, symmetrize=symmetrize, scale=scale)
 
 
 # %%
@@ -288,7 +335,6 @@ class AltLinearOperator(sparse.linalg.LinearOperator):
         self.i = len(Mi)
         self.Mi = Mi
         self.iter = 0       # current iteration, taken modulo `i`
-
 
     def _matvec(self, x):
         # Select preconditioner (inverse) based on current iteration
@@ -322,7 +368,6 @@ class IterLinearOperator(sparse.linalg.LinearOperator):
         else:
             self.Mi = Mi
 
-
     def _matvec(self, x):
         # Initial estimate
         xk = np.zeros_like(x)
@@ -337,6 +382,7 @@ class IterLinearOperator(sparse.linalg.LinearOperator):
         return xk
 
 
+# %%
 def solve_rtl(x, solve_l):
     assert len(solve_l) > 1
     v = solve_l[0](x)
@@ -433,7 +479,7 @@ def trial_tridiag(mtx):
     }
 
 
-def trial_max_st(mtx, mtx_is_symmetric):
+def trial_max_st(mtx, mtx_is_symmetric, prune=None):
     if not mtx_is_symmetric:
         P = spanning_tree_precond(mtx, symmetrize=True)
     else:
@@ -442,6 +488,8 @@ def trial_max_st(mtx, mtx_is_symmetric):
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
     try:
+        if prune:
+            P = prune_sparse_matrix(P.tolil(), prune)
         M = lu_sparse_operator(P)
     except RuntimeError:
         M = None
@@ -541,6 +589,27 @@ def trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
             'precond'   : M
         }
 
+
+def trial_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
+    symmetrize = not mtx_is_symmetric
+        
+    try:
+        P = graph_precond_inv_m(mtx, m, nx.maximum_spanning_tree, symmetrize=symmetrize)
+    except RuntimeError:
+        P = None
+
+    if P is not None:
+        try:
+            M = lu_sparse_operator(P)
+        except RuntimeError:
+            M = None
+
+    return { 
+        's_coverage': s_coverage(mtx, P) if P is not None else None,
+        's_degree'  : s_degree(P) if P is not None else None,
+        'precond'   : M
+    }
+    
 
 def trial_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
@@ -711,6 +780,14 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds.append(max_st['precond'])
     labels.append('maxST')
     
+    # # Maximum spanning tree preconditioner, applied to pruned matrix
+    # max_st_pruned = trial_max_st(mtx, mtx_is_symmetric, prune=20)
+    # sc.append(max_st_pruned['s_coverage'])
+    # sd.append(max_st_pruned['s_degree'])
+    # preconds.append(max_st_pruned['precond'])
+    # labels.append('maxST (pruned A)')
+
+    
     # # Maximum spanning tree preconditioner, additive factors (m = 2..5)
     # for m in range(2, 6):
     #     max_st_add_m = trial_max_st_add_m(mtx, mtx_is_symmetric, m)
@@ -735,14 +812,22 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_st_alt_m_i['precond'])
     #     labels.append(f'maxST_alt_i (m = {m})')
 
-    # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
-    for m in range(2, 6):
-        max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, 1, scale=0, repeat_i=m)
-        #max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale=0.01, repeat_i=0)
-        sc.append(max_st_alt_m_o['s_coverage'])
-        sd.append(max_st_alt_m_o['s_degree'])
-        preconds.append(max_st_alt_m_o['precond'])
-        labels.append(f'maxST_alt_o (m = {m})')
+    # # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
+    # for m in range(2, 6):
+    #     max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, 1, scale=0, repeat_i=m)
+    #     #max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale=0.01, repeat_i=0)
+    #     sc.append(max_st_alt_m_o['s_coverage'])
+    #     sd.append(max_st_alt_m_o['s_degree'])
+    #     preconds.append(max_st_alt_m_o['precond'])
+    #     labels.append(f'maxST_alt_o (m = {m})')
+    
+    # # Maximum spanning tree preconditioner, iterative inverses
+    # for m in range(2, 6):
+    #     max_st_inv_m = trial_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None)
+    #     sc.append(max_st_inv_m['s_coverage'])
+    #     sd.append(max_st_inv_m['s_degree'])
+    #     preconds.append(max_st_inv_m['precond'])
+    #     labels.append(f'max_ST_inv (m = {m})')
 
     # Maximum linear forest preconditioner
     # max_lf = trial_max_lf(mtx, mtx_is_symmetric)
