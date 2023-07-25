@@ -62,7 +62,6 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
         return None
 
 
-# %%
 def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
@@ -79,19 +78,19 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds.append(None)
     labels.append('unpreconditioned')    
 
-    # # Jacobi preconditioner
-    # jacobi = trial_jacobi(mtx)
-    # sc.append(jacobi['s_coverage'])
-    # sd.append(jacobi['s_degree'])
-    # preconds.append(jacobi['precond'])
-    # labels.append('jacobi')
+    # Jacobi preconditioner
+    jacobi = trial_jacobi(mtx)
+    sc.append(jacobi['s_coverage'])
+    sd.append(jacobi['s_degree'])
+    preconds.append(jacobi['precond'])
+    labels.append('jacobi')
 
-    # # Tridiagonal preconditioner
-    # tridiag = trial_tridiag(mtx)
-    # sc.append(tridiag['s_coverage'])
-    # sd.append(tridiag['s_degree'])
-    # preconds.append(tridiag['precond'])
-    # labels.append('tridiag')
+    # Tridiagonal preconditioner
+    tridiag = trial_tridiag(mtx)
+    sc.append(tridiag['s_coverage'])
+    sd.append(tridiag['s_degree'])
+    preconds.append(tridiag['precond'])
+    labels.append('tridiag')
 
     # Maximum spanning tree preconditioner
     max_st = trial_max_st(mtx, mtx_is_symmetric)
@@ -149,12 +148,12 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_st_inv_m['precond'])
     #     labels.append(f'max_ST_inv (m = {m})')
 
-    # # Maximum linear forest preconditioner
-    # max_lf = trial_max_lf(mtx, mtx_is_symmetric)
-    # sc.append(max_lf['s_coverage'])
-    # sd.append(max_lf['s_degree'])
-    # preconds.append(max_lf['precond'])
-    # labels.append('maxLF')
+    # Maximum linear forest preconditioner
+    max_lf = trial_max_lf(mtx, mtx_is_symmetric)
+    sc.append(max_lf['s_coverage'])
+    sd.append(max_lf['s_degree'])
+    preconds.append(max_lf['precond'])
+    labels.append('maxLF')
     
     # Maximum linear forest preconditioner, additive factors (m = 2..5)
     # for m in range(2, 6):
@@ -305,5 +304,3 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     main(Path(args.mtx), args.seed, args.max_outer, args.max_inner, args.precond)
-
-# %%
