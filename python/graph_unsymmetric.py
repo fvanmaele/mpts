@@ -7,11 +7,9 @@ Created on Sun Jun 25 21:07:42 2023
 @author: archie
 """
 
-# %%
 import networkx as nx
 
 
-# %%
 def digraph_find_roots(G):
     """ Find roots (no incoming edges) of directed graph.
     """
