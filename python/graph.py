@@ -11,57 +11,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.io import mmread
-from pyamg import krylov
+
 
 from sparse_util import sparse_is_symmetric
 from trials import *
 
 
 # %%
-class gmres_counter(object):
-    """ Class for counting the number of GMRES iterations (inner+outer)
-    """
-    def __init__(self):
-        self.niter = 0
-        self.xk = []
-
-    def __call__(self, xk=None):
-        self.niter += 1
-        self.xk.append(xk)
-
-
-def run_trial(mtx, x, M, k_max_outer, k_max_inner):
-    """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
-    """
-    # Right-hand side from exact solution
-    rhs = mtx * x
-    counter = gmres_counter()
-    residuals = []  # input vector for fgmres residuals
-
-    try:
-        x_gmres, info = krylov.fgmres(mtx, rhs, M=M, x0=None, tol=1e-15, 
-                                      restrt=k_max_inner, maxiter=k_max_outer,
-                                      callback=counter, residuals=residuals)
-
-        # Normalize to relative residual
-        relres = np.array(residuals) / np.linalg.norm(rhs)
-
-        # Compute forward relative error
-        x_diff = np.matrix(counter.xk) - x.T
-        fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
-
-        return {
-            'x':  x,
-            'fre': fre.tolist(),
-            'rk': relres,
-            'exit_code': info, 
-            'iters': counter.niter 
-        }
-
-    except ValueError:
-        return None
-
-
 def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
@@ -79,28 +35,28 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     labels.append('unpreconditioned')    
 
     # Jacobi preconditioner
-    jacobi = trial_jacobi(mtx)
+    jacobi = precond_jacobi(mtx)
     sc.append(jacobi['s_coverage'])
     sd.append(jacobi['s_degree'])
     preconds.append(jacobi['precond'])
     labels.append('jacobi')
 
     # Tridiagonal preconditioner
-    tridiag = trial_tridiag(mtx)
+    tridiag = precond_tridiag(mtx)
     sc.append(tridiag['s_coverage'])
     sd.append(tridiag['s_degree'])
     preconds.append(tridiag['precond'])
     labels.append('tridiag')
 
     # Maximum spanning tree preconditioner
-    max_st = trial_max_st(mtx, mtx_is_symmetric)
+    max_st = precond_max_st(mtx, mtx_is_symmetric)
     sc.append(max_st['s_coverage'])
     sd.append(max_st['s_degree'])
     preconds.append(max_st['precond'])
     labels.append('maxST')
     
     # # Maximum spanning tree preconditioner, applied to pruned matrix
-    # max_st_pruned = trial_max_st(mtx, mtx_is_symmetric, prune=20)
+    # max_st_pruned = precond_max_st(mtx, mtx_is_symmetric, prune=20)
     # sc.append(max_st_pruned['s_coverage'])
     # sd.append(max_st_pruned['s_degree'])
     # preconds.append(max_st_pruned['precond'])
@@ -108,7 +64,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # # Maximum spanning tree preconditioner, additive factors (m = 2..5)
     # for m in range(2, 6):
-    #     max_st_add_m = trial_max_st_add_m(mtx, mtx_is_symmetric, m)
+    #     max_st_add_m = precond_max_st_add_m(mtx, mtx_is_symmetric, m)
     #     sc.append(max_st_add_m['s_coverage'])
     #     sd.append(max_st_add_m['s_degree'])
     #     preconds.append(max_st_add_m['precond'])
@@ -116,7 +72,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # # Maximum spanning tree preconditioner, multiplicative factors (m = 2..5)
     # for m in range(2, 6):
-    #     max_st_mult_m = trial_max_st_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
+    #     max_st_mult_m = precond_max_st_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_st_mult_m['s_coverage'])
     #     sd.append(max_st_mult_m['s_degree'])
     #     preconds.append(max_st_mult_m['precond'])
@@ -124,8 +80,8 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # # Maximum spanning tree preconditioner, inner alternating factors (m = 2..5)
     # for m in range(2, 6):
-    #     #max_st_alt_m_i = trial_max_st_alt_i(mtx, mtx_is_symmetric, m, scale=0)
-    #     max_st_alt_m_i = trial_max_st_alt_i(mtx, mtx_is_symmetric, m, scale=0.01)
+    #     #max_st_alt_m_i = precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale=0)
+    #     max_st_alt_m_i = precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_st_alt_m_i['s_coverage'])
     #     sd.append(max_st_alt_m_i['s_degree'])
     #     preconds.append(max_st_alt_m_i['precond'])
@@ -133,8 +89,8 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
     # for m in range(2, 6):
-    #     #max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, 1, scale=0, repeat_i=m)
-    #     max_st_alt_m_o = trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale=0.01, repeat_i=0)
+    #     #max_st_alt_m_o = precond_max_st_alt_o(mtx, mtx_is_symmetric, 1, scale=0, repeat_i=m)
+    #     max_st_alt_m_o = precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale=0.01, repeat_i=0)
     #     sc.append(max_st_alt_m_o['s_coverage'])
     #     sd.append(max_st_alt_m_o['s_degree'])
     #     preconds.append(max_st_alt_m_o['precond'])
@@ -142,14 +98,14 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     
     # # Maximum spanning tree preconditioner, iterative inverses
     # for m in range(2, 6):
-    #     max_st_inv_m = trial_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None)
+    #     max_st_inv_m = precond_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None)
     #     sc.append(max_st_inv_m['s_coverage'])
     #     sd.append(max_st_inv_m['s_degree'])
     #     preconds.append(max_st_inv_m['precond'])
     #     labels.append(f'max_ST_inv (m = {m})')
 
     # Maximum linear forest preconditioner
-    max_lf = trial_max_lf(mtx, mtx_is_symmetric)
+    max_lf = precond_max_lf(mtx, mtx_is_symmetric)
     sc.append(max_lf['s_coverage'])
     sd.append(max_lf['s_degree'])
     preconds.append(max_lf['precond'])
@@ -157,7 +113,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     
     # Maximum linear forest preconditioner, additive factors (m = 2..5)
     # for m in range(2, 6):
-    #     max_lf_add_m = trial_max_lf_add_m(mtx, mtx_is_symmetric, m)
+    #     max_lf_add_m = precond_max_lf_add_m(mtx, mtx_is_symmetric, m)
     #     sc.append(max_lf_add_m['s_coverage'])
     #     sd.append(max_lf_add_m['s_degree'])
     #     preconds.append(max_lf_add_m['precond'])
@@ -166,7 +122,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     # # Maximum linear forest preconditioner, multiplicative factors (m = 2..5),
     # # applied right-to-left
     # for m in range(2, 6):
-    #     max_lf_mult_m = trial_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
+    #     max_lf_mult_m = precond_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_lf_mult_m['s_coverage'])
     #     sd.append(max_lf_mult_m['s_degree'])
     #     preconds.append(max_lf_mult_m['precond'])
@@ -174,7 +130,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     
     # # Maximum spanning tree preconditioner, inner alternating factors (m = 2..5)
     # for m in range(2, 6):
-    #     max_lf_alt_m_i = trial_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale=0.01)
+    #     max_lf_alt_m_i = precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_lf_alt_m_i['s_coverage'])
     #     sd.append(max_lf_alt_m_i['s_degree'])
     #     preconds.append(max_lf_alt_m_i['precond'])
@@ -182,7 +138,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
     # for m in range(2, 6):
-    #     max_lf_alt_m_o = trial_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale=0.01)
+    #     max_lf_alt_m_o = precond_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_lf_alt_m_o['s_coverage'])
     #     sd.append(max_lf_alt_m_o['s_degree'])
     #     preconds.append(max_lf_alt_m_o['precond'])
@@ -190,14 +146,14 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     
     # # Maximum linear forest preconditioner, iterative inverses
     # for m in range(2, 6):
-    #     max_lf_inv_m = trial_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None)
+    #     max_lf_inv_m = precond_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None)
     #     sc.append(max_lf_inv_m['s_coverage'])
     #     sd.append(max_lf_inv_m['s_degree'])
     #     preconds.append(max_lf_inv_m['precond'])
     #     labels.append(f'max_lf_inv (m = {m})')
 
     # iLU(0)
-    ilu0 = trial_ilu0(mtx)
+    ilu0 = precond_ilu0(mtx)
     sc.append(None)
     sd.append(None)
     preconds.append(ilu0['precond'])
@@ -205,9 +161,9 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
 
     # Custom preconditioner    
     if custom is not None:
-        trial_custom(mtx, mmread(custom))
+        custom = precond_custom(mtx, mmread(custom))
         sc.append(None)
-        sd.append(trial_custom['s_degree'])
+        sd.append(custom['s_degree'])
         labels.append('custom')
 
     # Use logarithmic scale for relative residual (y-scale)

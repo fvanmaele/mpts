@@ -7,13 +7,60 @@ Created on Tue Jul 25 15:53:51 2023
 """
 
 from scipy import sparse
+from pyamg import krylov
+import numpy as np
+
 from sparse_util import s_coverage, s_degree, prune_sparse_matrix
 from sparse_lops import lu_sparse_operator, AltLinearOperator, IterLinearOperator
-
 import graph_precond as gp
 
 
-def trial_orig(mtx):
+class gmres_counter(object):
+    """ Class for counting the number of GMRES iterations (inner+outer)
+    """
+    def __init__(self):
+        self.niter = 0
+        self.xk = []
+
+    def __call__(self, xk=None):
+        self.niter += 1
+        self.xk.append(xk)
+
+
+def run_trial(mtx, x, M, k_max_outer, k_max_inner):
+    """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
+    """
+    # Right-hand side from exact solution
+    rhs = mtx * x
+    counter = gmres_counter()
+    residuals = []  # input vector for fgmres residuals
+
+    try:
+        x_gmres, info = krylov.fgmres(mtx, rhs, M=M, x0=None, tol=1e-15, 
+                                      restrt=k_max_inner, maxiter=k_max_outer,
+                                      callback=counter, residuals=residuals)
+
+        # Normalize to relative residual
+        relres = np.array(residuals) / np.linalg.norm(rhs)
+
+        # Compute forward relative error
+        x_diff = np.matrix(counter.xk) - x.T
+        fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
+
+        return {
+            'x':  x,
+            'fre': fre.tolist(),
+            'rk': relres,
+            'exit_code': info, 
+            'iters': counter.niter 
+        }
+
+    except ValueError:
+        return None
+
+
+# %% TODO: move to separate module
+def precond_orig(mtx):
     return {
         's_coverage': 1,
         's_degree'  : s_degree(mtx),
@@ -21,7 +68,7 @@ def trial_orig(mtx):
     }
 
 
-def trial_jacobi(mtx):
+def precond_jacobi(mtx):
     P = mtx.diagonal()
 
     try:
@@ -36,7 +83,7 @@ def trial_jacobi(mtx):
     }
 
 
-def trial_tridiag(mtx):
+def precond_tridiag(mtx):
     diagonals = [mtx.diagonal(k=-1), 
                  mtx.diagonal(k=0), 
                  mtx.diagonal(k=1)]
@@ -54,7 +101,7 @@ def trial_tridiag(mtx):
     }
 
 
-def trial_max_st(mtx, mtx_is_symmetric, prune=None):
+def precond_max_st(mtx, mtx_is_symmetric, prune=None):
     if not mtx_is_symmetric:
         P = gp.spanning_tree_precond(mtx, symmetrize=True)
     else:
@@ -76,7 +123,7 @@ def trial_max_st(mtx, mtx_is_symmetric, prune=None):
     }
 
 
-def trial_max_st_add_m(mtx, mtx_is_symmetric, m):
+def precond_max_st_add_m(mtx, mtx_is_symmetric, m):
     assert m > 1
     
     if not mtx_is_symmetric:
@@ -99,7 +146,7 @@ def trial_max_st_add_m(mtx, mtx_is_symmetric, m):
 
     
 # TODO: inverse of each factor M_i (right multiplication)
-def trial_max_st_mult_m(mtx, mtx_is_symmetric, m, scale):
+def precond_max_st_mult_m(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
     if not mtx_is_symmetric:
@@ -125,7 +172,7 @@ def trial_max_st_mult_m(mtx, mtx_is_symmetric, m, scale):
     }
 
 
-def trial_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
+def precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
     if not mtx_is_symmetric:
@@ -146,7 +193,7 @@ def trial_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
     }
 
 
-def trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
+def precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
 
@@ -168,7 +215,7 @@ def trial_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
         }
 
 
-def trial_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
+def precond_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
     symmetrize = not mtx_is_symmetric
         
     try:
@@ -189,7 +236,7 @@ def trial_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
     }
     
 
-def trial_max_lf(mtx, mtx_is_symmetric):
+def precond_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
         P = gp.linear_forest_precond(mtx, symmetrize=True)
     else:
@@ -208,7 +255,7 @@ def trial_max_lf(mtx, mtx_is_symmetric):
     }
 
 
-def trial_max_lf_add_m(mtx, mtx_is_symmetric, m):
+def precond_max_lf_add_m(mtx, mtx_is_symmetric, m):
     assert m > 1
     
     if not mtx_is_symmetric:
@@ -229,7 +276,7 @@ def trial_max_lf_add_m(mtx, mtx_is_symmetric, m):
     }
 
 
-def trial_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale):
+def precond_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
     if not mtx_is_symmetric:
@@ -253,7 +300,7 @@ def trial_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale):
     }
 
 
-def trial_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
+def precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
     if not mtx_is_symmetric:
@@ -274,7 +321,7 @@ def trial_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
     }
 
 
-def trial_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
+def precond_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
 
@@ -296,7 +343,7 @@ def trial_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
         }
 
 
-def trial_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None):
+def precond_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None):
     symmetrize = not mtx_is_symmetric
         
     try:
@@ -317,7 +364,7 @@ def trial_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None):
     }
     
 
-def trial_ilu0(mtx):
+def precond_ilu0(mtx):
     try:
         M = lu_sparse_operator(mtx, inexact=True)
     except RuntimeError:
@@ -330,7 +377,7 @@ def trial_ilu0(mtx):
     }
 
 
-def trial_custom(mtx, P):
+def precond_custom(mtx, P):
     try:
         M = lu_sparse_operator(P)
     except RuntimeError:
