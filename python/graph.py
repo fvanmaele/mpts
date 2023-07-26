@@ -69,8 +69,8 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_st_add_m['precond'])
     #     labels.append(f'maxST+ (m = {m})')
 
-    # Maximum spanning tree preconditioner, MOS factors (m = 2..5)
-    for m in range(2, 6):
+    # Maximum spanning tree preconditioner, MOS factors (m = 2, 3)
+    for m in [2, 3]:
         max_st_mos_m = precond_max_st_mos_m(mtx, mtx_is_symmetric, m)
         sc.append(max_st_mos_m['s_coverage'])
         sd.append(max_st_mos_m['s_degree'])
