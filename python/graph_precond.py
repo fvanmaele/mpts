@@ -98,7 +98,7 @@ def graph_precond_mos_m(mtx, m, precond, symmetrize=False):
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
 
-    return M_MOS
+    return M_MOS, B_diff
 
 
 # %% Spanning tree preconditioner

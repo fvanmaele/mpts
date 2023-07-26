@@ -168,12 +168,14 @@ def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
     symmetrize = not mtx_is_symmetric
         
     try:
-        P_list = gp.spanning_tree_precond_mos_m(mtx, m, symmetrize=symmetrize)
+        P_list, B_diff = gp.spanning_tree_precond_mos_m(mtx, m, symmetrize=symmetrize)
         P_list.reverse()
         P = P_list.pop()
 
         for Pl in P_list:  # XXX: can be done in log_2(n) iterations
             P = Pl @ P
+        print(f'{m}: {np.max(B_diff)}')
+
     except RuntimeError:
         P = None
 
