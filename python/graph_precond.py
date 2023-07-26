@@ -8,8 +8,9 @@ Created on Tue Jul 25 15:39:46 2023
 
 import networkx as nx
 from scipy import sparse
+from math import ceil
 
-from sparse_util import sparse_mask
+from sparse_util import sparse_mask, prune_sparse_matrix
 
 
 # %% Generalized graph preconditioner
@@ -77,43 +78,6 @@ def graph_precond_list_m(mtx, optG, m, symmetrize=False, scale=None):
     return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
 
 
-# TODO: diagonal factor T (diagp)
-def graph_precond_inv_m(mtx, m, optG, symmetrize=False):
-    assert sparse.issparse(mtx)
-    assert callable(optG)
-
-    B = mtx.copy()
-    D = sparse.diags(B.diagonal())
-
-    if symmetrize:
-        R = sparse.coo_array(abs((B + B.T) / 2))
-    else:
-        R = sparse.coo_array(abs(B))
-    
-    P = nx.to_scipy_sparse_array(optG(nx.Graph(R)))
-    M = sparse_mask(B, sparse.coo_array(P + D), scale=None)
-
-    # XXX: similar logic as above
-    for k in range(1, m):
-        # Inverse of spanning tree is dense, prune according to sparsity
-        # pattern of previous factor
-        B = sparse_mask(sparse.coo_matrix(B @ sparse.linalg.inv(M)), 
-                        sparse.coo_matrix(M))
-        D = sparse.diags(B.diagonal())
-
-        # Absolute weights based on new factor
-        if symmetrize:
-            R = sparse.coo_array(abs((B + B.T) / 2))
-        else:
-            R = sparse.coo_array(abs(B))
-
-        # Compute new spanning tree
-        P = nx.to_scipy_sparse_array(optG(nx.Graph(R)))
-        M = sparse_mask(B, sparse.coo_array(P + D), scale=None)
-    
-    return M
-
-
 # %% Spanning tree preconditioner
 def spanning_tree_precond(mtx, symmetrize=False):
     """ Compute spanning tree preconditioner for a given sparse matrix.
@@ -133,10 +97,27 @@ def spanning_tree_precond_list_m(mtx, m, symmetrize=False, scale=None):
     return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize, scale=scale)
 
 
-def spanning_tree_precond_inv_m(mtx, m, symmetrize=False):
+# TODO: specify a sparsity pattern (here: pruned powers / neumann expansion of coefficient matrix A)
+def spanning_tree_precond_mos_m(mtx, m, symmetrize=False):
     """ Compute spanning tree preconditioner iteratively, by computing (pruned) inverses
     """
-    return graph_precond_inv_m(mtx, m, nx.maximum_spanning_tree, symmetrize=symmetrize)
+    n, _ = mtx.shape
+    Id = sparse.eye(n)
+    mtx_avg_deg = ceil(mtx.getnnz() / n)
+    B = mtx.copy()
+
+    B_diff = []
+    M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
+    M_MOS  = []
+
+    for l in range(0, m):
+        M = spanning_tree_precond(B)  # includes diagonal of mtx1 (S^diag)
+        B = sparse_mask((B @ sparse.linalg.inv(M)).tocoo(), prune_sparse_matrix(B @ B, mtx_avg_deg))  # neumann expansion
+        
+        B_diff.append(sparse.linalg.norm(Id - B))
+        M_MOS.append(M.copy())
+
+    return M_MOS
 
 
 # %% Maximum linear forest preconditioner
@@ -214,7 +195,7 @@ def linear_forest_precond_list_m(mtx, m, symmetrize=False, scale=0):
     return graph_precond_list_m(mtx, linear_forest, m, symmetrize=symmetrize, scale=scale)
 
 
-def linear_forest_precond_inv_m(mtx, m, symmetrize=False):
-    """ Compute linear forest preconditioner iteratively, by computing (pruned) inverses
-    """
-    return graph_precond_inv_m(mtx, m, nx.maximum_spanning_tree, symmetrize=symmetrize)
+# def linear_forest_precond_mos_m(mtx, m, symmetrize=False):
+#     """ Compute linear forest preconditioner iteratively, by computing (pruned) inverses
+#     """
+#     return graph_precond_inv_m(mtx, m, nx.maximum_spanning_tree, symmetrize=symmetrize)

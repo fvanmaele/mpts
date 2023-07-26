@@ -108,8 +108,10 @@ def s_degree(mtx):
     return max(M_deg)
 
 
+# TODO: preserve diagonal, return sparsity pattern
 def prune_sparse_matrix(matrix, N):
-    #assert sparse.isspmatrix_csr(matrix)
+    matrix_pruned = sparse.csr_array(matrix.shape)
+    
     # Find the nonzero elements and their corresponding row indices
     row_indices, col_indices, values = sparse.find(matrix)
 
@@ -119,21 +121,22 @@ def prune_sparse_matrix(matrix, N):
     for row_idx in unique_row_indices:
         # Find the indices of nonzero elements in the current row
         row_indices_mask = (row_indices == row_idx)
-        row_values = values[row_indices_mask]
-        row_col_indices = col_indices[row_indices_mask]
+        row_values       = values[row_indices_mask]
+        row_col_indices  = col_indices[row_indices_mask]
 
-        if len(row_values) <= N:
-            continue
+        # if len(row_values) <= N:
+        #     continue
 
         # Sort the row values by their absolute values
-        sorted_indices = np.argsort(np.abs(row_values))
+        sorted_indices = np.flip(np.argsort(np.abs(row_values)))
 
         # Prune the row values and indices beyond N
-        pruned_indices = row_col_indices[sorted_indices[:-N]]
-        #pruned_values = row_values[sorted_indices[:-N]]
+        pruned_indices = row_col_indices[sorted_indices[:N]]
+        pruned_values  = row_values[sorted_indices[:N]]
 
         # Set the pruned values and indices in the matrix
-        matrix[row_idx, pruned_indices] = 0
-        #matrix[row_idx, pruned_indices] = pruned_values
+        #matrix[row_idx, pruned_indices] = 0
+        matrix_pruned[row_idx, pruned_indices] = pruned_values
 
-    return matrix.tocoo()
+    matrix_pruned.setdiag(matrix.diagonal())
+    return matrix_pruned.tocoo()

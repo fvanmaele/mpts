@@ -1,72 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul 25 15:53:51 2023
+Created on Wed Jul 26 12:48:03 2023
 
 @author: archie
 """
 
-from scipy import sparse
-from pyamg import krylov
 import numpy as np
+from scipy import sparse
 
+import graph_precond as gp
 from sparse_util import s_coverage, s_degree, prune_sparse_matrix
 from sparse_lops import lu_sparse_operator, AltLinearOperator, IterLinearOperator
-import graph_precond as gp
 
 
-class gmres_counter(object):
-    """ Class for counting the number of GMRES iterations (inner+outer)
-    """
-    def __init__(self):
-        self.niter = 0
-        self.xk = []
+# %% Diagonal preconditioners
+def unit(x):
+    return np.where(x != 0, x / np.abs(x), 1)
 
-    def __call__(self, xk=None):
-        self.niter += 1
-        self.xk.append(xk)
+def diagp0(mtx):
+    return mtx.diagonal()
 
+def row_sums_excluding_diagonal(mtx):
+    # Set the diagonal elements to zero in the CSR matrix
+    mtx = mtx.copy()
+    mtx.setdiag(0)
 
-def run_trial(mtx, x, M, k_max_outer, k_max_inner):
-    """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
-    """
-    # Right-hand side from exact solution
-    rhs = mtx * x
-    counter = gmres_counter()
-    residuals = []  # input vector for fgmres residuals
+    # Compute the sum of row elements excluding the diagonal elements
+    return np.array(mtx.sum(axis=1)).flatten()
 
-    try:
-        x_gmres, info = krylov.fgmres(mtx, rhs, M=M, x0=None, tol=1e-15, 
-                                      restrt=k_max_inner, maxiter=k_max_outer,
-                                      callback=counter, residuals=residuals)
+def diagp1(mtx):
+    mtx_d = mtx.diagonal()
+    return np.multiply(unit(mtx_d), np.maximum(np.abs(mtx_d), row_sums_excluding_diagonal(abs(mtx))))
 
-        # Normalize to relative residual
-        relres = np.array(residuals) / np.linalg.norm(rhs)
+def diagp2(mtx):
+    mtx_d = mtx.diagonal()
+    return np.multiply(unit(mtx_d), np.array(abs(mtx).sum(axis=1)).flatten())
 
-        # Compute forward relative error
-        x_diff = np.matrix(counter.xk) - x.T
-        fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
-
-        return {
-            'x':  x,
-            'fre': fre.tolist(),
-            'rk': relres,
-            'exit_code': info, 
-            'iters': counter.niter 
-        }
-
-    except ValueError:
-        return None
+def diagl1(mtx):
+    mtx_d = mtx.diagonal()
+    return mtx_d + row_sums_excluding_diagonal(abs(mtx))
 
 
-# %% TODO: move to separate module
+# %%
 def precond_orig(mtx):
     return {
         's_coverage': 1,
         's_degree'  : s_degree(mtx),
         'precond'   : None
     }
-
 
 def precond_jacobi(mtx):
     P = mtx.diagonal()
@@ -81,7 +63,6 @@ def precond_jacobi(mtx):
         's_degree'  : s_degree(sparse.diags(P)),
         'precond'   : M
     }
-
 
 def precond_tridiag(mtx):
     diagonals = [mtx.diagonal(k=-1), 
@@ -99,7 +80,6 @@ def precond_tridiag(mtx):
         's_degree'  : s_degree(P),
         'precond'   : M
     }
-
 
 def precond_max_st(mtx, mtx_is_symmetric, prune=None):
     if not mtx_is_symmetric:
@@ -122,7 +102,6 @@ def precond_max_st(mtx, mtx_is_symmetric, prune=None):
         'precond'   : M
     }
 
-
 def precond_max_st_add_m(mtx, mtx_is_symmetric, m):
     assert m > 1
     
@@ -144,34 +123,6 @@ def precond_max_st_add_m(mtx, mtx_is_symmetric, m):
         'precond'   : M
     }
 
-    
-# TODO: inverse of each factor M_i (right multiplication)
-def precond_max_st_mult_m(mtx, mtx_is_symmetric, m, scale):
-    assert m > 1
-
-    if not mtx_is_symmetric:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
-    
-    try:
-        # XXX: is the product of spanning tree still sparse?
-        # a product of inverses can be used instead
-        P = Pi[0]
-        for k in range(1, len(Pi)):
-           P = P @ Pi[k]
-        M = lu_sparse_operator(P)
-
-    except RuntimeError:
-        M = None
-        
-    return { 
-        's_coverage': None,
-        's_degree'  : None,
-        'precond'   : M
-    }
-
-
 def precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
@@ -191,7 +142,6 @@ def precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
         's_degree'  : None,
         'precond'   : M
     }
-
 
 def precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
     if m == 1:
@@ -214,17 +164,23 @@ def precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
             'precond'   : M
         }
 
-
-def precond_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
+def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
     symmetrize = not mtx_is_symmetric
         
     try:
-        P = gp.spanning_tree_precond_inv_m(mtx, m, symmetrize=symmetrize)
+        P_list = gp.spanning_tree_precond_mos_m(mtx, m, symmetrize=symmetrize)
+        P_list.reverse()
+        P = P_list.pop()
+
+        for Pl in P_list:  # XXX: can be done in log_2(n) iterations
+            P = Pl @ P
+
     except RuntimeError:
         P = None
 
     if P is not None:
         try:
+            # TODO: can be implemented as LU for every factor instead of (dense) product
             M = lu_sparse_operator(P)
         except RuntimeError:
             M = None
@@ -234,7 +190,6 @@ def precond_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None):
         's_degree'  : s_degree(P) if P is not None else None,
         'precond'   : M
     }
-    
 
 def precond_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
@@ -253,7 +208,6 @@ def precond_max_lf(mtx, mtx_is_symmetric):
         's_degree'  : s_degree(P),
         'precond'   : M
     }
-
 
 def precond_max_lf_add_m(mtx, mtx_is_symmetric, m):
     assert m > 1
@@ -275,31 +229,6 @@ def precond_max_lf_add_m(mtx, mtx_is_symmetric, m):
         'precond'   : M
     }
 
-
-def precond_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale):
-    assert m > 1
-
-    if not mtx_is_symmetric:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
-    
-    try:
-        P = Pi[0]
-        for k in range(1, len(Pi)):
-           P = P @ Pi[k]
-        M = lu_sparse_operator(P)
-
-    except RuntimeError:
-        M = None
-        
-    return { 
-        's_coverage': None,
-        's_degree'  : None,
-        'precond'   : M
-    }
-
-
 def precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
     assert m > 1
 
@@ -319,7 +248,6 @@ def precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
         's_degree'  : None,
         'precond'   : M
     }
-
 
 def precond_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
     if m == 1:
@@ -342,28 +270,6 @@ def precond_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
             'precond'   : M
         }
 
-
-def precond_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None):
-    symmetrize = not mtx_is_symmetric
-        
-    try:
-        P = gp.linear_forest_precond_inv_m(mtx, m, symmetrize=symmetrize)
-    except RuntimeError:
-        P = None
-
-    if P is not None:
-        try:
-            M = lu_sparse_operator(P)
-        except RuntimeError:
-            M = None
-
-    return { 
-        's_coverage': s_coverage(mtx, P) if P is not None else None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
-    
-
 def precond_ilu0(mtx):
     try:
         M = lu_sparse_operator(mtx, inexact=True)
@@ -375,7 +281,6 @@ def precond_ilu0(mtx):
         's_degree'  : None,
         'precond'   : M
     }
-
 
 def precond_custom(mtx, P):
     try:

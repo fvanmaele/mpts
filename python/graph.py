@@ -4,17 +4,16 @@
 @author: fvanmaele
 """
 
-import warnings
-from pathlib import Path
 
+from pathlib import Path
+from scipy.io import mmread
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
-from scipy.io import mmread
-
-
 from sparse_util import sparse_is_symmetric
-from trials import *
+from sparse_precond import *
+from solver import run_trial
 
 
 # %%
@@ -28,7 +27,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds = []
 
     # Unpreconditioned system
-    orig = trial_orig(mtx)
+    orig = precond_orig(mtx)
     sc.append(1)
     sd.append(orig['s_degree'])
     preconds.append(None)
@@ -70,13 +69,13 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_st_add_m['precond'])
     #     labels.append(f'maxST+ (m = {m})')
 
-    # # Maximum spanning tree preconditioner, multiplicative factors (m = 2..5)
-    # for m in range(2, 6):
-    #     max_st_mult_m = precond_max_st_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
-    #     sc.append(max_st_mult_m['s_coverage'])
-    #     sd.append(max_st_mult_m['s_degree'])
-    #     preconds.append(max_st_mult_m['precond'])
-    #     labels.append(f'maxST* (m = {m})')
+    # Maximum spanning tree preconditioner, MOS factors (m = 2..5)
+    for m in range(2, 6):
+        max_st_mos_m = precond_max_st_mos_m(mtx, mtx_is_symmetric, m)
+        sc.append(max_st_mos_m['s_coverage'])
+        sd.append(max_st_mos_m['s_degree'])
+        preconds.append(max_st_mos_m['precond'])
+        labels.append(f'maxST* (m = {m})')
 
     # # Maximum spanning tree preconditioner, inner alternating factors (m = 2..5)
     # for m in range(2, 6):
@@ -95,14 +94,6 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     sd.append(max_st_alt_m_o['s_degree'])
     #     preconds.append(max_st_alt_m_o['precond'])
     #     labels.append(f'maxST_alt_o (m = {m})')
-    
-    # # Maximum spanning tree preconditioner, iterative inverses
-    # for m in range(2, 6):
-    #     max_st_inv_m = precond_max_st_inv_m(mtx, mtx_is_symmetric, m, prune=None)
-    #     sc.append(max_st_inv_m['s_coverage'])
-    #     sd.append(max_st_inv_m['s_degree'])
-    #     preconds.append(max_st_inv_m['precond'])
-    #     labels.append(f'max_ST_inv (m = {m})')
 
     # Maximum linear forest preconditioner
     max_lf = precond_max_lf(mtx, mtx_is_symmetric)
@@ -119,8 +110,7 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_lf_add_m['precond'])
     #     labels.append(f'maxLF+ (m = {m})')
 
-    # # Maximum linear forest preconditioner, multiplicative factors (m = 2..5),
-    # # applied right-to-left
+    # # Maximum linear forest preconditioner, MOS factors (m = 2..5)
     # for m in range(2, 6):
     #     max_lf_mult_m = precond_max_lf_mult_m(mtx, mtx_is_symmetric, m, scale=0.01)
     #     sc.append(max_lf_mult_m['s_coverage'])
@@ -144,14 +134,6 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     #     preconds.append(max_lf_alt_m_o['precond'])
     #     labels.append(f'maxLF_alt_o (m = {m})')
     
-    # # Maximum linear forest preconditioner, iterative inverses
-    # for m in range(2, 6):
-    #     max_lf_inv_m = precond_max_lf_inv_m(mtx, mtx_is_symmetric, m, prune=None)
-    #     sc.append(max_lf_inv_m['s_coverage'])
-    #     sd.append(max_lf_inv_m['s_degree'])
-    #     preconds.append(max_lf_inv_m['precond'])
-    #     labels.append(f'max_lf_inv (m = {m})')
-
     # iLU(0)
     ilu0 = precond_ilu0(mtx)
     sc.append(None)
