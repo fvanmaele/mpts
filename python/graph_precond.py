@@ -106,7 +106,7 @@ def spanning_tree_precond_mos_m(mtx, m, symmetrize=False):
     mtx_avg_deg = ceil(mtx.getnnz() / n)
     B = mtx.copy()
 
-    B_diff = []
+    B_diff = []  # TODO: add warning if B_diff gets "too large" in some iteration
     M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
     M_MOS  = []
 

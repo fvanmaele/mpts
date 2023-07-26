@@ -174,7 +174,6 @@ def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
 
         for Pl in P_list:  # XXX: can be done in log_2(n) iterations
             P = Pl @ P
-
     except RuntimeError:
         P = None
 
@@ -185,11 +184,17 @@ def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
         except RuntimeError:
             M = None
 
-    return { 
-        's_coverage': s_coverage(mtx, P) if P is not None else None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
+        return { 
+            's_coverage': None,
+            's_degree'  : s_degree(P),
+            'precond'   : M
+        }
+    else:
+        return {
+            's_coverage': None,
+            's_degree'  : None,
+            'precond'   : None
+        }
 
 def precond_max_lf(mtx, mtx_is_symmetric):
     if not mtx_is_symmetric:
