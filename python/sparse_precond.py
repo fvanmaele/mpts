@@ -14,34 +14,6 @@ from sparse_util import s_coverage, s_degree, prune_sparse_matrix
 from sparse_lops import lu_sparse_operator, AltLinearOperator, IterLinearOperator
 
 
-# %% Diagonal preconditioners
-def unit(x):
-    return np.where(x != 0, x / np.abs(x), 1)
-
-def diagp0(mtx):
-    return mtx.diagonal()
-
-def row_sums_excluding_diagonal(mtx):
-    # Set the diagonal elements to zero in the CSR matrix
-    mtx = mtx.copy()
-    mtx.setdiag(0)
-
-    # Compute the sum of row elements excluding the diagonal elements
-    return np.array(mtx.sum(axis=1)).flatten()
-
-def diagp1(mtx):
-    mtx_d = mtx.diagonal()
-    return np.multiply(unit(mtx_d), np.maximum(np.abs(mtx_d), row_sums_excluding_diagonal(abs(mtx))))
-
-def diagp2(mtx):
-    mtx_d = mtx.diagonal()
-    return np.multiply(unit(mtx_d), np.array(abs(mtx).sum(axis=1)).flatten())
-
-def diagl1(mtx):
-    mtx_d = mtx.diagonal()
-    return mtx_d + row_sums_excluding_diagonal(abs(mtx))
-
-
 # %%
 def precond_orig(mtx):
     return {

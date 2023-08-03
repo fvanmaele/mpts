@@ -7,33 +7,33 @@ Created on Tue Jul 25 15:39:46 2023
 """
 
 import networkx as nx
+import numpy as np
 from scipy import sparse
-from math import ceil
 
-from sparse_util import sparse_mask, prune_sparse_matrix
+from sparse_util  import sparse_mask, prune_sparse_matrix
+from diag_precond import diagp1
 
 
 # %% Generalized graph preconditioner
-# In every case, `optG` is assumed to be a graph optimization function that does
-# NOT return self-loops (diagonal elements in the adjacency matrix)
-def graph_precond(mtx, optG, symmetrize=False):
-    if symmetrize:
-        G_abs = nx.Graph(abs((mtx + mtx.T) / 2))
-    else:
-        G_abs = nx.Graph(abs(mtx))
+# optG is assumed to not return diagonal elements in the adjacency matrix
+def graph_normalized(mtx):
+    """  Normalized and symmetrized version of a graph for segmentation
+    """
+    mtx_diagp_inv = sparse.diags(1 / diagp1(mtx))
+    
+    return nx.Graph(abs(mtx_diagp_inv @ mtx) + abs(mtx_diagp_inv @ mtx).T)
+    
 
+def graph_precond(mtx, optG):
+    C = graph_normalized(mtx)
     D = sparse.diags(mtx.diagonal())  # DIAgonal
-    O = optG(G_abs)  # graph optimization function (spanning tree, linear forest, etc.)
+    O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
     
     return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
 
 
-def graph_precond_add_m(mtx, optG, m, symmetrize=False):
-    # Only consider absolute values for the maximum spanning tree
-    if symmetrize:
-        R = nx.Graph(abs((mtx + mtx.T) / 2))
-    else:
-        R = nx.Graph(abs(mtx))
+def graph_precond_add_m(mtx, optG, m):
+    C = graph_normalized(mtx)
 
     # Begin with an empty sparse matrix
     S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
@@ -44,56 +44,53 @@ def graph_precond_add_m(mtx, optG, m, symmetrize=False):
     # In every iteration, the optimized graph is computed for the remainder 
     # (excluding self-loops)
     for k in range(m-1):
-        Mk = nx.to_scipy_sparse_array(optG(R))  # no diagonal elements
+        Mk = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
         
         # Accumulation of spanning trees (may have any amount of cycles)
         S = S + Mk
         
         # Subtract weights for the next iteration
-        R = nx.Graph(nx.to_scipy_sparse_array(R) - Mk)
+        C = nx.Graph(nx.to_scipy_sparse_array(C) - Mk)
 
     return sparse_mask(mtx, sparse.coo_array(S + D))
 
 
-def graph_precond_list_m(mtx, optG, m, symmetrize=False, scale=None):
-    if symmetrize:
-        R = nx.Graph(abs((mtx + mtx.T) / 2))
-    else:
-        R = nx.Graph(abs(mtx))
-
-    M = nx.to_scipy_sparse_array(optG(nx.Graph(R)))  # no diagonal elements
+def graph_precond_list_m(mtx, optG, m, scale=None):
+    C = graph_normalized(mtx)
+    M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
     S = [M]
 
     # Retrieve diagonal of input matrix for later adding
     D = sparse.diags(mtx.diagonal())
-    
+
     # Apply graph optimization to graph with entries scaled according to indices
     # retrieved in the previous step
     for k in range(1, m):
-        R = nx.Graph(sparse_mask(sparse.coo_array(nx.to_scipy_sparse_array(R)), 
-                     sparse.coo_array(M + D), scale=scale))
-        M = nx.to_scipy_sparse_array(optG(R))       
+        C = nx.Graph(sparse_mask(sparse.coo_array(nx.to_scipy_sparse_array(C)), 
+                                 sparse.coo_array(M + D), scale=scale))
+        M = nx.to_scipy_sparse_array(optG(C))       
         S.append(M)
 
     return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
+    
 
-
-# TODO: specify a sparsity pattern (here: pruned powers / neumann expansion of coefficient matrix A)
-# TODO: accept precondition function (spanning_tree_precond, linear_forest_precond)
-def graph_precond_mos_m(mtx, m, precond, symmetrize=False):
-
+def graph_precond_mos_m(mtx, m, precond):
     n, _ = mtx.shape
     Id = sparse.eye(n)
-    mtx_avg_deg = ceil(mtx.getnnz() / n)
-    B = mtx.copy()
 
+    # Vector of weights, matching the number of non-zero elements in each row of A
+    mtx_row_idx, _, _ = sparse.find(mtx)
+    _, mtx_q = np.unique(mtx_row_idx, return_counts=True)
+
+    # Check if B converges towards identity matrix
     B_diff = []  # TODO: add warning if B_diff gets "too large" in some iteration
     M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
     M_MOS  = []
+    B = mtx.copy()
 
     for l in range(0, m):
-        M = precond(B, symmetrize=symmetrize)  # includes diagonal of mtx1 (S^diag)
-        B = sparse_mask((B @ sparse.linalg.inv(M)).tocoo(), prune_sparse_matrix(B @ B, mtx_avg_deg))  # neumann expansion
+        M = precond(B)  # includes diagonal of mtx1 (S^diag)
+        B = sparse_mask((B @ sparse.linalg.inv(M)).tocoo(), prune_sparse_matrix(B, mtx_q))
 
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
@@ -101,29 +98,37 @@ def graph_precond_mos_m(mtx, m, precond, symmetrize=False):
     return M_MOS, B_diff
 
 
+def graph_precond_mos_d(mtx, optG, m, scale=None):
+    pass # TODO
+    
+
 # %% Spanning tree preconditioner
-def spanning_tree_precond(mtx, symmetrize=False):
+def spanning_tree_precond(mtx):
     """ Compute spanning tree preconditioner for a given sparse matrix.
     """
-    return graph_precond(mtx, nx.maximum_spanning_tree, symmetrize=symmetrize)
+    return graph_precond(mtx, nx.maximum_spanning_tree)
 
 
-def spanning_tree_precond_add_m(mtx, m, symmetrize=False):
+def spanning_tree_precond_add_m(mtx, m):
     """ Compute m spanning tree factors, computed by subtraction from the original graph.
     """
-    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize)
+    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m)
 
 
-def spanning_tree_precond_list_m(mtx, m, symmetrize=False, scale=None):
+def spanning_tree_precond_list_m(mtx, m, scale=None):
     """ Compute m spanning tree factors, computed by successively scaling of optimal entries
     """
-    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, symmetrize=symmetrize, scale=scale)
+    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, scale=scale)
 
 
-def spanning_tree_precond_mos_m(mtx, m, symmetrize=False):
+def spanning_tree_precond_mos_m(mtx, m):
     """ Compute spanning tree preconditioner iteratively, by computing (pruned) inverses
     """
-    return graph_precond_mos_m(mtx, m, spanning_tree_precond, symmetrize=symmetrize)
+    return graph_precond_mos_m(mtx, m, spanning_tree_precond)
+
+
+def spanning_tree_precond_mos_d(mtx, m, scale=None):
+    return graph_precond_mos_d(mtx, nx.maximum_spanning_tree, m, scale=scale)
 
 
 # %% Maximum linear forest preconditioner
@@ -183,25 +188,29 @@ def linear_forest(G):
         return forest
     
 
-def linear_forest_precond(mtx, symmetrize=False):
+def linear_forest_precond(mtx):
     """ Compute linear forest preconditioner for a given sparse matrix.
     """
-    return graph_precond(mtx, linear_forest, symmetrize=symmetrize)
+    return graph_precond(mtx, linear_forest)
 
 
-def linear_forest_precond_add_m(mtx, m, symmetrize=False):
+def linear_forest_precond_add_m(mtx, m):
     """ Compute m linear forest factors, computed by subtraction from the original graph.
     """
-    return graph_precond_add_m(mtx, linear_forest, m, symmetrize=symmetrize)
+    return graph_precond_add_m(mtx, linear_forest, m)
 
 
-def linear_forest_precond_list_m(mtx, m, symmetrize=False, scale=0):
+def linear_forest_precond_list_m(mtx, m, scale=0):
     """ Compute m linear forest factors, computed by successively scaling of optimal entries
     """
-    return graph_precond_list_m(mtx, linear_forest, m, symmetrize=symmetrize, scale=scale)
+    return graph_precond_list_m(mtx, linear_forest, m, scale=scale)
 
 
-def linear_forest_precond_mos_m(mtx, m, symmetrize=False):
+def linear_forest_precond_mos_m(mtx, m):
     """ Compute linear forest preconditioner iteratively, by computing (pruned) inverses
     """
-    return graph_precond_mos_m(mtx, m, linear_forest_precond, symmetrize=symmetrize)
+    return graph_precond_mos_m(mtx, m, linear_forest_precond)
+
+
+def linear_forest_precond_mos_d(mtx, m, scale=None):
+    return graph_precond_mos_d(mtx, linear_forest, m, scale=scale)
