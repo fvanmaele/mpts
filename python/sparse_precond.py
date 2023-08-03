@@ -53,18 +53,17 @@ def precond_tridiag(mtx):
         'precond'   : M
     }
 
-def precond_max_st(mtx, mtx_is_symmetric, prune=None):
-    if not mtx_is_symmetric:
-        P = gp.spanning_tree_precond(mtx, symmetrize=True)
-    else:
-        P = gp.spanning_tree_precond(mtx)
+def precond_max_st(mtx, q_max=None):
+    P = gp.spanning_tree_precond(mtx)
+    q = [q_max] * mtx.shape[0]
 
     # LU (with the correct permutation) applied to a spanning tree has no fill-in.
     # TODO: factorize the spanning tree conditioner "layer by layer"
     try:
-        if prune:
-            P = prune_sparse_matrix(P.tolil(), prune)
+        if q is not None:
+            P = prune_sparse_matrix(P.tolil(), q)
         M = lu_sparse_operator(P)
+
     except RuntimeError:
         M = None
 
@@ -74,13 +73,9 @@ def precond_max_st(mtx, mtx_is_symmetric, prune=None):
         'precond'   : M
     }
 
-def precond_max_st_add_m(mtx, mtx_is_symmetric, m):
+def precond_max_st_add_m(mtx, m):
     assert m > 1
-    
-    if not mtx_is_symmetric:
-        P = gp.spanning_tree_precond_add_m(mtx, m, symmetrize=True)
-    else:
-        P = gp.spanning_tree_precond_add_m(mtx, m)
+    P = gp.spanning_tree_precond_add_m(mtx, m)
 
     # Accumulation of spanning tree factors may result in any amount of cycles.
     # Use sparse LU decomposition and hope for the best
@@ -95,13 +90,9 @@ def precond_max_st_add_m(mtx, mtx_is_symmetric, m):
         'precond'   : M
     }
 
-def precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
+def precond_max_st_alt_i(mtx, m, scale):
     assert m > 1
-
-    if not mtx_is_symmetric:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
+    Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
 
     try:
         M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
@@ -115,14 +106,10 @@ def precond_max_st_alt_i(mtx, mtx_is_symmetric, m, scale):
         'precond'   : M
     }
 
-def precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
+def precond_max_st_alt_o(mtx, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
-
-    if not mtx_is_symmetric:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
+    Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
 
     try:
         M = IterLinearOperator(mtx, [sparse.linalg.splu(P).solve for P in Pi], repeat_i=repeat_i)
@@ -136,11 +123,9 @@ def precond_max_st_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
             'precond'   : M
         }
 
-def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
-    symmetrize = not mtx_is_symmetric
-        
+def precond_max_st_mos_m(mtx, m, prune=None):
     try:
-        P_list, B_diff = gp.spanning_tree_precond_mos_m(mtx, m, symmetrize=symmetrize)
+        P_list, B_diff = gp.spanning_tree_precond_mos_m(mtx, m)
         P_list.reverse()
         P = P_list.pop()
 
@@ -170,11 +155,8 @@ def precond_max_st_mos_m(mtx, mtx_is_symmetric, m, prune=None):
             'precond'   : None
         }
 
-def precond_max_lf(mtx, mtx_is_symmetric):
-    if not mtx_is_symmetric:
-        P = gp.linear_forest_precond(mtx, symmetrize=True)
-    else:
-        P = gp.linear_forest_precond(mtx)
+def precond_max_lf(mtx):
+    P = gp.linear_forest_precond(mtx)
 
     # Note: not permuted to tridiagonal system (tridiagonal solver)
     try:
@@ -188,13 +170,9 @@ def precond_max_lf(mtx, mtx_is_symmetric):
         'precond'   : M
     }
 
-def precond_max_lf_add_m(mtx, mtx_is_symmetric, m):
+def precond_max_lf_add_m(mtx, m):
     assert m > 1
-    
-    if not mtx_is_symmetric:
-        P = gp.linear_forest_precond_add_m(mtx, m, symmetrize=True)
-    else:
-        P = gp.linear_forest_precond_add_m(mtx, m)
+    P = gp.linear_forest_precond_add_m(mtx, m)
 
     # Accumulation of (after permutation) tridiagonal factors
     try:
@@ -208,13 +186,9 @@ def precond_max_lf_add_m(mtx, mtx_is_symmetric, m):
         'precond'   : M
     }
 
-def precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
+def precond_max_lf_alt_i(mtx, m, scale):
     assert m > 1
-
-    if not mtx_is_symmetric:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
+    Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
     
     try:
         M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
@@ -228,14 +202,10 @@ def precond_max_lf_alt_i(mtx, mtx_is_symmetric, m, scale):
         'precond'   : M
     }
 
-def precond_max_lf_alt_o(mtx, mtx_is_symmetric, m, scale, repeat_i=0):
+def precond_max_lf_alt_o(mtx, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
-
-    if not mtx_is_symmetric:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, symmetrize=True, scale=scale)
-    else:
-        Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
+    Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
 
     try:
         M = IterLinearOperator(mtx, [sparse.linalg.splu(P).solve for P in Pi], repeat_i=repeat_i)

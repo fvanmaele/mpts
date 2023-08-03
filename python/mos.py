@@ -76,7 +76,3 @@ print(f"{result['iters']} iters, relres: {result['rk'][-1]}, fre: {result['fre']
 M_MOS_3 = lu_sparse_operator(T3 @ M2 @ M1 @ M0)
 result = run_trial(mtx1, x1, M_MOS_3, k_max_outer=10, k_max_inner=20)
 print(f"{result['iters']} iters, relres: {result['rk'][-1]}, fre: {result['fre'][-1]}")
-
-# %%
-
-
