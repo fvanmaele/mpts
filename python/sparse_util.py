@@ -108,8 +108,13 @@ def s_degree(mtx):
     return max(M_deg)
 
 
-# TODO: do not consider diagonal when sorting
-def prune_sparse_matrix(matrix, q):
+# TODO: special version of sparse_mask() -> return sparsity pattern
+def prune_sparse_matrix(matrix, q, threshold=None):
+    if threshold is not None:
+        assert len(threshold) > 0
+        assert (np.array(threshold) > 0).all()
+    
+    # Begin with empty matrix
     matrix_pruned = sparse.csr_array(matrix.shape)
 
     # Find the nonzero elements and their corresponding row indices
@@ -126,21 +131,35 @@ def prune_sparse_matrix(matrix, q):
         row_values       = values[row_indices_mask]
         row_col_indices  = col_indices[row_indices_mask]
 
-        # if len(row_values) <= N:
-        #     continue
+        if threshold is None:
+            # Exclude diagonal elements from sorting
+            diagonal_indices = np.where(row_col_indices == row_idx)
+            row_col_indices  = np.delete(row_col_indices, diagonal_indices)
+            row_values       = np.delete(row_values, diagonal_indices)
 
-        # Sort the row values by their absolute values
-        sorted_indices = np.flip(np.argsort(np.abs(row_values)))
+            # if len(row_values) <= N:
+            #     continue
+    
+            # Sort the row values by their absolute values
+            sorted_indices = np.flip(np.argsort(np.abs(row_values)))
+    
+            # Prune the row values and indices beyond N
+            N = q[qi]
+            pruned_indices = row_col_indices[sorted_indices[:N]]
+            pruned_values  = row_values[sorted_indices[:N]]
 
-        # Prune the row values and indices beyond N
-        N = q[qi]
-        pruned_indices = row_col_indices[sorted_indices[:N]]
-        pruned_values  = row_values[sorted_indices[:N]]
+        else:
+            max_value = np.max(np.abs(row_values))
+            above_threshold_indices = np.where(np.abs(row_values) >= threshold[qi] * max_value)
+            
+            # Prune the row values and indices below the threshold
+            pruned_indices = row_col_indices[above_threshold_indices]
+            pruned_values  = row_values[above_threshold_indices]
 
         # Set the pruned values and indices in the matrix
         #matrix[row_idx, pruned_indices] = 0
         matrix_pruned[row_idx, pruned_indices] = pruned_values
 
-    # XXX: ensure diagonal elements are preserved
+    # Re-add diagonal elements (which were considered in the main loop)
     matrix_pruned.setdiag(matrix.diagonal())
     return matrix_pruned.tocoo()
