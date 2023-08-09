@@ -10,7 +10,7 @@ import networkx as nx
 import numpy as np
 from scipy import sparse
 
-from sparse_util  import sparse_mask, prune_sparse_matrix
+from sparse_util  import sparse_prune, sparse_scale, sparse_max_n
 from diag_precond import diagp1, unit
 
 
@@ -29,7 +29,7 @@ def graph_precond(mtx, optG):
     D = sparse.diags(mtx.diagonal())  # DIAgonal
     O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
     
-    return sparse_mask(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
+    return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
 
 
 def graph_precond_add_m(mtx, optG, m):
@@ -52,7 +52,7 @@ def graph_precond_add_m(mtx, optG, m):
         # Subtract weights for the next iteration
         C = nx.Graph(nx.to_scipy_sparse_array(C) - Mk)
 
-    return sparse_mask(mtx, sparse.coo_array(S + D))
+    return sparse_prune(mtx, sparse.coo_array(S + D))
 
 
 def graph_precond_list_m(mtx, optG, m, scale=None):
@@ -64,14 +64,15 @@ def graph_precond_list_m(mtx, optG, m, scale=None):
     D = sparse.diags(mtx.diagonal())
 
     # Apply graph optimization to graph with entries scaled according to indices
-    # retrieved in the previous step
+    # retrieved in the previous step (2.2)
     for k in range(1, m):
-        C = nx.Graph(sparse_mask(sparse.coo_array(nx.to_scipy_sparse_array(C)), 
-                                 sparse.coo_array(M + D), scale=scale))
+        # C -> scale(C, S(M) \ S_diag(M), scale)
+        C = nx.Graph(sparse_scale(nx.to_scipy_sparse_array(C).tocoo(), 
+                                  sparse.coo_array(M), scale=scale))
         M = nx.to_scipy_sparse_array(optG(C))       
         S.append(M)
 
-    return [sparse_mask(mtx, sparse.coo_array(Sk + D)) for Sk in S]
+    return [sparse_prune(mtx, sparse.coo_array(Sk + D)) for Sk in S]
     
 
 def graph_precond_mos_m(mtx, m, precond):
@@ -90,7 +91,7 @@ def graph_precond_mos_m(mtx, m, precond):
 
     for l in range(0, m):
         M = precond(B)  # includes diagonal of mtx1 (S^diag)
-        B = prune_sparse_matrix(B @ sparse.linalg.inv(M), mtx_q)
+        B = sparse_max_n(B @ sparse.linalg.inv(M), mtx_q)
 
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
@@ -157,6 +158,7 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
         M_prod = M_MOS_d[0]
         for k in reversed(range(1, m+1)):
             M_prod = M_prod @ M_MOS_d[k]
+        # TODO: sparse condition estimate of A, |R|/|A| < 1/cond(A)
         R = M_prod - A
     
     return M_MOS_d, R

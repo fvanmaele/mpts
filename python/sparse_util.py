@@ -41,43 +41,60 @@ def sparse_is_ddiag(matrix):
     return rows_ddiag / matrix.shape[0]
 
 
-def sparse_mask(mtx, mtx_mask, scale=None):
+def sparse_prune(mtx, mtx_mask):
     """ Index a sparse matrix with another sparse matrix of the same dimension.
     
     It is assumed that non-zero indices of `mtx_mask` are a subset of 
     non-zero indices of `mtx` (with potentially differing entries).
-
-    If the `scale` parameter is specified, indexed entries are scaled with a given
-    factor instead of removed.
     """
     # TODO: do a precondition check on "is a subset of"
     assert mtx.shape == mtx_mask.shape
     assert sparse.issparse(mtx)
     assert sparse.issparse(mtx_mask)
 
-    rows = []
-    cols = []
-    data = []
-    mask = {}
+    rows, cols, data, mask = [], [], [], {}
 
     for i, j, v in zip(mtx_mask.row, mtx_mask.col, mtx_mask.data):
         mask[(i, j)] = True
 
     for i, j, v in zip(mtx.row, mtx.col, mtx.data):
-        if scale is not None:
+        if (i, j) in mask:
             rows.append(i)
             cols.append(j)
-            
-            if (i, j) in mask:
-                data.append(scale*v)
-            else:
-                data.append(v)
-        else:
-            if (i, j) in mask:
-                rows.append(i)
-                cols.append(j)
+            data.append(v)
 
-                data.append(v)
+    return sparse.coo_matrix((data, (rows, cols)))
+
+
+def sparse_scale(mtx, mtx_mask, scale):
+    """ Scale a sparse matrix by indices of another sparse matrix.
+    
+    It is assumed that non-zero indices of `mtx_mask` are a subset of 
+    non-zero indices of `mtx` (with potentially differing entries).
+    """
+    # TODO: do a precondition check on "is a subset of"
+    assert mtx.shape == mtx_mask.shape
+    assert sparse.issparse(mtx)
+    assert sparse.issparse(mtx_mask)
+    
+    rows, cols, data, mask = [], [], [], {}
+
+    for i, j, v in zip(mtx_mask.row, mtx_mask.col, mtx_mask.data):
+        mask[(i, j)] = True
+        
+    # TODO: handle scale = 0 (avoid explicit zeros)
+    for i, j, v in zip(mtx.row, mtx.col, mtx.data):
+        in_mask = (i, j) in mask
+
+        if in_mask and scale != 0:
+            rows.append(i)
+            cols.append(j)
+            data.append(scale*v)
+
+        elif not in_mask:
+            rows.append(i)
+            cols.append(j)
+            data.append(v)
 
     return sparse.coo_matrix((data, (rows, cols)))
 
@@ -109,7 +126,7 @@ def s_degree(mtx):
 
 
 # TODO: special version of sparse_mask() -> return sparsity pattern
-def prune_sparse_matrix(matrix, q, threshold=None):
+def sparse_max_n(matrix, q, threshold=None):
     if threshold is not None:
         assert len(threshold) > 0
         assert (np.array(threshold) > 0).all()

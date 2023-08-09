@@ -130,7 +130,7 @@ def precond_max_st_alt_o(mtx, m, scale, repeat_i=0):
             'precond'   : M
         }
 
-def precond_max_st_mos_m(mtx, m, prune=None):
+def precond_max_st_mos_m(mtx, m):
     try:
         P_list, B_diff = gp.spanning_tree_precond_mos_m(mtx, m)
         P_list.reverse()
@@ -161,6 +161,13 @@ def precond_max_st_mos_m(mtx, m, prune=None):
             's_degree'  : None,
             'precond'   : None
         }
+
+def precond_max_st_mos_d(mtx, m, remainder=False):
+    try:
+        M_mos_d, R = gp.spanning_tree_precond_mos_d(mtx, m, scale=None, remainder=remainder)
+    except RuntimeError:
+        pass
+
 
 def precond_max_lf(mtx):
     P = gp.linear_forest_precond(mtx)
@@ -224,6 +231,38 @@ def precond_max_lf_alt_o(mtx, m, scale, repeat_i=0):
             's_coverage': None,
             's_degree'  : None,
             'precond'   : M
+        }
+
+def precond_max_lf_mos_m(mtx, m):
+    try:
+        P_list, B_diff = gp.linear_forest_precond_mos_m(mtx, m)
+        P_list.reverse()
+        P = P_list.pop()
+
+        for Pl in P_list:  # XXX: can be done in log_2(n) iterations
+            P = Pl @ P
+        print(f'{m}: {np.max(B_diff)}')
+
+    except RuntimeError:
+        P = None
+
+    if P is not None:
+        try:
+            # TODO: can be implemented as LU for every factor instead of (dense) product
+            M = lu_sparse_operator(P)
+        except RuntimeError:
+            M = None
+
+        return { 
+            's_coverage': None,
+            's_degree'  : s_degree(P),
+            'precond'   : M
+        }
+    else:
+        return {
+            's_coverage': None,
+            's_degree'  : None,
+            'precond'   : None
         }
 
 def precond_ilu0(mtx):
