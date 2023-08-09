@@ -11,8 +11,8 @@ import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sparse_precond import *
-from solver import run_trial
+from trial import run_trial
+from trial_precond import *
 
 
 # %%

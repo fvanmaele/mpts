@@ -16,7 +16,7 @@ from sparse_util import sparse_mask, prune_sparse_matrix
 from sparse_lops import lu_sparse_operator
 from diag_precond import diagp1
 
-from solver import run_trial
+from trial import run_trial
 import graph_precond as gp
 
 

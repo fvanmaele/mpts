@@ -92,6 +92,9 @@ def precond_max_st_add_m(mtx, m):
 
 def precond_max_st_alt_i(mtx, m, scale):
     assert m > 1
+    assert scale > 0
+    assert scale < 1
+
     Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
 
     try:
@@ -109,6 +112,10 @@ def precond_max_st_alt_i(mtx, m, scale):
 def precond_max_st_alt_o(mtx, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
+    else:
+        assert scale > 0
+        assert scale > 1
+
     Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
 
     try:

@@ -11,7 +11,7 @@ import numpy as np
 from scipy import sparse
 
 from sparse_util  import sparse_mask, prune_sparse_matrix
-from diag_precond import diagp1
+from diag_precond import diagp1, unit
 
 
 # %% Generalized graph preconditioner
@@ -90,7 +90,7 @@ def graph_precond_mos_m(mtx, m, precond):
 
     for l in range(0, m):
         M = precond(B)  # includes diagonal of mtx1 (S^diag)
-        B = sparse_mask((B @ sparse.linalg.inv(M)).tocoo(), prune_sparse_matrix(B, mtx_q))
+        B = prune_sparse_matrix(B @ sparse.linalg.inv(M), mtx_q)
 
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
@@ -98,8 +98,75 @@ def graph_precond_mos_m(mtx, m, precond):
     return M_MOS, B_diff
 
 
-def graph_precond_mos_d(mtx, optG, m, scale=None):
-    pass # TODO
+def precond_mos_d(A, Al_pp, T, remainder=False):
+    """
+    Generalization of ILU factorizations (MOS Ansatz)
+
+    Parameters
+    ----------
+    A : sparse.matrix
+        Input coefficient matrix.
+    Am : sparse.matrix...
+        Off-diagonal matrices A''_0, ..., A''_{m-1}
+    T : np.array
+        Invertible diagonal matrix with unit(T) = unit(diag(A)) and |T| >= |diag(A)|
+    remainder : bool
+        If True, compute R = A - M_MOS_d (requires m-1 sparse matrix-matrix products)
+
+    Returns
+    -------
+    M_MOS_d : sparse.matrix...
+        MOS-d preconditioner as list of (multiplicative) factors
+
+    """
+    m = len(Al_pp)
+    assert m >= 2
+
+    # Precondition checks for diagonal matrix T
+    A_diag = A.diagonal()
+    assert T.ndim == 1              # diagonal matrix, 1d representation
+    assert np.any(T > 0)            # invertible
+    assert abs(T) >= abs(A_diag)    # |T| >= |diag(A)|
+    assert np.all(unit(T) == unit(A_diag))
+    
+    # Intermediate diagonal factors (1.33)
+    T_inv = 1 / T
+    E = 1/m * T_inv * (A_diag - T)
+    I = np.ones(len(T))
+    assert np.all(E <= 0)
+    assert np.allclose(T * (I + m*E), A_diag)
+    
+    # (1.34)
+    J = I + E
+    assert np.all((m - 1)/m * I <= J)
+    assert np.all(J <= I)
+    
+    # Compute factors A' in dependence of A''_0,...,A''_{m-1}
+    Al_p = []
+    for l in range(0, m):
+        Al_p.append(sparse.diags(J ** -(m-1-l)) @ Al_pp[l] @ sparse.diags(J ** -l))
+
+    # Compute MOS-d preconditioner
+    M_MOS_d = [sparse.diags(T)]
+    for l in reversed(range(0, m)):
+        M_MOS_d.append(sparse.diags(J) + sparse.diags(T_inv) @ Al_p[l])
+
+    # Explicitly compute matrix-matrix products for remainder calculation
+    R = None
+    if remainder:
+        M_prod = M_MOS_d[0]
+        for k in reversed(range(1, m+1)):
+            M_prod = M_prod @ M_MOS_d[k]
+        R = M_prod - A
+    
+    return M_MOS_d, R
+
+
+def graph_precond_mos_d(mtx, optG, m, scale=None, remainder=False):
+    # Note: no permutation done here
+    Al_pp = graph_precond_list_m(mtx, optG, m, scale=scale)
+    
+    return precond_mos_d(mtx, Al_pp, diagp1(mtx), remainder=remainder)
     
 
 # %% Spanning tree preconditioner
@@ -127,8 +194,8 @@ def spanning_tree_precond_mos_m(mtx, m):
     return graph_precond_mos_m(mtx, m, spanning_tree_precond)
 
 
-def spanning_tree_precond_mos_d(mtx, m, scale=None):
-    return graph_precond_mos_d(mtx, nx.maximum_spanning_tree, m, scale=scale)
+def spanning_tree_precond_mos_d(mtx, m, scale=None, remainder=False):
+    return graph_precond_mos_d(mtx, nx.maximum_spanning_tree, m, scale=scale, remainder=remainder)
 
 
 # %% Maximum linear forest preconditioner
@@ -212,5 +279,5 @@ def linear_forest_precond_mos_m(mtx, m):
     return graph_precond_mos_m(mtx, m, linear_forest_precond)
 
 
-def linear_forest_precond_mos_d(mtx, m, scale=None):
-    return graph_precond_mos_d(mtx, linear_forest, m, scale=scale)
+def linear_forest_precond_mos_d(mtx, m, scale=None, remainder=False):
+    return graph_precond_mos_d(mtx, linear_forest, m, scale=scale, remainder=remainder)
