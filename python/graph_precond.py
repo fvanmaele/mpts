@@ -67,8 +67,7 @@ def graph_precond_list_m(mtx, optG, m, scale=None):
     # retrieved in the previous step (2.2)
     for k in range(1, m):
         # C -> scale(C, S(M) \ S_diag(M), scale)
-        C = nx.Graph(sparse_scale(nx.to_scipy_sparse_array(C).tocoo(), 
-                                  sparse.coo_array(M), scale=scale))
+        C = nx.Graph(sparse_scale(nx.to_scipy_sparse_array(C).tocoo(), sparse.coo_array(M), scale=scale))
         M = nx.to_scipy_sparse_array(optG(C))       
         S.append(M)
 
