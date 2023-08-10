@@ -59,34 +59,40 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     # preconds.append(max_st_pruned['precond'])
     # labels.append('maxST (pruned A)')
 
-    # # Maximum spanning tree preconditioner, additive factors (m = 2..5)
-    # for m in range(2, 6):
+    # # Maximum spanning tree preconditioner, additive factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_st_add_m = precond_max_st_add_m(mtx, m)
     #     sc.append(max_st_add_m['s_coverage'])
     #     sd.append(max_st_add_m['s_degree'])
     #     preconds.append(max_st_add_m['precond'])
     #     labels.append(f'maxST+ (m = {m})')
 
-    # Maximum spanning tree preconditioner, MOS factors (m = 2, 3)
-    for m in [2, 3]:
-        max_st_mos_m = precond_max_st_mos_m(mtx, m)
-        sc.append(max_st_mos_m['s_coverage'])
-        sd.append(max_st_mos_m['s_degree'])
-        preconds.append(max_st_mos_m['precond'])
-        labels.append(f'maxST* (m = {m})')
+    # # Maximum spanning tree preconditioner, MOS-a factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
+    #     max_st_mos_m = precond_max_st_mos_m(mtx, m)
+    #     sc.append(max_st_mos_m['s_coverage'])
+    #     sd.append(max_st_mos_m['s_degree'])
+    #     preconds.append(max_st_mos_m['precond'])
+    #     labels.append(f'maxST* (m = {m})')
 
-    # # Maximum spanning tree preconditioner, inner alternating factors (m = 2..5)
-    # for m in range(2, 6):
-    #     #max_st_alt_m_i = precond_max_st_alt_i(mtx, m, scale=0)
+    # # Maximum spanning tree preconditioner, MOS-d factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
+    #     max_st_mos_d = precond_max_st_mos_d(mtx, m, scale=0.01)
+    #     sc.append(max_st_mos_d['s_coverage'])
+    #     sd.append(max_st_mos_d['s_degree'])
+    #     preconds.append(max_st_mos_d['precond'])
+    #     labels.append(f'maxST*d (m = {m}')
+
+    # # Maximum spanning tree preconditioner, inner alternating factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_st_alt_m_i = precond_max_st_alt_i(mtx, m, scale=0.01)
     #     sc.append(max_st_alt_m_i['s_coverage'])
     #     sd.append(max_st_alt_m_i['s_degree'])
     #     preconds.append(max_st_alt_m_i['precond'])
     #     labels.append(f'maxST_alt_i (m = {m})')
 
-    # # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
-    # for m in range(2, 6):
-    #     #max_st_alt_m_o = precond_max_st_alt_o(mtx, 1, scale=0, repeat_i=m)
+    # # Maximum spanning tree preconditioner, outer alternating factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_st_alt_m_o = precond_max_st_alt_o(mtx, m, scale=0.01, repeat_i=0)
     #     sc.append(max_st_alt_m_o['s_coverage'])
     #     sd.append(max_st_alt_m_o['s_degree'])
@@ -100,38 +106,46 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds.append(max_lf['precond'])
     labels.append('maxLF')
     
-    # Maximum linear forest preconditioner, additive factors (m = 2..5)
-    # for m in range(2, 6):
+    # Maximum linear forest preconditioner, additive factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_lf_add_m = precond_max_lf_add_m(mtx, m)
     #     sc.append(max_lf_add_m['s_coverage'])
     #     sd.append(max_lf_add_m['s_degree'])
     #     preconds.append(max_lf_add_m['precond'])
     #     labels.append(f'maxLF+ (m = {m})')
 
-    # # Maximum linear forest preconditioner, MOS factors (m = 2..5)
-    # for m in range(2, 6):
+    # # Maximum linear forest preconditioner, MOS factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_lf_mult_m = precond_max_lf_mult_m(mtx, m, scale=0.01)
     #     sc.append(max_lf_mult_m['s_coverage'])
     #     sd.append(max_lf_mult_m['s_degree'])
     #     preconds.append(max_lf_mult_m['precond'])
     #     labels.append(f'maxLF* (m = {m})')
     
-    # # Maximum spanning tree preconditioner, inner alternating factors (m = 2..5)
-    # for m in range(2, 6):
+    # # Maximum linear forest preconditioner, inner alternating factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_lf_alt_m_i = precond_max_lf_alt_i(mtx, m, scale=0.01)
     #     sc.append(max_lf_alt_m_i['s_coverage'])
     #     sd.append(max_lf_alt_m_i['s_degree'])
     #     preconds.append(max_lf_alt_m_i['precond'])
     #     labels.append(f'maxLF_alt_i (m = {m})')
 
-    # # Maximum spanning tree preconditioner, outer alternating factors (m = 2..5)
-    # for m in range(2, 6):
+    # # Maximum linear forest preconditioner, outer alternating factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
     #     max_lf_alt_m_o = precond_max_lf_alt_o(mtx, m, scale=0.01)
     #     sc.append(max_lf_alt_m_o['s_coverage'])
     #     sd.append(max_lf_alt_m_o['s_degree'])
     #     preconds.append(max_lf_alt_m_o['precond'])
     #     labels.append(f'maxLF_alt_o (m = {m})')
     
+    # Maximum linear forest preconditioner, MOS-d factors (m = 2, 3, 4)
+    for m in [2, 3, 4]:
+        max_lf_mos_d = precond_max_lf_mos_d(mtx, m, scale=0.01)
+        sc.append(max_lf_mos_d['s_coverage'])
+        sd.append(max_lf_mos_d['s_degree'])
+        preconds.append(max_lf_mos_d['precond'])
+        labels.append(f'maxLF*d (m = {m}')
+
     # iLU(0)
     ilu0 = precond_ilu0(mtx)
     sc.append(None)

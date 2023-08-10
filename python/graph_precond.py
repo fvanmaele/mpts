@@ -55,7 +55,7 @@ def graph_precond_add_m(mtx, optG, m):
     return sparse_prune(mtx, sparse.coo_array(S + D))
 
 
-def graph_precond_list_m(mtx, optG, m, scale=None):
+def graph_precond_list_m(mtx, optG, m, scale):
     C = graph_normalized(mtx)
     M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
     S = [M]
@@ -67,7 +67,7 @@ def graph_precond_list_m(mtx, optG, m, scale=None):
     # retrieved in the previous step (2.2)
     for k in range(1, m):
         # C -> scale(C, S(M) \ S_diag(M), scale)
-        C = nx.Graph(sparse_scale(nx.to_scipy_sparse_array(C).tocoo(), sparse.coo_array(M), scale=scale))
+        C = nx.Graph(sparse_scale(nx.to_scipy_sparse_array(C).tocoo(), M.tocoo(), scale))
         M = nx.to_scipy_sparse_array(optG(C))       
         S.append(M)
 
@@ -90,6 +90,7 @@ def graph_precond_mos_m(mtx, m, precond):
 
     for l in range(0, m):
         M = precond(B)  # includes diagonal of mtx1 (S^diag)
+        #B = sparse_prune((B @ sparse.linalg.inv(M)).tocoo(), sparse_max_n(B, mtx_q))
         B = sparse_max_n(B @ sparse.linalg.inv(M), mtx_q)
 
         B_diff.append(sparse.linalg.norm(Id - B))
@@ -124,9 +125,9 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
 
     # Precondition checks for diagonal matrix T
     A_diag = A.diagonal()
-    assert T.ndim == 1              # diagonal matrix, 1d representation
-    assert np.any(T > 0)            # invertible
-    assert abs(T) >= abs(A_diag)    # |T| >= |diag(A)|
+    assert T.ndim == 1                          # diagonal matrix, 1d representation
+    assert np.all(T != 0)                       # invertible
+    assert np.all(abs(T)  >= abs(A_diag))       # |T| >= |diag(A)|
     assert np.all(unit(T) == unit(A_diag))
     
     # Intermediate diagonal factors (1.33)
@@ -163,7 +164,7 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
     return M_MOS_d, R
 
 
-def graph_precond_mos_d(mtx, optG, m, scale=None, remainder=False):
+def graph_precond_mos_d(mtx, optG, m, scale=0, remainder=False):
     # Note: no permutation done here
     Al_pp = graph_precond_list_m(mtx, optG, m, scale=scale)
     
@@ -183,7 +184,7 @@ def spanning_tree_precond_add_m(mtx, m):
     return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m)
 
 
-def spanning_tree_precond_list_m(mtx, m, scale=None):
+def spanning_tree_precond_list_m(mtx, m, scale):
     """ Compute m spanning tree factors, computed by successively scaling of optimal entries
     """
     return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, scale=scale)
@@ -195,7 +196,7 @@ def spanning_tree_precond_mos_m(mtx, m):
     return graph_precond_mos_m(mtx, m, spanning_tree_precond)
 
 
-def spanning_tree_precond_mos_d(mtx, m, scale=None, remainder=False):
+def spanning_tree_precond_mos_d(mtx, m, scale=0, remainder=False):
     return graph_precond_mos_d(mtx, nx.maximum_spanning_tree, m, scale=scale, remainder=remainder)
 
 
@@ -268,7 +269,7 @@ def linear_forest_precond_add_m(mtx, m):
     return graph_precond_add_m(mtx, linear_forest, m)
 
 
-def linear_forest_precond_list_m(mtx, m, scale=0):
+def linear_forest_precond_list_m(mtx, m, scale):
     """ Compute m linear forest factors, computed by successively scaling of optimal entries
     """
     return graph_precond_list_m(mtx, linear_forest, m, scale=scale)
@@ -280,5 +281,5 @@ def linear_forest_precond_mos_m(mtx, m):
     return graph_precond_mos_m(mtx, m, linear_forest_precond)
 
 
-def linear_forest_precond_mos_d(mtx, m, scale=None, remainder=False):
+def linear_forest_precond_mos_d(mtx, m, scale=0, remainder=False):
     return graph_precond_mos_d(mtx, linear_forest, m, scale=scale, remainder=remainder)

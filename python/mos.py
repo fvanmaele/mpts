@@ -21,7 +21,7 @@ import graph_precond as gp
 
 
 # %%
-mtx1 = mmread('../mtx/00_2048/c-20.mtx')
+mtx1 = mmread('../mtx/00_2048/cryg2500.mtx')
 #assert mtx1_is_symmetric
 Id1 = sparse.eye(mtx1.shape[0])
 mtx1_row_idx, _, _ = sparse.find(mtx1)

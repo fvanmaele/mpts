@@ -82,7 +82,6 @@ def sparse_scale(mtx, mtx_mask, scale):
     for i, j, v in zip(mtx_mask.row, mtx_mask.col, mtx_mask.data):
         mask[(i, j)] = True
 
-    # TODO: handle scale = 0 (avoid explicit zeros)
     for i, j, v in zip(mtx.row, mtx.col, mtx.data):
         in_mask = (i, j) in mask
 
