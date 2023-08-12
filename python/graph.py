@@ -16,7 +16,7 @@ from trial_precond import *
 
 
 # %%
-def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_x=None, custom=None):
+def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None, custom=None):
     """ Compare the performance of spanning tree preconditioners
     """
     sc, sc_mst, sc_lf = [], [], []
@@ -161,82 +161,91 @@ def run_trial_precond(mtx, x, k_max_outer=10, k_max_inner=20, title=None, title_
     preconds.append(ilu0['precond'])
     labels.append('iLU')
 
-    # Use logarithmic scale for relative residual (y-scale)
-    fig1, ax1 = plt.subplots(nrows=1, ncols=2)
-    fig1.set_size_inches(10, 7)
-    fig1.set_dpi(300)
+    for xi, x in enumerate(xs):
+        title_x = title_xs[xi]
 
-    ax1.set_yscale('log')
-    ax1.set_xlabel('iterations')
-    ax1.set_ylabel('relres')
-
-    # Classical preconditioners
-    for i, label in enumerate(labels):
-        M = preconds[i]
-
-        if M is None and i > 0:
-            print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
-            continue
+        # Use logarithmic scale for relative residual (y-scale)
+        fig1, ax1 = plt.subplots(nrows=1, ncols=2)
+        fig1.set_size_inches(10, 7)
+        fig1.set_dpi(300)
+    
+        ax1[0].set_yscale('log')
+        ax1[0].set_xlabel('iterations')
+        ax1[0].set_ylabel('relres')
+    
+        ax1[1].set_yscale('log')
+        ax1[1].set_xlabel('iterations')
+        ax1[1].set_ylabel('relres')
         
-        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+        # Classical preconditioners
+        for i, label in enumerate(labels):
+            M = preconds[i]
     
-        if result is not None:
-            relres = result['rk']
-            fre    = result['fre']
-    
-            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
+            if M is None and i > 0:
+                print("{}, s_coverage: {}, s_degree: {}".format(label, sc[i], sd[i]))
+                continue
             
-            # Results included in both MST/LF graphs
-            ax1[0, 0].plot(range(1, len(relres)+1), relres, label=label)
-            ax1[0, 1].plot(range(1, len(relres)+1), relres, label=label)
-        else:
-            warnings.warn(f'failed to solve {label} system')
-
-
-    # MST preconditioners
-    for i, label in enumerate(labels_mst):
-        M = preconds_mst[i]
-
-        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
-
-        if result is not None:
-            relres = result['rk']
-            fre    = result['fre']
-    
-            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
-    
-            # Plot results for MST preconditioner
-            ax1[0, 0].plot(range(1, len(relres)+1), relres, label=label)
-        else:
-            warnings.warn(f'failed to solve {label} system')
+            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+        
+            if result is not None:
+                relres = result['rk']
+                fre    = result['fre']
+        
+                print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                    label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
+                
+                # Results included in both MST/LF graphs
+                ax1[0].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[1].plot(range(1, len(relres)+1), relres, label=label)
+            else:
+                warnings.warn(f'failed to solve {label} system')
     
     
-    # LF preconditioners
-    for i, label in enumerate(labels_lf):
-        M = preconds_lf[i]
-
-        result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
-
-        if result is not None:
-            relres = result['rk']
-            fre    = result['fre']
+        # MST preconditioners
+        for i, label in enumerate(labels_mst):
+            M = preconds_mst[i]
     
-            print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                label, result['iters'], sc[i], sd[i], relres[-1], fre[-1]))
+            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
     
-            # Plot results for LF preconditioner
-            ax1[0, 1].plot(range(1, len(relres)+1), relres, label=label)
-        else:
-            warnings.warn(f'failed to solve {label} system')
-
-    # Save picture
-    ax1.legend(title=f'{title}, x{title_x}')
-    fig1.savefig(f'{title}_x{title_x}.png', bbox_inches='tight')
-
-    plt.close()
+            if result is not None:
+                relres = result['rk']
+                fre    = result['fre']
+        
+                print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                    label, result['iters'], sc_mst[i], sd_mst[i], relres[-1], fre[-1]))
+        
+                # Plot results for MST preconditioner
+                ax1[0].plot(range(1, len(relres)+1), relres, label=label)
+            else:
+                warnings.warn(f'failed to solve {label} system')
+        
+        
+        # LF preconditioners
+        for i, label in enumerate(labels_lf):
+            M = preconds_lf[i]
     
+            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+    
+            if result is not None:
+                relres = result['rk']
+                fre    = result['fre']
+        
+                print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                    label, result['iters'], sc_lf[i], sd_lf[i], relres[-1], fre[-1]))
+    
+                # Plot results for LF preconditioner
+                ax1[1].plot(range(1, len(relres)+1), relres, label=label)
+            else:
+                warnings.warn(f'failed to solve {label} system')
+    
+    
+        # Save picture
+        ax1[0].legend(title=f'{title}, x{title_x}')
+        ax1[1].legend(title=f'{title}, x{title_x}')
+        fig1.savefig(f'{title}_x{title_x}.png', bbox_inches='tight')
+    
+        plt.close()
+
 
 def main(mtx_path, seed, max_outer, max_inner):
     np.seterr(all='raise')
@@ -255,16 +264,8 @@ def main(mtx_path, seed, max_outer, max_inner):
     x3 = np.sin(np.linspace(0, 100*np.pi, n))
 
     print(f'{title}, rhs: normally distributed')
-    run_trial_precond(mtx, x1, k_max_outer=max_outer, k_max_inner=max_inner, 
-                      title=title, title_x='randn')
-    
-    print(f'\n{title}, rhs: ones')
-    run_trial_precond(mtx, x2, k_max_outer=max_outer, k_max_inner=max_inner, 
-                      title=title, title_x='ones')
-    
-    print(f'\n{title}, rhs: sine')
-    run_trial_precond(mtx, x3, k_max_outer=max_outer, k_max_inner=max_inner, 
-                      title=title, title_x='sine')
+    run_trial_precond(mtx, [x1, x2, x3], k_max_outer=max_outer, k_max_inner=max_inner, 
+                      title=title, title_xs=['randn', 'ones', 'sine'])
 
 
 if __name__ == "__main__":
