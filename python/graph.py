@@ -59,21 +59,21 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
     # preconds_mst.append(max_st_pruned['precond'])
     # labels_mst.append('maxST (pruned A)')
 
-    # # Maximum spanning tree preconditioner, additive factors (m = 2, 3, 4)
-    # for m in [2, 3, 4]:
-    #     max_st_add_m = precond_max_st_add_m(mtx, m)
-    #     sc_mst.append(max_st_add_m['s_coverage'])
-    #     sd_mst.append(max_st_add_m['s_degree'])
-    #     preconds_mst.append(max_st_add_m['precond'])
-    #     labels_mst.append(f'maxST+ (m = {m})')
-
-    # Maximum spanning tree preconditioner, MOS-a factors (m = 2, 3, 4)
+    # Maximum spanning tree preconditioner, additive factors (m = 2, 3, 4)
     for m in [2, 3, 4]:
-        max_st_mos_m = precond_max_st_mos_m(mtx, m)
-        sc_mst.append(max_st_mos_m['s_coverage'])
-        sd_mst.append(max_st_mos_m['s_degree'])
-        preconds_mst.append(max_st_mos_m['precond'])
-        labels_mst.append(f'maxST*a (m = {m})')
+        max_st_add_m = precond_max_st_add_m(mtx, m)
+        sc_mst.append(max_st_add_m['s_coverage'])
+        sd_mst.append(max_st_add_m['s_degree'])
+        preconds_mst.append(max_st_add_m['precond'])
+        labels_mst.append(f'maxST+ (m = {m})')
+
+    # # Maximum spanning tree preconditioner, MOS-a factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
+    #     max_st_mos_m = precond_max_st_mos_m(mtx, m)
+    #     sc_mst.append(max_st_mos_m['s_coverage'])
+    #     sd_mst.append(max_st_mos_m['s_degree'])
+    #     preconds_mst.append(max_st_mos_m['precond'])
+    #     labels_mst.append(f'maxST*a (m = {m})')
 
     # # Maximum spanning tree preconditioner, MOS-d factors (m = 2, 3, 4)
     # for m in [2, 3, 4]:
@@ -107,28 +107,28 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
     labels_lf.append('maxLF')
     
     # Maximum linear forest preconditioner, additive factors (m = 2, 3, 4)
-    # for m in [2, 3, 4]:
-    #     max_lf_add_m = precond_max_lf_add_m(mtx, m)
-    #     sc_lf.append(max_lf_add_m['s_coverage'])
-    #     sd_lf.append(max_lf_add_m['s_degree'])
-    #     preconds_lf.append(max_lf_add_m['precond'])
-    #     labels_lf.append(f'maxLF+ (m = {m})')
-
-    # Maximum spanning tree preconditioner, MOS-a factors (m = 2, 3, 4)
     for m in [2, 3, 4]:
-        max_lf_mos_m = precond_max_lf_mos_m(mtx, m)
-        sc_mst.append(max_lf_mos_m['s_coverage'])
-        sd_mst.append(max_lf_mos_m['s_degree'])
-        preconds_mst.append(max_lf_mos_m['precond'])
-        labels_mst.append(f'maxLF*a (m = {m})')
+        max_lf_add_m = precond_max_lf_add_m(mtx, m)
+        sc_lf.append(max_lf_add_m['s_coverage'])
+        sd_lf.append(max_lf_add_m['s_degree'])
+        preconds_lf.append(max_lf_add_m['precond'])
+        labels_lf.append(f'maxLF+ (m = {m})')
 
-    # # Maximum spanning tree preconditioner, MOS-d factors (m = 2, 3, 4)
+    # # Maximum linear forest preconditioner, MOS-a factors (m = 2, 3, 4)
+    # for m in [2, 3, 4]:
+    #     max_lf_mos_m = precond_max_lf_mos_m(mtx, m)
+    #     sc_lf.append(max_lf_mos_m['s_coverage'])
+    #     sd_lf.append(max_lf_mos_m['s_degree'])
+    #     preconds_lf.append(max_lf_mos_m['precond'])
+    #     labels_lf.append(f'maxLF*a (m = {m})')
+
+    # # Maximum linear forest preconditioner, MOS-d factors (m = 2, 3, 4)
     # for m in [2, 3, 4]:
     #     max_lf_mos_d = precond_max_lf_mos_d(mtx, m, scale=0)
-    #     sc_mst.append(max_lf_mos_d['s_coverage'])
-    #     sd_mst.append(max_lf_mos_d['s_degree'])
-    #     preconds_mst.append(max_lf_mos_d['precond'])
-    #     labels_mst.append(f'maxLF*d (m = {m}')
+    #     sc_lf.append(max_lf_mos_d['s_coverage'])
+    #     sd_lf.append(max_lf_mos_d['s_degree'])
+    #     preconds_lf.append(max_lf_mos_d['precond'])
+    #     labels_lf.append(f'maxLF*d (m = {m}')
     
     # # Maximum linear forest preconditioner, inner alternating factors (m = 2, 3, 4)
     # for m in [2, 3, 4]:
@@ -165,7 +165,7 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
         title_x = title_xs[xi]
 
         # Use logarithmic scale for relative residual (y-scale)
-        fig1, ax1 = plt.subplots(nrows=1, ncols=2)
+        fig1, ax1 = plt.subplots(nrows=1, ncols=2, sharey=True)
         fig1.set_size_inches(10, 7)
         fig1.set_dpi(300)
     
