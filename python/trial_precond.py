@@ -62,6 +62,7 @@ def precond_max_st(mtx, q_max=None):
     try:
         if q is not None:
             P = sparse_max_n(P.tolil(), q)
+        
         M = lu_sparse_operator(P)
 
     except RuntimeError:
