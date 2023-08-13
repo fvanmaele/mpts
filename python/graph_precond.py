@@ -164,6 +164,7 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
     return M_MOS_d, R
 
 
+# XXX: move to trial_precond
 def graph_precond_mos_d(mtx, optG, m, scale=0, remainder=False):
     # Note: no permutation done here
     Al_pp = graph_precond_list_m(mtx, optG, m, scale=scale)

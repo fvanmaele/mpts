@@ -91,6 +91,7 @@ def precond_max_st_add_m(mtx, m):
         'precond'   : M
     }
 
+# XXX: take list as argument
 def precond_max_st_alt_i(mtx, m, scale):
     assert m > 1
 
@@ -108,6 +109,7 @@ def precond_max_st_alt_i(mtx, m, scale):
         'precond'   : M
     }
 
+# XXX: take list as argument
 def precond_max_st_alt_o(mtx, m, scale, repeat_i=0):
     if m == 1:
         assert repeat_i > 0
@@ -153,6 +155,7 @@ def precond_max_st_mos_m(mtx, m):
     }
 
 # TODO: check invertibility condition |R|/|A| < 1/spcond(A) for MOS-d preconditioner
+# XXX: take list as argument
 def precond_max_st_mos_d(mtx, m, scale=0, remainder=False):
     try:
         M_MOS_d, R = gp.spanning_tree_precond_mos_d(mtx, m, scale=scale, remainder=remainder)
