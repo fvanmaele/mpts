@@ -51,14 +51,18 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
                     continue
                 
                 result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
-    
+                result['mtx']    = title
+                result['method'] = label_m
+                result['x_id']   = title_x
+
                 if result is not None:
                     relres  = result['rk']
                     fre     = result['fre']
 
                     print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
                         label_m, result['iters'], sc, sd, relres[-1], fre[-1]))
-    
+                    
+                    # TODO: write label/method to JSON file
                     with open(f'{title}_x{title_x}_{label_m}.json', 'w') as f:
                         json.dump(result, f, cls=NumpyArrayEncoder)
                 

@@ -43,7 +43,7 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
         fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
 
         return {
-            'x':  x,
+            #'x':  x,
             'fre': fre.tolist(),
             'rk': relres,
             'exit_code': info, 
