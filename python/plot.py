@@ -60,12 +60,14 @@ def main(json_f):
             # XXX: replace jacobi with diagp0, diagp1, diagp2
             ref_trials = ['orig', 'diagp0', 'diagp1', 'diagp2', 'tridiag', 'ilu0']
             
-            for k, label in enumerate(ref_trials):
+            for m, label in enumerate(ref_trials, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[0, 0].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[0, 0].legend(fontsize='8')
                 ax1[0, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[0, 1].legend(fontsize='8')
 
             # R2, C1) MST + MOS-a
             trials21 = ['max-st',
@@ -74,12 +76,13 @@ def main(json_f):
                         'max-st_mos-a_m4'
             ]
             
-            for k, label in enumerate(trials21):
+            for m, label in enumerate(trials21, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[1, 0].plot(range(1, len(relres)+1), relres, label=label)
-
+                ax1[1, 0].legend(fontsize='8')
+                
             # R3, C1) MST + MOS-d
             trials31 = ['max-st',
                         'max-st_mos-d_m2',
@@ -87,11 +90,12 @@ def main(json_f):
                         'max-st_mos-d_m4'
             ]
 
-            for k, label in enumerate(trials31):
+            for m, label in enumerate(trials31, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[2, 0].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[2, 0].legend(fontsize='8')
                 
             # R4, C1) MST + ALT-o
             trials41 = ['max-st',
@@ -100,11 +104,12 @@ def main(json_f):
                         'max-st_alt-o_m4'
             ]
             
-            for k, label in enumerate(trials41):
+            for m, label in enumerate(trials41, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[3, 0].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[3, 0].legend(fontsize='8')
                 
             # R5, C1) MST + ALT-i
             trials51 = ['max-st',
@@ -113,12 +118,13 @@ def main(json_f):
                         'max-st_alt-i_m4'
             ]
             
-            for k, label in enumerate(trials51):
+            for m, label in enumerate(trials51, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[4, 0].plot(range(1, len(relres)+1), relres, label=label)
-
+                ax1[4, 0].legend(fontsize='8')
+                
             # R6, C1) MST + ALT-o-repeat
             trials61 = ['max-st',
                         'max-st_alt-o-repeat_m2',
@@ -126,11 +132,12 @@ def main(json_f):
                         'max-st_alt-o-repeat_m4'
             ]
             
-            for k, label in enumerate(trials61):
+            for m, label in enumerate(trials61, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[5, 0].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[5, 0].legend(fontsize='8')
                 
             # R7, C1) MST + addition
             trials71 = ['max-st',
@@ -139,12 +146,13 @@ def main(json_f):
                         'max-st_add_m4'
             ]
 
-            for k, label in enumerate(trials71):
+            for m, label in enumerate(trials71, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[6, 0].plot(range(1, len(relres)+1), relres, label=label)
-
+                ax1[6, 0].legend(fontsize='8')
+                
             # R2, C2) LF + MOS-a
             trials22 = ['max-lf',
                         'max-lf_mos-a_m2',
@@ -152,12 +160,13 @@ def main(json_f):
                         'max-lf_mos-a_m4'
             ]
             
-            for k, label in enumerate(trials22):
+            for m, label in enumerate(trials22, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[1, 1].plot(range(1, len(relres)+1), relres, label=label)
-                
+                ax1[1, 1].legend(fontsize='8')
+
             # R3, C2) LF + MOS-d
             trials32 = ['max-lf',
                         'max-lf_mos-d_m2',
@@ -165,11 +174,12 @@ def main(json_f):
                         'max-lf_mos-d_m4'
             ]
 
-            for k, label in enumerate(trials32):
+            for m, label in enumerate(trials32, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[2, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[2, 1].legend(fontsize='8')
                 
             # R4, C2) LF + ALT-o
             trials42 = ['max-lf',
@@ -178,11 +188,12 @@ def main(json_f):
                         'max-lf_alt-o_m4'
             ]
             
-            for k, label in enumerate(trials42):
+            for m, label in enumerate(trials42, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[3, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[3, 1].legend(fontsize='8')
                 
             # R5, C2) LF + ALT-i
             trials52 = ['max-lf',
@@ -191,11 +202,12 @@ def main(json_f):
                         'max-lf_alt-i_m4'
             ]
 
-            for k, label in enumerate(trials52):
+            for m, label in enumerate(trials52, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[4, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[4, 1].legend(fontsize='8')
                 
             # R6, C2) LF + ALT-o-repeat
             trials62 = ['max-lf',
@@ -204,11 +216,12 @@ def main(json_f):
                         'max-lf_alt-o-repeat_m4'
             ]
 
-            for k, label in enumerate(trials62):
+            for m, label in enumerate(trials62, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[5, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[5, 1].legend(fontsize='8')
                 
             # R7, C2) LF + addition
             trials72 = ['max-lf',
@@ -217,13 +230,15 @@ def main(json_f):
                         'max-lf_add_m4'
             ]
              
-            for k, label in enumerate(trials72):
+            for m, label in enumerate(trials72, start=1):
                 relres = trials[matrix][x_id][label]['relres']
                 fre    = trials[matrix][x_id][label]['fre']
                 
                 ax1[6, 1].plot(range(1, len(relres)+1), relres, label=label)
+                ax1[6, 1].legend(fontsize='8')
                 
             fig1.savefig(f'{matrix}_x{x_id}.png', bbox_inches='tight')
+            plt.close()
 
 
 # %%
