@@ -44,7 +44,7 @@ def setup_precond_mst(mtx, m_max):
     preconds = {}
 
     # MST factors, scale = 0 (MOS-d) and scale = 0.01 (ALT-i, ALT-o)
-    print('setup: factors (mst, m = {m})')
+    print(f'setup: factors (mst, m = {m_max})')
     Pi_max_st_noscale = gp.spanning_tree_precond_list_m(mtx, m_max, scale=0)
     Pi_max_st_scale   = gp.spanning_tree_precond_list_m(mtx, m_max, scale=0.01)
 
@@ -113,7 +113,7 @@ def setup_precond_lf(mtx, m_max):
     preconds = {}
     
     # LF factors, scale = 0 (MOS-d) and scale = 0.01 (ALT-i, ALT-o)
-    print('setup: factors (lf, m = {m})')
+    print(f'setup: factors (lf, m = {m_max})')
     Pi_max_lf_noscale = gp.linear_forest_precond_list_m(mtx, m_max, scale=0)
     Pi_max_lf_scale   = gp.linear_forest_precond_list_m(mtx, m_max, scale=0.01)
     

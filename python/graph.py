@@ -25,7 +25,7 @@ class NumpyArrayEncoder(json.JSONEncoder):
 # %%
 def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
     # Generate plots for different right-hand sides
-    # TODO: save all data as JSON files, do plotting in different file (easier adjustment and regeneration of plots)
+    # TODO: do plotting in different file (easier adjustment and regeneration of plots)
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]
         
@@ -34,33 +34,35 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
         preconds_lf  = setup_precond_lf(mtx, 4)
         
         preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
-        
+
         for label, precond_m in preconds.items():
-            for m, precond in enumerate(precond_m, start=1):
+            if len(precond_m) == 1:
+                start_m=1
+            else:
+                start_m=2
+
+            for m, precond in enumerate(precond_m, start=start_m):
                 M  = precond['precond']
                 sc = precond['s_coverage']
                 sd = precond['s_degree']
+                label_m = label + f'_m{m}'
                 
                 if M is None and label != 'orig':
-                    print("{}, s_coverage: {}, s_degree: {}".format(label, sc, sd))
+                    print("{}, s_coverage: {}, s_degree: {}".format(label_m, sc, sd))
                     continue
                 
                 result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
     
                 if result is not None:
-                    relres = result['rk']
-                    fre    = result['fre']
-
-                    if m > 1:
-                        label_m = label + f'_m{m}'
-                    else:
-                        label_m = label
+                    relres  = result['rk']
+                    fre     = result['fre']
 
                     print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
                         label_m, result['iters'], sc, sd, relres[-1], fre[-1]))
     
                     with open(f'{title}_x{title_x}_{label_m}.json', 'w') as f:
                         json.dump(result, f, cls=NumpyArrayEncoder)
+                
                 else:
                     warnings.warn(f'failed to solve {label} system')
 
