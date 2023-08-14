@@ -50,13 +50,16 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
                 if result is not None:
                     relres = result['rk']
                     fre    = result['fre']
+
                     if m > 1:
-                        label += f'_m{m}'
+                        label_m = label + f'_m{m}'
+                    else:
+                        label_m = label
 
                     print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                        label, result['iters'], sc, sd, relres[-1], fre[-1]))
+                        label_m, result['iters'], sc, sd, relres[-1], fre[-1]))
     
-                    with open(f'{title}_x{title_x}_{label}.json', 'w') as f:
+                    with open(f'{title}_x{title_x}_{label_m}.json', 'w') as f:
                         json.dump(result, f, cls=NumpyArrayEncoder)
                 else:
                     warnings.warn(f'failed to solve {label} system')
