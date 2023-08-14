@@ -52,9 +52,9 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
         
                 print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
                     label, result['iters'], sc, sd, relres[-1], fre[-1]))
-                
+
                 with open(f'{title}_x{title_x}.json', 'w') as f:
-                    json.dump(result, f)
+                    json.dump(result, f, cls=NumpyArrayEncoder)
             else:
                 warnings.warn(f'failed to solve {label} system')
 
