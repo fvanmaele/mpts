@@ -44,7 +44,11 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
                 M  = precond['precond']
                 sc = precond['s_coverage']
                 sd = precond['s_degree']
-                label_m = label + f'_m{m}'
+
+                if m != 1:
+                    label_m = label + f'_m{m}'
+                else:
+                    label_m = label
                 
                 if M is None and label != 'orig':
                     print("{}, s_coverage: {}, s_degree: {}".format(label_m, sc, sd))
