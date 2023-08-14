@@ -21,17 +21,15 @@ def precond_orig(mtx):
     }
 
 
-def precond_jacobi(mtx):
-    P = mtx.diagonal()
-
+def precond_diag(mtx, diag):
     try:
-        M = sparse.diags(1. / P, format='csc')
+        M = sparse.diags(1. / diag, format='csc')
     except FloatingPointError:
         M = None
 
     return { 
-        's_coverage': s_coverage(mtx, sparse.diags(P)),
-        's_degree'  : s_degree(sparse.diags(P)),
+        's_coverage': s_coverage(mtx, sparse.diags(diag)),
+        's_degree'  : s_degree(sparse.diags(diag)),
         'precond'   : M
     }
 

@@ -8,7 +8,7 @@ Created on Mon Aug 14 04:20:12 2023
 
 #from scipy.io import mmread, mmwrite
 from scipy import sparse
-from diag_precond import diagp1
+from diag_precond import diagp0, diagp1, diagp2
 
 import trial_precond as tr
 import graph_precond as gp
@@ -25,7 +25,9 @@ def setup_precond(mtx):
     preconds['orig'] = [tr.precond_orig(mtx)]
     
     #print('setup: jacobi')
-    preconds['jacobi'] = [tr.precond_jacobi(mtx)]
+    preconds['diagp0'] = [tr.precond_diag(mtx, diagp0(mtx))]
+    preconds['diagp1'] = [tr.precond_diag(mtx, diagp1(mtx))]
+    preconds['diagp2'] = [tr.precond_diag(mtx, diagp2(mtx))]
     
     #print('setup: tridiag')
     preconds['tridiag'] = [tr.precond_tridiag(mtx)]
