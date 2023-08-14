@@ -75,7 +75,7 @@ def graph_precond_add_m(mtx, optG, m):
     return sparse_prune(mtx, sparse.coo_array(S + D))
 
 
-def graph_precond_mos_a(mtx, m, precond):
+def graph_precond_mos_a(mtx, optG, m):
     n, _ = mtx.shape
     Id = sparse.eye(n)
 
@@ -92,7 +92,7 @@ def graph_precond_mos_a(mtx, m, precond):
     B = mtx.copy()
 
     for l in range(0, m):
-        M = precond(B)  # includes diagonal of mtx1 (S^diag)
+        M = graph_precond(B, optG)  # includes diagonal of mtx1 (S^diag)
         B = sparse_max_n(B @ sparse.linalg.inv(M), mtx_q)
 
         B_diff.append(sparse.linalg.norm(Id - B))
@@ -157,31 +157,6 @@ def graph_precond_mos_d(mtx, Al_pp, T):
     return M_MOS_d
 
 
-# %% Spanning tree preconditioner
-def spanning_tree_precond(mtx):
-    """ Compute spanning tree preconditioner for a given sparse matrix.
-    """
-    return graph_precond(mtx, nx.maximum_spanning_tree)
-
-
-def spanning_tree_precond_add_m(mtx, m):
-    """ Compute m spanning tree factors, computed by subtraction from the original graph.
-    """
-    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m)
-
-
-def spanning_tree_precond_list_m(mtx, m, scale):
-    """ Compute m spanning tree factors, computed by successively scaling of optimal entries
-    """
-    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, scale=scale)
-
-
-def spanning_tree_precond_mos_a(mtx, m):
-    """ Compute spanning tree preconditioner iteratively, by computing (pruned) inverses
-    """
-    return graph_precond_mos_a(mtx, m, spanning_tree_precond)
-
-
 # %% Maximum linear forest preconditioner
 def find_n_factors(G, n):
     """Sequential greedy [0,n]-factor computation on a weighted graph G = (V, E)
@@ -239,6 +214,7 @@ def linear_forest(G):
         return forest
     
 
+# %% Convenience wrapper functions
 def linear_forest_precond(mtx):
     """ Compute linear forest preconditioner for a given sparse matrix.
     """
@@ -261,3 +237,27 @@ def linear_forest_precond_mos_a(mtx, m):
     """ Compute linear forest preconditioner iteratively, by computing (pruned) inverses
     """
     return graph_precond_mos_a(mtx, m, linear_forest_precond)
+
+
+def spanning_tree_precond(mtx):
+    """ Compute spanning tree preconditioner for a given sparse matrix.
+    """
+    return graph_precond(mtx, nx.maximum_spanning_tree)
+
+
+def spanning_tree_precond_add_m(mtx, m):
+    """ Compute m spanning tree factors, computed by subtraction from the original graph.
+    """
+    return graph_precond_add_m(mtx, nx.maximum_spanning_tree, m)
+
+
+def spanning_tree_precond_list_m(mtx, m, scale):
+    """ Compute m spanning tree factors, computed by successively scaling of optimal entries
+    """
+    return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, scale=scale)
+
+
+def spanning_tree_precond_mos_a(mtx, m):
+    """ Compute spanning tree preconditioner iteratively, by computing (pruned) inverses
+    """
+    return graph_precond_mos_a(mtx, m, spanning_tree_precond)

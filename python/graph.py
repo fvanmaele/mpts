@@ -25,7 +25,6 @@ class NumpyArrayEncoder(json.JSONEncoder):
 # %%
 def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
     # Generate plots for different right-hand sides
-    # TODO: do plotting in different file (easier adjustment and regeneration of plots)
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]
         

@@ -54,7 +54,7 @@ def precond_tridiag(mtx):
     }
 
 
-def precond_graph(mtx, P, q_max=None):
+def precond_mtx(mtx, P, q_max=None):
     q = [q_max] * mtx.shape[0]
     
     try:
