@@ -22,14 +22,35 @@ def graph_normalized(mtx):
     mtx_diagp_inv = sparse.diags(1 / diagp1(mtx))
     
     return nx.Graph(abs(mtx_diagp_inv @ mtx) + abs(mtx_diagp_inv @ mtx).T)
+
+
+def graph_precond_list_m(mtx, optG, m, scale):
+    C = graph_normalized(mtx)
+    M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
+    S = [M]
+
+    # Retrieve diagonal of input matrix for later adding
+    D = sparse.diags(mtx.diagonal())
+
+    # Apply graph optimization to graph with entries scaled according to indices
+    # retrieved in the previous step (2.2)
+    for k in range(1, m):
+        # C -> scale(C, S(M) \ S_diag(M), scale)
+        C = nx.Graph(sparse_scale((nx.to_scipy_sparse_array(C) + D).tocoo(), M.tocoo(), scale))
+        M = nx.to_scipy_sparse_array(optG(C))       
+        S.append(M)
+
+    return [sparse_prune(mtx, sparse.coo_array(Sk + D)) for Sk in S]
     
 
+# special version (m = 1) of graph_precond_list_m()
 def graph_precond(mtx, optG):
-    C = graph_normalized(mtx)
-    D = sparse.diags(mtx.diagonal())  # DIAgonal
-    O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
+    # C = graph_normalized(mtx)
+    # D = sparse.diags(mtx.diagonal())  # DIAgonal
+    # O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
     
-    return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
+    # return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
+    return graph_precond_list_m(mtx, optG, 1)
 
 
 def graph_precond_add_m(mtx, optG, m):
@@ -55,26 +76,7 @@ def graph_precond_add_m(mtx, optG, m):
     return sparse_prune(mtx, sparse.coo_array(S + D))
 
 
-def graph_precond_list_m(mtx, optG, m, scale):
-    C = graph_normalized(mtx)
-    M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
-    S = [M]
-
-    # Retrieve diagonal of input matrix for later adding
-    D = sparse.diags(mtx.diagonal())
-
-    # Apply graph optimization to graph with entries scaled according to indices
-    # retrieved in the previous step (2.2)
-    for k in range(1, m):
-        # C -> scale(C, S(M) \ S_diag(M), scale)
-        C = nx.Graph(sparse_scale((nx.to_scipy_sparse_array(C) + D).tocoo(), M.tocoo(), scale))
-        M = nx.to_scipy_sparse_array(optG(C))       
-        S.append(M)
-
-    return [sparse_prune(mtx, sparse.coo_array(Sk + D)) for Sk in S]
-    
-
-def graph_precond_mos_m(mtx, m, precond):
+def graph_precond_mos_a(mtx, m, precond):
     n, _ = mtx.shape
     Id = sparse.eye(n)
 
@@ -84,35 +86,33 @@ def graph_precond_mos_m(mtx, m, precond):
 
     # Check if B converges towards identity matrix
     B_diff = []  # TODO: add warning if B_diff gets "too large" in some iteration
-    M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
+    #M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
     M_MOS  = []
     B = mtx.copy()
 
     for l in range(0, m):
         M = precond(B)  # includes diagonal of mtx1 (S^diag)
-        #B = sparse_prune((B @ sparse.linalg.inv(M)).tocoo(), sparse_max_n(B, mtx_q))
         B = sparse_max_n(B @ sparse.linalg.inv(M), mtx_q)
 
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
 
+    M_MOS.reverse()  # M_{m-1}, ..., M_0
     return M_MOS, B_diff
 
 
-def precond_mos_d(A, Al_pp, T, remainder=False):
+def graph_precond_mos_d(mtx, Al_pp, T):
     """
     Generalization of ILU factorizations (MOS Ansatz)
 
     Parameters
     ----------
-    A : sparse.matrix
+    mtx : sparse.matrix
         Input coefficient matrix.
-    Am : sparse.matrix...
+    Al_pp : sparse.matrix...
         Off-diagonal matrices A''_0, ..., A''_{m-1}
     T : np.array
         Invertible diagonal matrix with unit(T) = unit(diag(A)) and |T| >= |diag(A)|
-    remainder : bool
-        If True, compute R = A - M_MOS_d (requires m-1 sparse matrix-matrix products)
 
     Returns
     -------
@@ -124,7 +124,7 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
     assert m >= 2
 
     # Precondition checks for diagonal matrix T
-    A_diag = A.diagonal()
+    A_diag = mtx.diagonal()
     assert T.ndim == 1                          # diagonal matrix, 1d representation
     assert np.all(T != 0)                       # invertible
     assert np.all(abs(T)  >= abs(A_diag))       # |T| >= |diag(A)|
@@ -148,29 +148,13 @@ def precond_mos_d(A, Al_pp, T, remainder=False):
         Al_p.append(sparse.diags(J ** -(m-1-l)) @ Al_pp[l] @ sparse.diags(J ** -l))
 
     # Compute MOS-d preconditioner
-    M_MOS_d = [sparse.diags(T)]
-    for l in reversed(range(0, m)):
+    M_MOS_d = []
+    for l in range(0, m):
         M_MOS_d.append(sparse.diags(J) + sparse.diags(T_inv) @ Al_p[l])
-
-    # Explicitly compute matrix-matrix products for remainder calculation
-    R = None
-    if remainder:
-        M_prod = M_MOS_d[0]
-        for k in reversed(range(1, m+1)):
-            M_prod = M_prod @ M_MOS_d[k]
-        # TODO: sparse condition estimate of A, |R|/|A| < 1/cond(A)
-        R = M_prod - A
     
-    return M_MOS_d, R
+    M_MOS_d.reverse()  # M_pp_{m-1}, ..., M_pp_0
+    return M_MOS_d
 
-
-# XXX: move to trial_precond
-def graph_precond_mos_d(mtx, optG, m, scale=0, remainder=False):
-    # Note: no permutation done here
-    Al_pp = graph_precond_list_m(mtx, optG, m, scale=scale)
-    
-    return precond_mos_d(mtx, Al_pp, diagp1(mtx), remainder=remainder)
-    
 
 # %% Spanning tree preconditioner
 def spanning_tree_precond(mtx):
@@ -191,14 +175,10 @@ def spanning_tree_precond_list_m(mtx, m, scale):
     return graph_precond_list_m(mtx, nx.maximum_spanning_tree, m, scale=scale)
 
 
-def spanning_tree_precond_mos_m(mtx, m):
+def spanning_tree_precond_mos_a(mtx, m):
     """ Compute spanning tree preconditioner iteratively, by computing (pruned) inverses
     """
-    return graph_precond_mos_m(mtx, m, spanning_tree_precond)
-
-
-def spanning_tree_precond_mos_d(mtx, m, scale=0, remainder=False):
-    return graph_precond_mos_d(mtx, nx.maximum_spanning_tree, m, scale=scale, remainder=remainder)
+    return graph_precond_mos_a(mtx, m, spanning_tree_precond)
 
 
 # %% Maximum linear forest preconditioner
@@ -276,11 +256,7 @@ def linear_forest_precond_list_m(mtx, m, scale):
     return graph_precond_list_m(mtx, linear_forest, m, scale=scale)
 
 
-def linear_forest_precond_mos_m(mtx, m):
+def linear_forest_precond_mos_a(mtx, m):
     """ Compute linear forest preconditioner iteratively, by computing (pruned) inverses
     """
-    return graph_precond_mos_m(mtx, m, linear_forest_precond)
-
-
-def linear_forest_precond_mos_d(mtx, m, scale=0, remainder=False):
-    return graph_precond_mos_d(mtx, linear_forest, m, scale=scale, remainder=remainder)
+    return graph_precond_mos_a(mtx, m, linear_forest_precond)

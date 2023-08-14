@@ -6,12 +6,10 @@ Created on Wed Jul 26 12:48:03 2023
 @author: archie
 """
 
-import numpy as np
 from scipy import sparse
 
-import graph_precond as gp
 from sparse_util import s_coverage, s_degree, sparse_max_n
-from sparse_lops import lu_sparse_operator, AltLinearOperator, IterLinearOperator
+from sparse_lops import lu_sparse_operator
 
 
 # %%
@@ -21,6 +19,7 @@ def precond_orig(mtx):
         's_degree'  : s_degree(mtx),
         'precond'   : None
     }
+
 
 def precond_jacobi(mtx):
     P = mtx.diagonal()
@@ -35,6 +34,7 @@ def precond_jacobi(mtx):
         's_degree'  : s_degree(sparse.diags(P)),
         'precond'   : M
     }
+
 
 def precond_tridiag(mtx):
     diagonals = [mtx.diagonal(k=-1), 
@@ -53,18 +53,15 @@ def precond_tridiag(mtx):
         'precond'   : M
     }
 
-def precond_max_st(mtx, q_max=None):
-    P = gp.spanning_tree_precond(mtx)
-    q = [q_max] * mtx.shape[0]
 
-    # LU (with the correct permutation) applied to a spanning tree has no fill-in.
-    # TODO: factorize the spanning tree conditioner "layer by layer"
+def precond_graph(mtx, P, q_max=None):
+    q = [q_max] * mtx.shape[0]
+    
     try:
         if q is not None:
             P = sparse_max_n(P.tolil(), q)
-        
         M = lu_sparse_operator(P)
-
+    
     except RuntimeError:
         M = None
 
@@ -74,31 +71,10 @@ def precond_max_st(mtx, q_max=None):
         'precond'   : M
     }
 
-def precond_max_st_add_m(mtx, m):
-    assert m > 1
-    P = gp.spanning_tree_precond_add_m(mtx, m)
 
-    # Accumulation of spanning tree factors may result in any amount of cycles.
-    # Use sparse LU decomposition and hope for the best
+def precond_lops(mtx, Pi, lop, **kwargs):
     try:
-        M = lu_sparse_operator(P)
-    except RuntimeError:
-        M = None
-
-    return { 
-        's_coverage': s_coverage(mtx, P),
-        's_degree'  : s_degree(P),
-        'precond'   : M
-    }
-
-# XXX: take list as argument
-def precond_max_st_alt_i(mtx, m, scale):
-    assert m > 1
-
-    Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
-
-    try:
-        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
+        M = lop(mtx, [sparse.linalg.splu(P).solve for P in Pi], **kwargs)
 
     except RuntimeError:
         M = None
@@ -109,34 +85,13 @@ def precond_max_st_alt_i(mtx, m, scale):
         'precond'   : M
     }
 
-# XXX: take list as argument
-def precond_max_st_alt_o(mtx, m, scale, repeat_i=0):
-    if m == 1:
-        assert repeat_i > 0
 
-    Pi = gp.spanning_tree_precond_list_m(mtx, m, scale=scale)
-
+def precond_prod_r(mtx, Pi):
     try:
-        M = IterLinearOperator(mtx, [sparse.linalg.splu(P).solve for P in Pi], repeat_i=repeat_i)
+        P = Pi.pop()
 
-    except RuntimeError:
-        M = None
-
-    return {
-            's_coverage': None,
-            's_degree'  : None,
-            'precond'   : M
-        }
-
-def precond_max_st_mos_m(mtx, m):
-    try:
-        P_list, B_diff = gp.spanning_tree_precond_mos_m(mtx, m)
-        P_list.reverse()
-        P = P_list.pop()
-
-        for Pl in P_list:  # XXX: can be done in log_2(n) iterations
-            P = Pl @ P
-        print(f'{m}: {np.max(B_diff)}')
+        for factor in Pi:  # XXX: can be done in log_2(n) iterations
+            P = P @ factor
 
     except RuntimeError:
         P = None
@@ -154,144 +109,6 @@ def precond_max_st_mos_m(mtx, m):
         'precond'   : M
     }
 
-# TODO: check invertibility condition |R|/|A| < 1/spcond(A) for MOS-d preconditioner
-# XXX: take list as argument
-def precond_max_st_mos_d(mtx, m, scale=0, remainder=False):
-    try:
-        M_MOS_d, R = gp.spanning_tree_precond_mos_d(mtx, m, scale=scale, remainder=remainder)
-        P = M_MOS_d[0]
-        
-        for k in reversed(range(1, m+1)):
-            P = P @ M_MOS_d[k]
-    except RuntimeError:
-        P = None
-    
-    if P is not None:
-        try:
-            # TODO: can be implemented as LU for every factor instead of (dense) product
-            M = lu_sparse_operator(P)
-        except RuntimeError:
-            M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
-
-def precond_max_lf(mtx):
-    P = gp.linear_forest_precond(mtx)
-
-    # Note: not permuted to tridiagonal system (tridiagonal solver)
-    try:
-        M = lu_sparse_operator(P)
-    except RuntimeError:
-        M = None
-
-    return { 
-        's_coverage': s_coverage(mtx, P),
-        's_degree'  : s_degree(P),
-        'precond'   : M
-    }
-
-def precond_max_lf_add_m(mtx, m):
-    assert m > 1
-    P = gp.linear_forest_precond_add_m(mtx, m)
-
-    # Accumulation of (after permutation) tridiagonal factors
-    try:
-        M = lu_sparse_operator(P)
-    except RuntimeError:
-        M = None
-
-    return { 
-        's_coverage': s_coverage(mtx, P),
-        's_degree'  : s_degree(P),
-        'precond'   : M
-    }
-
-def precond_max_lf_alt_i(mtx, m, scale):
-    assert m > 1
-    Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
-    
-    try:
-        M = AltLinearOperator(mtx.shape, [sparse.linalg.splu(P).solve for P in Pi])
-
-    except RuntimeError:
-        M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : None,
-        'precond'   : M
-    }
-
-def precond_max_lf_alt_o(mtx, m, scale, repeat_i=0):
-    if m == 1:
-        assert repeat_i > 0
-    Pi = gp.linear_forest_precond_list_m(mtx, m, scale=scale)
-
-    try:
-        M = IterLinearOperator(mtx, [sparse.linalg.splu(P).solve for P in Pi], repeat_i=repeat_i)
-
-    except RuntimeError:
-        M = None
-
-    return {
-            's_coverage': None,
-            's_degree'  : None,
-            'precond'   : M
-        }
-
-def precond_max_lf_mos_m(mtx, m):
-    try:
-        P_list, B_diff = gp.linear_forest_precond_mos_m(mtx, m)
-        P_list.reverse()
-        P = P_list.pop()
-
-        for Pl in P_list:  # XXX: can be done in log_2(n) iterations
-            P = Pl @ P
-        print(f'{m}: {np.max(B_diff)}')
-
-    except RuntimeError:
-        P = None
-
-    if P is not None:
-        try:
-            # TODO: can be implemented as LU for every factor instead of (dense) product
-            M = lu_sparse_operator(P)
-        except RuntimeError:
-            M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
-
-# TODO: check invertibility condition |R|/|A| < 1/spcond(A) for MOS-d preconditioner
-def precond_max_lf_mos_d(mtx, m, scale=0, remainder=False):
-    try:
-        M_MOS_d, R = gp.linear_forest_precond_mos_d(mtx, m, scale=scale, remainder=remainder)
-        P = M_MOS_d[0]
-        
-        for k in reversed(range(1, m+1)):
-            P = P @ M_MOS_d[k]
-    except RuntimeError:
-        P = None
-    
-    if P is not None:
-        try:
-            # TODO: can be implemented as LU for every factor instead of (dense) product
-            M = lu_sparse_operator(P)
-        except RuntimeError:
-            M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
 
 def precond_ilu0(mtx):
     try:
@@ -305,14 +122,3 @@ def precond_ilu0(mtx):
         'precond'   : M
     }
 
-def precond_custom(mtx, P):
-    try:
-        M = lu_sparse_operator(P)
-    except RuntimeError:
-        M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : s_degree(P),
-        'precond'   : M
-    }

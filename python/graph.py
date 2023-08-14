@@ -4,112 +4,28 @@
 @author: fvanmaele
 """
 
-
 from pathlib import Path
 from scipy.io import mmread
+
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle
+import json
 
 from trial import run_trial
-from trial_precond import *
+from graph_setup import setup_precond, setup_precond_mst, setup_precond_lf
 
 
-def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None, custom=None):
-    """ Compare the performance of spanning tree preconditioners
-    """
-    preconds = {}
-
-    # %% Unpreconditioned system
-    preconds['orig'] = precond_orig(mtx)
-
-    # Jacobi preconditioner
-    preconds['jacobi'] = precond_jacobi(mtx)
-
-    # Tridiagonal preconditioner
-    preconds['tridiag'] = precond_tridiag(mtx)
-
-    # iLU(0)
-    preconds['ilu0'] = precond_ilu0(mtx)
-
-    # Maximum spanning tree preconditioner
-    preconds['max_st'] = precond_max_st(mtx)
-
-    # Maximum linear forest preconditioner
-    preconds['max_lf'] = precond_max_lf(mtx)
+class NumpyArrayEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 
-    # %% Maximum spanning tree preconditioner, additive factors (m = 2, 3, 4)
-    # XXX: avoid repeatedly computing factors + save factors to file for caching
-    preconds['max_st_add'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_add'].append(precond_max_st_add_m(mtx, m))
-
-    # Maximum spanning tree preconditioner, MOS-a factors (m = 2, 3, 4)
-    preconds['max_st_mos_a'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_mos_a'].append(precond_max_st_mos_m(mtx, m))
-
-    # Maximum spanning tree preconditioner, MOS-d factors (m = 2, 3, 4)
-    preconds['max_st_mos_d'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_mos_d'].append(precond_max_st_mos_d(mtx, m, scale=0))
-
-    # Maximum spanning tree preconditioner, inner alternating factors (m = 2, 3, 4)
-    preconds['max_st_alt_i'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_alt_i'].append(precond_max_st_alt_i(mtx, m, scale=0.01))
-
-    # Maximum spanning tree preconditioner, outer alternating factors (m = 2, 3, 4)
-    preconds['max_st_alt_o'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_alt_o'].append(precond_max_st_alt_o(mtx, m, scale=0.01, repeat_i=0))
-
-    # Maximum spanning tree preconditioner, outer repeating factors (m = 2, 3, 4)
-    preconds['max_st_alt_o_repeat'] = []
-    for m in [2, 3, 4]:
-        preconds['max_st_alt_o_repeat'].append(precond_max_st_alt_o(mtx, 1, scale=None, repeat_i=m))
-
-
-    # %% Maximum linear forest preconditioner, additive factors (m = 2, 3, 4)
-    preconds['max_lf_add'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_add'].append(precond_max_lf_add_m(mtx, m))
-
-    # Maximum linear forest preconditioner, MOS-a factors (m = 2, 3, 4)
-    preconds['max_lf_mos_a'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_mos_a'].append(precond_max_lf_mos_m(mtx, m))
-
-    # Maximum linear forest preconditioner, MOS-d factors (m = 2, 3, 4)
-    preconds['max_lf_mos_d'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_mos_d'].append(precond_max_lf_mos_d(mtx, m, scale=0))
-
-    # Maximum linear forest preconditioner, inner alternating factors (m = 2, 3, 4)
-    preconds['max_lf_alt_i'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_alt_i'].append(precond_max_lf_alt_i(mtx, m, scale=0.01))
-
-    # Maximum linear forest preconditioner, outer alternating factors (m = 2, 3, 4)
-    preconds['max_lf_alt_o'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_alt_o'].append(precond_max_lf_alt_o(mtx, m, scale=0.01, repeat_i=0))
-
-    # Maximum linear forest preconditioner, outer repeating factors (m = 2, 3, 4)
-    preconds['max_lf_alt_o_repeat'] = []
-    for m in [2, 3, 4]:
-        preconds['max_lf_alt_o_repeat'].append(precond_max_lf_alt_o(mtx, 1, scale=None, repeat_i=m))
-
-
-    # %% TODO: save matrix factors as .mtx files, load if available
-    # (generalization between alt_i, alt_o, mos_d, mos_a)
-    # with open(f'{title}.pickle', 'wb') as f:
-    #     pickle.dump(preconds, f, pickle.HIGHEST_PROTOCOL)  # cannot save SuperLU object
-    
-    
-    # %% Generate plots for different right-hand sides
+# %%
+def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
+    # Generate plots for different right-hand sides
     # TODO: save all data as JSON files, do plotting in different file (easier adjustment and regeneration of plots)
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]

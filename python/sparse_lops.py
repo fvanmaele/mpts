@@ -26,11 +26,11 @@ def lu_sparse_operator(P, inexact=False):
 class AltLinearOperator(sparse.linalg.LinearOperator):
     """ Class for non-stationary preconditioners, used with FGMRES.
     """
-    def __init__(self, shape, Mi):
+    def __init__(self, A, Mi):
         assert len(Mi) > 0
 
         # LinearOperator
-        self.shape = shape  # assumed consistent between `Mi`
+        self.shape = A.shape  # assumed consistent between `Mi`
         self.dtype = None        
         super().__init__(self.dtype, self.shape)
         
