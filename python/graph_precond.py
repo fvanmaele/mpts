@@ -24,6 +24,15 @@ def graph_normalized(mtx):
     return nx.Graph(abs(mtx_diagp_inv @ mtx) + abs(mtx_diagp_inv @ mtx).T)
 
 
+# special version (m = 1) of graph_precond_list_m()
+def graph_precond(mtx, optG):
+    C = graph_normalized(mtx)
+    D = sparse.diags(mtx.diagonal())  # DIAgonal
+    O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
+    
+    return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
+
+
 def graph_precond_list_m(mtx, optG, m, scale):
     C = graph_normalized(mtx)
     M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
@@ -42,16 +51,6 @@ def graph_precond_list_m(mtx, optG, m, scale):
 
     return [sparse_prune(mtx, sparse.coo_array(Sk + D)) for Sk in S]
     
-
-# special version (m = 1) of graph_precond_list_m()
-def graph_precond(mtx, optG):
-    # C = graph_normalized(mtx)
-    # D = sparse.diags(mtx.diagonal())  # DIAgonal
-    # O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
-    
-    # return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
-    return graph_precond_list_m(mtx, optG, 1)
-
 
 def graph_precond_add_m(mtx, optG, m):
     C = graph_normalized(mtx)
@@ -85,8 +84,10 @@ def graph_precond_mos_a(mtx, m, precond):
     _, mtx_q = np.unique(mtx_row_idx, return_counts=True)
 
     # Check if B converges towards identity matrix
-    B_diff = []  # TODO: add warning if B_diff gets "too large" in some iteration
-    #M_diff = []  # TODO: distance of B_l to the MOS preconditioner applied to A
+    # TODO: add warning if B_diff gets "too large" in some iteration
+    # TODO: distance of B_l to the MOS preconditioner applied to A
+    B_diff = []
+    #M_diff = []
     M_MOS  = []
     B = mtx.copy()
 

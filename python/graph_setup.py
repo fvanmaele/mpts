@@ -7,6 +7,7 @@ Created on Mon Aug 14 04:20:12 2023
 """
 
 from scipy.io import mmread, mmwrite
+from scipy import sparse
 from diag_precond import diagp1
 
 import trial_precond as tr
@@ -29,6 +30,7 @@ def setup_precond(mtx):
 
 # %%
 # TODO: save matrix factors as .mtx files, load if available
+# TODO: print compute time for each setup phase
 def setup_precond_mst(mtx, m_max):
     """ Compare the performance of spanning tree preconditioners
     """
@@ -37,7 +39,6 @@ def setup_precond_mst(mtx, m_max):
     # MST factors, scale = 0 (MOS-d) and scale = 0.01 (ALT-i, ALT-o)
     Pi_max_st_noscale = gp.spanning_tree_precond_list_m(mtx, m_max, scale=0)
     Pi_max_st_scale   = gp.spanning_tree_precond_list_m(mtx, m_max, scale=0.01)
-
 
     # Maximum spanning tree preconditioner
     P_max_st = Pi_max_st_noscale[0]
@@ -56,7 +57,7 @@ def setup_precond_mst(mtx, m_max):
     preconds['max_st_mos_a'] = []
     
     for m in range(2, m_max+1):
-        preconds['max_st_mos_a'].append(tr.precond_prod_r(mtx, [diagp1(mtx), max_st_mos_a[:m]]))
+        preconds['max_st_mos_a'].append(tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)), *max_st_mos_a[:m]]))
 
 
     # MOS-d factors
@@ -64,7 +65,7 @@ def setup_precond_mst(mtx, m_max):
     preconds['max_st_mos_d'] = []
     
     for m in range(2, m_max+1):
-        preconds['max_st_mos_d'].append(tr.precond_prod_r(mtx, [diagp1(mtx), max_st_mos_d[:m]]))
+        preconds['max_st_mos_d'].append(tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)), *max_st_mos_d[:m]]))
 
 
     # Inner alternating factors
@@ -92,13 +93,13 @@ def setup_precond_mst(mtx, m_max):
 
 # %%
 # TODO: save matrix factors as .mtx files, load if available
+# XXX: same logic as setup_precond_mst(), take optimization function/label as parameter
 def setup_precond_lf(mtx, m_max):
     preconds = {}
     
     # LF factors, scale = 0 (MOS-d) and scale = 0.01 (ALT-i, ALT-o)
     Pi_max_lf_noscale = gp.linear_forest_precond_list_m(mtx, m_max, scale=0)
     Pi_max_lf_scale   = gp.linear_forest_precond_list_m(mtx, m_max, scale=0.01)
-    
     
     # Maximum linear forest preconditioner
     P_max_lf = Pi_max_lf_noscale[0]
@@ -117,7 +118,7 @@ def setup_precond_lf(mtx, m_max):
     preconds['max_lf_mos_a'] = []
     
     for m in range(2, m_max+1):
-        preconds['max_lf_mos_a'].append(tr.precond_prod_r(mtx, [diagp1(mtx), max_lf_mos_a[:m]]))
+        preconds['max_lf_mos_a'].append(tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)), *max_lf_mos_a[:m]]))
     
     
     # MOS-d factors
@@ -125,7 +126,7 @@ def setup_precond_lf(mtx, m_max):
     preconds['max_lf_mos_d'] = []
     
     for m in range(2, m_max+1):
-        preconds['max_lf_mos_d'].append(tr.precond_prod_r(mtx, [diagp1(mtx), max_lf_mos_d[:m]]))
+        preconds['max_lf_mos_d'].append(tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)), *max_lf_mos_d[:m]]))
     
     
     # Inner alternating factors
