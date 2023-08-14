@@ -35,28 +35,31 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
         
         preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
         
-        for label, precond in preconds.items():
-            M  = precond['precond']
-            sc = precond['s_coverage']
-            sd = precond['s_degree']
-            
-            if M is None and label != 'orig':
-                print("{}, s_coverage: {}, s_degree: {}".format(label, sc, sd))
-                continue
-            
-            result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+        for label, precond_m in preconds.items():
+            for m, precond in enumerate(precond_m, start=1):
+                M  = precond['precond']
+                sc = precond['s_coverage']
+                sd = precond['s_degree']
+                
+                if M is None and label != 'orig':
+                    print("{}, s_coverage: {}, s_degree: {}".format(label, sc, sd))
+                    continue
+                
+                result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
+    
+                if result is not None:
+                    relres = result['rk']
+                    fre    = result['fre']
+                    if m > 1:
+                        label += f'_m{m}'
 
-            if result is not None:
-                relres = result['rk']
-                fre    = result['fre']
-        
-                print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                    label, result['iters'], sc, sd, relres[-1], fre[-1]))
-
-                with open(f'{title}_x{title_x}.json', 'w') as f:
-                    json.dump(result, f, cls=NumpyArrayEncoder)
-            else:
-                warnings.warn(f'failed to solve {label} system')
+                    print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                        label, result['iters'], sc, sd, relres[-1], fre[-1]))
+    
+                    with open(f'{title}_x{title_x}_{label}.json', 'w') as f:
+                        json.dump(result, f, cls=NumpyArrayEncoder)
+                else:
+                    warnings.warn(f'failed to solve {label} system')
 
 
 # %%

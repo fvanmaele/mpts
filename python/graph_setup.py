@@ -21,16 +21,16 @@ def setup_precond(mtx):
     preconds = {}
 
     print('setup: orig')
-    preconds['orig'] = tr.precond_orig(mtx)
+    preconds['orig'] = [tr.precond_orig(mtx)]
     
     print('setup: jacobi')
-    preconds['jacobi'] = tr.precond_jacobi(mtx)
+    preconds['jacobi'] = [tr.precond_jacobi(mtx)]
     
     print('setup: tridiag')
-    preconds['tridiag'] = tr.precond_tridiag(mtx)
+    preconds['tridiag'] = [tr.precond_tridiag(mtx)]
     
     print('setup: ilu0')
-    preconds['ilu0'] = tr.precond_ilu0(mtx)
+    preconds['ilu0'] = [tr.precond_ilu0(mtx)]
     
     return preconds
 
@@ -51,7 +51,7 @@ def setup_precond_mst(mtx, m_max):
     # Maximum spanning tree preconditioner
     print('setup: mst')
     P_max_st = Pi_max_st_noscale[0]
-    preconds['max_st'] = tr.precond_graph(mtx, P_max_st)
+    preconds['max_st'] = [tr.precond_graph(mtx, P_max_st)]
 
 
     # Additive factors
@@ -120,7 +120,7 @@ def setup_precond_lf(mtx, m_max):
     # Maximum linear forest preconditioner
     print('setup: lf')
     P_max_lf = Pi_max_lf_noscale[0]
-    preconds['max_lf'] = tr.precond_graph(mtx, P_max_lf)
+    preconds['max_lf'] = [tr.precond_graph(mtx, P_max_lf)]
 
 
     # Additive factors
