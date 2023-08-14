@@ -6,7 +6,7 @@ Created on Mon Aug 14 04:20:12 2023
 @author: user
 """
 
-from scipy.io import mmread, mmwrite
+#from scipy.io import mmread, mmwrite
 from scipy import sparse
 from diag_precond import diagp1
 
@@ -67,53 +67,53 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
     # MOS-a factors
-    print(f'setup: {opt_label}_mos_a')
+    print(f'setup: {opt_label}_mos-a')
     graph_mos_a, graph_mos_a_diff = gp.graph_precond_mos_a(mtx, opt_graph, m_max)
-    preconds[opt_label + '_mos_a'] = []
+    preconds[opt_label + '_mos-a'] = []
     
     for m in m_range:
-        preconds[opt_label + '_mos_a'].append(
+        preconds[opt_label + '_mos-a'].append(
             tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_a[:m])
         )
 
 
     # MOS-d factors
-    print(f'setup: {opt_label}_mos_d')
+    print(f'setup: {opt_label}_mos-d')
     graph_mos_d = gp.graph_precond_mos_d(mtx, Pi_graph_noscale, diagp1(mtx))
-    preconds[opt_label + '_mos_d'] = []
+    preconds[opt_label + '_mos-d'] = []
     
     for m in m_range:
-        preconds[opt_label + '_mos_d'].append(
+        preconds[opt_label + '_mos-d'].append(
             tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_d[:m])
         )
 
 
     # Inner alternating factors
-    print(f'setup: {opt_label}_alt_i')
-    preconds[opt_label + '_alt_i'] = []
+    print(f'setup: {opt_label}_alt-i')
+    preconds[opt_label + '_alt-i'] = []
 
     for m in m_range:
-        preconds[opt_label + '_alt_i'].append(
+        preconds[opt_label + '_alt-i'].append(
             tr.precond_lops(mtx, Pi_graph_scale[:m], AltLinearOperator)
         )
 
 
     # Outer alternating factors
-    print(f'setup: {opt_label}_alt_o')
-    preconds[opt_label + '_alt_o'] = []
+    print(f'setup: {opt_label}_alt-o')
+    preconds[opt_label + '_alt-o'] = []
     
     for m in m_range:
-        preconds[opt_label + '_alt_o'].append(
+        preconds[opt_label + '_alt-o'].append(
             tr.precond_lops(mtx, Pi_graph_scale[:m], IterLinearOperator)
         )
 
 
     # Outer repeating factors
-    print(f'setup: {opt_label}_alt_o_repeat')
-    preconds[opt_label + '_alt_o_repeat'] = []
+    print(f'setup: {opt_label}_alt-o-repeat')
+    preconds[opt_label + '_alt-o-repeat'] = []
     
     for m in m_range:
-        preconds[opt_label + '_alt_o_repeat'].append(
+        preconds[opt_label + '_alt-o-repeat'].append(
             tr.precond_lops(mtx, [P_graph], IterLinearOperator, repeat_i=m)
         )
 
@@ -122,7 +122,7 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 # %%
 def setup_precond_mst(mtx, m_max):
-    return setup_precond_graph(mtx, nx.maximum_spanning_tree, 'max_st', m_max)
+    return setup_precond_graph(mtx, nx.maximum_spanning_tree, 'max-st', m_max)
 
 def setup_precond_lf(mtx, m_max):
-    return setup_precond_graph(mtx, gp.linear_forest, 'max_lf', m_max)
+    return setup_precond_graph(mtx, gp.linear_forest, 'max-lf', m_max)
