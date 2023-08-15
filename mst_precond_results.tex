@@ -5,18 +5,13 @@
 \usepackage[latin9]{inputenc}
 \usepackage[landscape]{geometry}
 \geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=1cm,rmargin=1cm}
-\usepackage{color}
 \usepackage{array}
 \usepackage{multirow}
-\usepackage{footnote}
 \usepackage{graphicx}
 
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-
-\makesavenoteenv{tabular}
-
 %% Special footnote code from the package 'stblftnt.sty'
 %% Author: Robin Fairbairns -- Last revised Dec 13 1996
 \let\SF@@footnote\footnote
@@ -36,9 +31,6 @@
 %% Because html converters don't know tabularnewline
 \providecommand{\tabularnewline}{\\}
 
-\@ifundefined{showcaptionsetup}{}{%
- \PassOptionsToPackage{caption=false}{subfig}}
-\usepackage{subfig}
 \makeatother
 
 \usepackage{babel}
@@ -51,23 +43,19 @@
 Matrix & Patt. symm. & Num. symm. & Diag. dom. & Pos. def. & NNZ & $n$ & Condition & Conn. comp.\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 100\% & 52.7\% & No & No & 13,151 & 2,395 & 1.204710e+04 & 1\tabularnewline
+\emph{add20} & 100\% & 52.7\% & 0\% & No & 13,151 & 2,395 & 1.204710e+04 & 1\tabularnewline
 \hline 
-\emph{c-20} & 100\% & 100\% & No & No & 20,445 & 2,921 & 1.049837e+12 & 1\tabularnewline
+\emph{c-20} & 100\% & 100\% & 0.48\% & No & 20,445 & 2,921 & 1.049837e+12 & 1\tabularnewline
 \hline 
-\emph{cryg2500} & 99.5\% & 0\% & No & No & 12,349 & 2,500 & 3.631392e+16 & 1\tabularnewline
+\emph{cryg2500} & 99.5\% & 0\% & 8.44\% & No & 12,349 & 2,500 & 3.631392e+16 & 1\tabularnewline
 \hline 
-\emph{dw2048} & 98.5\% & 94.8\% & No & No & 10,114 & 2,048 & 2.093210e+03 & 1\tabularnewline
+\emph{dw2048} & 98.5\% & 94.8\% & 0\% & No & 10,114 & 2,048 & 2.093210e+03 & 1\tabularnewline
 \hline 
-\emph{orsreg\_1} & 100\% & 41.2\% & \textbf{Yes} & No & 14,133 & 2,204 & 6.745269e+03 & 1\tabularnewline
+\emph{orsreg\_1} & 100\% & 41.2\% & \textbf{100\%} & No & 14,133 & 2,204 & 6.745269e+03 & 1\tabularnewline
 \hline 
-\emph{pde2961} & 100\% & 50.1\% & No & No & 14,585 & 2,961 & 6.424933e+02 & 1\tabularnewline
+\emph{pde2961} & 100\% & 50.1\% & 0\% & No & 14,585 & 2,961 & 6.424933e+02 & 1\tabularnewline
 \hline 
-\emph{wang1} & 100\% & 80.8\% & No & No & 19,093 & 2,903 & 2.032301e+04 & 1\tabularnewline
-\hline 
-\textcolor{red}{ex28}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 100\% & 98.8\% & No & No & 77,031 & 2,603 & 1.983028e+05  & 1\tabularnewline
-\hline 
-\textcolor{red}{gre512}\footnote{Explicit zeros. Preconditioners are singular, except for iLU(0).} & 0\% & 0\% & No & No & 1,976 & 512 & 1.58318e+02 & 1\tabularnewline
+\emph{wang1} & 100\% & 80.8\% & 0\% & No & 19,093 & 2,903 & 2.032301e+04 & 1\tabularnewline
 \hline 
 \end{tabular}
 
@@ -93,10 +81,6 @@ Matrix & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \emph{wang1} & 0.5008 & 0.7422 & 0.8795 & 0.8905 & 0.5316\tabularnewline
 \hline 
-\textcolor{red}{ex28} & 0.3236 & 0.3311 & 0.6349 & 0.6588 & 0.3239\tabularnewline
-\hline 
-\textcolor{red}{gre512} & 0.1797 & 0.1816 & 0.4165 & 0.4292 & 0.4292\tabularnewline
-\hline 
 \end{tabular}%
 \end{minipage}\hfill{}%
 \begin{minipage}[t]{0.5\columnwidth}%
@@ -105,7 +89,7 @@ Matrix & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \hline 
 \hline 
-\emph{add20} & 83 & \multirow{9}{*}{0} & \multirow{9}{*}{2} & \multirow{9}{*}{2} & 11 & 27\tabularnewline
+\emph{add20} & 83 & \multirow{7}{*}{0} & \multirow{7}{*}{2} & \multirow{7}{*}{2} & 11 & 27\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
 \emph{c-20} & 157 &  &  &  & 148 & 40\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
@@ -118,10 +102,6 @@ Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \emph{pde2961} & 4 &  &  &  & 3 & 3\tabularnewline
 \cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
 \emph{wang1} & 6 &  &  &  & 5 & 6\tabularnewline
-\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
-\textcolor{red}{ex28} & 61 &  &  &  & 5 & 7\tabularnewline
-\cline{1-2} \cline{2-2} \cline{6-7} \cline{7-7} 
-\textcolor{red}{gre512} & 4 &  &  &  & 2 & 2\tabularnewline
 \hline 
 \end{tabular}%
 \end{minipage}
@@ -129,130 +109,186 @@ Matrix & orig & jacobi & tridiag & maxLF & maxST & minST\tabularnewline
 \section{Results}
 
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/add20_xones}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/add20_xrandn}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/add20_xsine}}%
-\end{minipage}
-
-\caption{add20}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/add20_xones}
+\par\end{centering}
+\caption{add20, $x=1$}
 
 \end{figure}
+\newpage{}
 
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/c-20_xones}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/add20_xrandn}
+\par\end{centering}
+\caption{add20, $x\sim\mathcal{N}(0,1)$}
 
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/c-20_xrandn}
+\end{figure}
+\newpage{}
 
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/c-20_xsine}}%
-\end{minipage}
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/add20_xsine}
+\par\end{centering}
+\caption{add20, $x\sim\sin$}
+\end{figure}
+\newpage{}
 
-\caption{c-20}
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/c20_xones}
+\par\end{centering}
+\caption{c20, $x=1$}
+\end{figure}
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/c20_xsine}
+\par\end{centering}
+\caption{c20, $x\sim\mathcal{N}(0,1)$}
+\end{figure}
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/c20_xsine}
+\par\end{centering}
+\caption{c20, $x=\sin$}
+\end{figure}
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/cryg2500_xones}
+\par\end{centering}
+\caption{cryg2500, $x=1$}
 \end{figure}
 
+\newpage{}
+
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/cryg2500_xones}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/cryg2500_xrandn}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/cryg2500_xsine}}%
-\end{minipage}
-
-\caption{cryg2500}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/cryg2500_xrandn}
+\par\end{centering}
+\caption{cryg2500, $x\sim\mathcal{N}(0,1)$}
 \end{figure}
 
+\newpage{}
+
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/dw2048_xones}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/dw2048_xrandn}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/dw2048_xsine}}%
-\end{minipage}
-
-\caption{dw2048}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/cryg2500_xsine}
+\par\end{centering}
+\caption{cryg2500, $x=\sin$}
 \end{figure}
 
+\newpage{}
+
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/orsreg_1_xones}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/orsreg_1_xrandn}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/orsreg_1_xsine}}%
-\end{minipage}
-
-\caption{orsreg\_1}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/dw2048_xones}
+\par\end{centering}
+\caption{dw2048, $x=1$}
 \end{figure}
 
+\newpage{}
+
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/pde2961_xones}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/pde2961_xrandn}
-
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/pde2961_xsine}}%
-\end{minipage}
-
-\caption{pde2961}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/dw2048_xrandn}
+\par\end{centering}
+\caption{dw2048, $x\sim\mathcal{N}(0,1)$}
 \end{figure}
 
+\newpage{}
+
 \begin{figure}[h]
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x=1$]{\includegraphics[width=1\textwidth]{png/wang1_xones}
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/dw2048_xsine}
+\par\end{centering}
+\caption{dw2048, $x=\sin$}
+\end{figure}
 
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[$x\sim\mathcal{N}(0,1)$]{\includegraphics[width=1\textwidth]{png/wang1_xrandn}
+\newpage{}
 
-}%
-\end{minipage}\hfill{}%
-\begin{minipage}[t]{0.33\columnwidth}%
-\subfloat[{$x=\sin([0,100\pi])$}]{\includegraphics[width=1\textwidth]{png/wang1_xsine}}%
-\end{minipage}
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/orsreg1_xones}
+\par\end{centering}
+\caption{orsreg1, $x=1$}
+\end{figure}
 
-\caption{wang1}
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/orsreg1_xrandn}
+\par\end{centering}
+\caption{orsreg1, $x\sim\mathcal{N}(0,1)$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/orsreg1_xsine}
+\par\end{centering}
+\caption{orsreg1, $x=\sin$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/pde2961_xones}
+\par\end{centering}
+\caption{pde2961, $x=1$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/pde2961_xrandn}
+\par\end{centering}
+\caption{pde2961, $x\sim\mathcal{N}(0,1)$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/pde2961_xsine}
+\par\end{centering}
+\caption{pde2961, $x=\sin$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/wang1_xones}
+\par\end{centering}
+\caption{wang1, $x=1$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/wang1_xrandn}
+\par\end{centering}
+\caption{wang1, $x\sim\mathcal{N}(0,1)$}
+\end{figure}
+
+\newpage{}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[width=0.9\paperwidth]{png/wang1_xsine}
+\par\end{centering}
+\caption{wang1, $x=\sin$}
 \end{figure}
 
 \end{document}

@@ -6,7 +6,7 @@ Created on Mon Aug 14 17:49:05 2023
 @author: user
 """
 
-NROWS, NCOLS = 7, 2
+NROWS, NCOLS = 6, 2
 
 import numpy as np
 import json
@@ -40,34 +40,56 @@ def load_trials(json_f):
 
 def main(json_f):
     trials = load_trials(json_f)
+    x_lim = 200
 
     for matrix in trials.keys():
         for x_id in trials[matrix].keys():
             fig1, ax1 = plt.subplots(nrows=NROWS, ncols=NCOLS, sharey=True)
-            fig1.set_size_inches(10, 26)
+            fig1.set_size_inches(10, 16)
             fig1.set_dpi(300)
 
             for i in range(NROWS):
                 ax1[i, 0].set_yscale('log')
-                ax1[i, 0].set_xlabel('iterations')
+                #ax1[i, 0].set_xlabel('iterations')
                 ax1[i, 0].set_ylabel('relres')
             
                 ax1[i, 1].set_yscale('log')
-                ax1[i, 1].set_xlabel('iterations')
+                #ax1[i, 1].set_xlabel('iterations')
                 ax1[i, 1].set_ylabel('relres')
 
+            ax1[-1, 0].set_xlabel('iterations')
+            ax1[-1, 1].set_xlabel('iterations')
+            
             # R1) Reference results
             # XXX: replace jacobi with diagp0, diagp1, diagp2
             ref_trials = ['orig', 'diagp0', 'diagp1', 'diagp2', 'tridiag', 'ilu0']
             
             for m, label in enumerate(ref_trials, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[0, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[0, 0].legend(fontsize='8')
-                ax1[0, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[0, 1].legend(fontsize='8')
+                # TODO: ensure same number of iterations (xscale) for every subplot
+                ax1[0, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[0, 0].legend(fontsize='8')
+            # ax1[0, 0].set_xlim(100)
+
+            # R1, C2) MST + LF
+            trials12 = ['max-st', 'max-lf']
+
+            for m, label in enumerate(trials12, start=1):
+                relres = trials[matrix][x_id][label]['relres']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
+                
+                # TODO: ensure same number of iterations (xscale) for every subplot
+                ax1[0, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[0, 1].legend(fontsize='8')
+            # ax1[0, 1].set_xlim(100)
 
             # R2, C1) MST + MOS-a
             trials21 = ['max-st',
@@ -78,10 +100,14 @@ def main(json_f):
             
             for m, label in enumerate(trials21, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[1, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[1, 0].legend(fontsize='8')
+                ax1[1, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[1, 0].legend(fontsize='8')
+            # ax1[1, 0].set_xlim(100)
                 
             # R3, C1) MST + MOS-d
             trials31 = ['max-st',
@@ -92,10 +118,14 @@ def main(json_f):
 
             for m, label in enumerate(trials31, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[2, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[2, 0].legend(fontsize='8')
+                ax1[2, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[2, 0].legend(fontsize='8')
+            # ax1[2, 0].set_xlim(100)
                 
             # R4, C1) MST + ALT-o
             trials41 = ['max-st',
@@ -106,10 +136,14 @@ def main(json_f):
             
             for m, label in enumerate(trials41, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[3, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[3, 0].legend(fontsize='8')
+                ax1[3, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[3, 0].legend(fontsize='8')
+            # ax1[3, 0].set_xlim(100)
                 
             # R5, C1) MST + ALT-i
             trials51 = ['max-st',
@@ -120,10 +154,14 @@ def main(json_f):
             
             for m, label in enumerate(trials51, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[4, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[4, 0].legend(fontsize='8')
+                ax1[4, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[4, 0].legend(fontsize='8')
+            # ax1[4, 0].set_xlim(100)
                 
             # R6, C1) MST + ALT-o-repeat
             trials61 = ['max-st',
@@ -134,24 +172,32 @@ def main(json_f):
             
             for m, label in enumerate(trials61, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[5, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[5, 0].legend(fontsize='8')
+                ax1[5, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[5, 0].legend(fontsize='8')
+            # ax1[5, 0].set_xlim(100)
                 
-            # R7, C1) MST + addition
-            trials71 = ['max-st',
-                        'max-st_add_m2',
-                        'max-st_add_m3',
-                        'max-st_add_m4'
-            ]
+            # # R7, C1) MST + addition
+            # trials71 = ['max-st',
+            #             'max-st_add_m2',
+            #             'max-st_add_m3',
+            #             'max-st_add_m4'
+            # ]
 
-            for m, label in enumerate(trials71, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+            # for m, label in enumerate(trials71, start=1):
+            #     relres = trials[matrix][x_id][label]['relres']
+            #     relres += [0] * (x_lim - len(relres))
+            #     fre = trials[matrix][x_id][label]['fre']
+            #     fre += [0] * (x_lim - len(relres))
                 
-                ax1[6, 0].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[6, 0].legend(fontsize='8')
+            #     ax1[6, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            # ax1[6, 0].legend(fontsize='8')
+            # # ax1[6, 0].set_xlim(100)
                 
             # R2, C2) LF + MOS-a
             trials22 = ['max-lf',
@@ -162,10 +208,14 @@ def main(json_f):
             
             for m, label in enumerate(trials22, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[1, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[1, 1].legend(fontsize='8')
+                ax1[1, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[1, 1].legend(fontsize='8')
+            # ax1[1, 1].set_xlim(100)
 
             # R3, C2) LF + MOS-d
             trials32 = ['max-lf',
@@ -176,10 +226,14 @@ def main(json_f):
 
             for m, label in enumerate(trials32, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[2, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[2, 1].legend(fontsize='8')
+                ax1[2, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[2, 1].legend(fontsize='8')
+            # ax1[2, 1].set_xlim(100)
                 
             # R4, C2) LF + ALT-o
             trials42 = ['max-lf',
@@ -190,10 +244,14 @@ def main(json_f):
             
             for m, label in enumerate(trials42, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[3, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[3, 1].legend(fontsize='8')
+                ax1[3, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[3, 1].legend(fontsize='8')
+            # ax1[3, 1].set_xlim(100)
                 
             # R5, C2) LF + ALT-i
             trials52 = ['max-lf',
@@ -204,10 +262,14 @@ def main(json_f):
 
             for m, label in enumerate(trials52, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[4, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[4, 1].legend(fontsize='8')
+                ax1[4, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[4, 1].legend(fontsize='8')
+            # ax1[4, 1].set_xlim(100)
                 
             # R6, C2) LF + ALT-o-repeat
             trials62 = ['max-lf',
@@ -218,24 +280,32 @@ def main(json_f):
 
             for m, label in enumerate(trials62, start=1):
                 relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+                relres += [0] * (x_lim - len(relres))
+                fre = trials[matrix][x_id][label]['fre']
+                fre += [0] * (x_lim - len(relres))
                 
-                ax1[5, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[5, 1].legend(fontsize='8')
+                ax1[5, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            ax1[5, 1].legend(fontsize='8')
+            # ax1[5, 1].set_xlim(100)
                 
-            # R7, C2) LF + addition
-            trials72 = ['max-lf',
-                        'max-lf_add_m2',
-                        'max-lf_add_m3',
-                        'max-lf_add_m4'
-            ]
+            # # R7, C2) LF + addition
+            # trials72 = ['max-lf',
+            #             'max-lf_add_m2',
+            #             'max-lf_add_m3',
+            #             'max-lf_add_m4'
+            # ]
              
-            for m, label in enumerate(trials72, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                fre    = trials[matrix][x_id][label]['fre']
+            # for m, label in enumerate(trials72, start=1):
+            #     relres = trials[matrix][x_id][label]['relres']
+            #     relres += [0] * (x_lim - len(relres))
+            #     fre = trials[matrix][x_id][label]['fre']
+            #     fre += [0] * (x_lim - len(relres))
                 
-                ax1[6, 1].plot(range(1, len(relres)+1), relres, label=label)
-                ax1[6, 1].legend(fontsize='8')
+            #     ax1[6, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            
+            # ax1[6, 1].legend(fontsize='8')
+            # # ax1[6, 1].set_xlim(100)
                 
             fig1.savefig(f'{matrix}_x{x_id}.png', bbox_inches='tight')
             plt.close()
