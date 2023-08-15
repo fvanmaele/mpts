@@ -73,7 +73,7 @@ def main(json_f):
             for i in range(NROWS):
                 ax1[i, 0].set_yscale('log')
                 ax1[i, 1].set_yscale('log')
-                ax1[i, 1].yaxis.set_tick_params(labelleft=True)
+                #ax1[i, 1].yaxis.set_tick_params(labelleft=True)
                 ax1[i, 0].set_ylabel('relres')
 
             ax1[-1, 0].set_xlabel('iterations')
