@@ -15,6 +15,7 @@ import re
 
 from pathlib import Path
 
+
 # %%
 def load_trials(json_f):
     trials = {}
@@ -38,6 +39,27 @@ def load_trials(json_f):
     return trials
 
 
+def plot_trial(labels, trials, matrix, x_id, x_lim, ax, y_title=None, alt_legend=False):
+    for m, label in enumerate(labels, start=1):
+        relres  = trials[matrix][x_id][label]['relres']
+        relres += [0] * (x_lim - len(relres))
+        
+        fre  = trials[matrix][x_id][label]['fre']
+        fre += [0] * (x_lim - len(relres))
+
+        # XXX: trick to display method name in legend, when comparing different preconditioner types
+        label_m = label if alt_legend else f'm = {m}'
+        ax.plot(range(1, x_lim+1), relres[:x_lim], label=label_m)
+    
+    ax.legend(fontsize='8')
+
+    if y_title is not None:
+        ax2 = ax.twinx()
+        ax2.set_ylabel(y_title)
+        ax2.set_yticks([])
+    
+     
+# %%
 def main(json_f):
     trials = load_trials(json_f)
     x_lim = 200
@@ -50,263 +72,135 @@ def main(json_f):
 
             for i in range(NROWS):
                 ax1[i, 0].set_yscale('log')
-                #ax1[i, 0].set_xlabel('iterations')
-                ax1[i, 0].set_ylabel('relres')
-            
                 ax1[i, 1].set_yscale('log')
-                #ax1[i, 1].set_xlabel('iterations')
-                ax1[i, 1].set_ylabel('relres')
+                ax1[i, 1].yaxis.set_tick_params(labelleft=True)
+                ax1[i, 0].set_ylabel('relres')
 
             ax1[-1, 0].set_xlabel('iterations')
             ax1[-1, 1].set_xlabel('iterations')
-            
-            # R1) Reference results
-            # XXX: replace jacobi with diagp0, diagp1, diagp2
-            ref_trials = ['orig', 'diagp0', 'diagp1', 'diagp2', 'tridiag', 'ilu0']
-            
-            for m, label in enumerate(ref_trials, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                # TODO: ensure same number of iterations (xscale) for every subplot
-                ax1[0, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[0, 0].legend(fontsize='8')
-            # ax1[0, 0].set_xlim(100)
 
+
+            # R1, C1) Reference results
+            labels11 = ['orig', 'diagp0', 'diagp1', 'diagp2', 'tridiag', 'ilu0']
+            
+            plot_trial(labels11, trials, matrix, x_id, x_lim, ax1[0, 0], y_title=None, alt_legend=True)
+
+
+            # TODO: use plot_trial()
             # R1, C2) MST + LF
-            trials12 = ['max-st', 'max-lf']
-
-            for m, label in enumerate(trials12, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                # TODO: ensure same number of iterations (xscale) for every subplot
-                ax1[0, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            labels12 = ['max-st', 'max-lf']
             
-            ax1[0, 1].legend(fontsize='8')
-            # ax1[0, 1].set_xlim(100)
+            plot_trial(labels12, trials, matrix, x_id, x_lim, ax1[0, 1], y_title=None, alt_legend=True)
+
 
             # R2, C1) MST + MOS-a
-            trials21 = ['max-st',
+            labels21 = ['max-st',
                         'max-st_mos-a_m2',
                         'max-st_mos-a_m3',
                         'max-st_mos-a_m4'
             ]
-            
-            for m, label in enumerate(trials21, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[1, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[1, 0].legend(fontsize='8')
-            # ax1[1, 0].set_xlim(100)
-                
+            plot_trial(labels21, trials, matrix, x_id, x_lim, ax1[1, 0], 'MOS-a (MST)')
+
+
             # R3, C1) MST + MOS-d
-            trials31 = ['max-st',
+            labels31 = ['max-st',
                         'max-st_mos-d_m2',
                         'max-st_mos-d_m3',
                         'max-st_mos-d_m4'
             ]
+            plot_trial(labels31, trials, matrix, x_id, x_lim, ax1[2, 0], 'MOS-d (MST)')
 
-            for m, label in enumerate(trials31, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[2, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
             
-            ax1[2, 0].legend(fontsize='8')
-            # ax1[2, 0].set_xlim(100)
-                
             # R4, C1) MST + ALT-o
-            trials41 = ['max-st',
+            labels41 = ['max-st',
                         'max-st_alt-o_m2',
                         'max-st_alt-o_m3',
                         'max-st_alt-o_m4'
             ]
-            
-            for m, label in enumerate(trials41, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[3, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[3, 0].legend(fontsize='8')
-            # ax1[3, 0].set_xlim(100)
-                
+            plot_trial(labels41, trials, matrix, x_id, x_lim, ax1[3, 0], 'ALT-o (MST)')
+
+
             # R5, C1) MST + ALT-i
-            trials51 = ['max-st',
+            labels51 = ['max-st',
                         'max-st_alt-i_m2',
                         'max-st_alt-i_m3',
                         'max-st_alt-i_m4'
             ]
-            
-            for m, label in enumerate(trials51, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[4, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[4, 0].legend(fontsize='8')
-            # ax1[4, 0].set_xlim(100)
-                
+            plot_trial(labels51, trials, matrix, x_id, x_lim, ax1[4, 0], 'ALT-i (MST)')
+
+
             # R6, C1) MST + ALT-o-repeat
-            trials61 = ['max-st',
+            labels61 = ['max-st',
                         'max-st_alt-o-repeat_m2',
                         'max-st_alt-o-repeat_m3',
                         'max-st_alt-o-repeat_m4'
             ]
+            plot_trial(labels61, trials, matrix, x_id, x_lim, ax1[5, 0], 'ALT-o-rep (MST)')
             
-            for m, label in enumerate(trials61, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[5, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
             
-            ax1[5, 0].legend(fontsize='8')
-            # ax1[5, 0].set_xlim(100)
-                
             # # R7, C1) MST + addition
-            # trials71 = ['max-st',
+            # labels71 = ['max-st',
             #             'max-st_add_m2',
             #             'max-st_add_m3',
             #             'max-st_add_m4'
             # ]
-
-            # for m, label in enumerate(trials71, start=1):
-            #     relres = trials[matrix][x_id][label]['relres']
-            #     relres += [0] * (x_lim - len(relres))
-            #     fre = trials[matrix][x_id][label]['fre']
-            #     fre += [0] * (x_lim - len(relres))
-                
-            #     ax1[6, 0].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            # ax1[6, 0].legend(fontsize='8')
-            # # ax1[6, 0].set_xlim(100)
-                
+            # plot_trial(labels71, trials, matrix, x_id, x_lim, ax1[6, 0], 'add (MST)')
+ 
+    
             # R2, C2) LF + MOS-a
-            trials22 = ['max-lf',
+            labels22 = ['max-lf',
                         'max-lf_mos-a_m2',
                         'max-lf_mos-a_m3',
                         'max-lf_mos-a_m4'
             ]
-            
-            for m, label in enumerate(trials22, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[1, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[1, 1].legend(fontsize='8')
-            # ax1[1, 1].set_xlim(100)
+            plot_trial(labels22, trials, matrix, x_id, x_lim, ax1[1, 1], 'MOS-a (LF)')
 
+            
             # R3, C2) LF + MOS-d
-            trials32 = ['max-lf',
+            labels32 = ['max-lf',
                         'max-lf_mos-d_m2',
                         'max-lf_mos-d_m3',
                         'max-lf_mos-d_m4'
             ]
+            plot_trial(labels32, trials, matrix, x_id, x_lim, ax1[2, 1], 'MOS-d (LF)')
 
-            for m, label in enumerate(trials32, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[2, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
             
-            ax1[2, 1].legend(fontsize='8')
-            # ax1[2, 1].set_xlim(100)
-                
             # R4, C2) LF + ALT-o
-            trials42 = ['max-lf',
+            labels42 = ['max-lf',
                         'max-lf_alt-o_m2',
                         'max-lf_alt-o_m3',
                         'max-lf_alt-o_m4'
             ]
+            plot_trial(labels42, trials, matrix, x_id, x_lim, ax1[3, 1], 'ALT-o (LF)')
+
             
-            for m, label in enumerate(trials42, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[3, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[3, 1].legend(fontsize='8')
-            # ax1[3, 1].set_xlim(100)
-                
             # R5, C2) LF + ALT-i
-            trials52 = ['max-lf',
+            labels52 = ['max-lf',
                         'max-lf_alt-i_m2',
                         'max-lf_alt-i_m3',
                         'max-lf_alt-i_m4'
             ]
+            plot_trial(labels52, trials, matrix, x_id, x_lim, ax1[4, 1], 'ALT-i (LF)')
 
-            for m, label in enumerate(trials52, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[4, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[4, 1].legend(fontsize='8')
-            # ax1[4, 1].set_xlim(100)
                 
             # R6, C2) LF + ALT-o-repeat
-            trials62 = ['max-lf',
+            labels62 = ['max-lf',
                         'max-lf_alt-o-repeat_m2',
                         'max-lf_alt-o-repeat_m3',
                         'max-lf_alt-o-repeat_m4'
             ]
+            plot_trial(labels62, trials, matrix, x_id, x_lim, ax1[5, 1], 'ALT-o-rep (LF)')
 
-            for m, label in enumerate(trials62, start=1):
-                relres = trials[matrix][x_id][label]['relres']
-                relres += [0] * (x_lim - len(relres))
-                fre = trials[matrix][x_id][label]['fre']
-                fre += [0] * (x_lim - len(relres))
-                
-                ax1[5, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
-            
-            ax1[5, 1].legend(fontsize='8')
-            # ax1[5, 1].set_xlim(100)
-                
+
             # # R7, C2) LF + addition
-            # trials72 = ['max-lf',
+            # labels72 = ['max-lf',
             #             'max-lf_add_m2',
             #             'max-lf_add_m3',
             #             'max-lf_add_m4'
             # ]
-             
-            # for m, label in enumerate(trials72, start=1):
-            #     relres = trials[matrix][x_id][label]['relres']
-            #     relres += [0] * (x_lim - len(relres))
-            #     fre = trials[matrix][x_id][label]['fre']
-            #     fre += [0] * (x_lim - len(relres))
-                
-            #     ax1[6, 1].plot(range(1, x_lim+1), relres[:x_lim], label=label)
+            # plot_trial(labels72, trials, matrix, x_id, x_lim, ax1[6, 1], 'add(LF)')
             
-            # ax1[6, 1].legend(fontsize='8')
-            # # ax1[6, 1].set_xlim(100)
-                
+
             fig1.savefig(f'{matrix}_x{x_id}.png', bbox_inches='tight')
             plt.close()
 
