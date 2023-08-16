@@ -29,11 +29,11 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
         title_x = title_xs[xi]
         
         preconds_ref = setup_precond(mtx)
-        #preconds_mst = setup_precond_mst(mtx, 4)
-        #preconds_lf  = setup_precond_lf(mtx, 4)
+        preconds_mst = setup_precond_mst(mtx, 4)
+        preconds_lf  = setup_precond_lf(mtx, 4)
         
-        #preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
-        preconds = {**preconds_ref}
+        preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
+        #preconds = {**preconds_ref}
 
         for label, precond_m in preconds.items():
             if len(precond_m) == 1:

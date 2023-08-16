@@ -17,8 +17,7 @@ def sparse_is_symmetric(mtx, tol=1e-10):
     return (abs(mtx-mtx.T) > tol).nnz == 0
 
 
-# TODO: return percentage of diagonally dominant rows
-def sparse_is_ddiag(matrix):
+def sparse_ddiag(matrix):
     if not sparse.issparse(matrix):
         raise ValueError("Input matrix must be a Scipy sparse matrix.")
     
