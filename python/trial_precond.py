@@ -84,30 +84,6 @@ def precond_lops(mtx, Pi, lop, **kwargs):
     }
 
 
-def precond_prod_r(mtx, Pi):
-    try:
-        P = Pi.pop()
-
-        for factor in Pi:  # XXX: can be done in log_2(n) iterations
-            P = P @ factor
-
-    except RuntimeError:
-        P = None
-
-    if P is not None:
-        try:
-            # TODO: can be implemented as LU for every factor instead of (dense) product
-            M = lu_sparse_operator(P)
-        except RuntimeError:
-            M = None
-
-    return {
-        's_coverage': None,
-        's_degree'  : s_degree(P) if P is not None else None,
-        'precond'   : M
-    }
-
-
 def precond_ilu0(mtx):
     try:
         M = lu_sparse_operator(mtx, inexact=True)

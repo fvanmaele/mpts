@@ -12,12 +12,12 @@ import numpy as np
 from scipy.io import mmread
 from scipy import sparse
 
-from sparse_util import sparse_prune, sparse_max_n
-from sparse_lops import lu_sparse_operator
-from diag_precond import diagp1
+from sparse_util  import sparse_prune, sparse_max_n
+from sparse_lops  import lu_sparse_operator
+from precond_diag import diagp1
 
-from trial import run_trial
-import graph_precond as gp
+from graph import run_trial
+import precond_graph as pg
 
 
 # %%
@@ -29,18 +29,18 @@ _, mtx1_q = np.unique(mtx1_row_idx, return_counts=True)
 
 # %% MST (m = 1)
 B0 = mtx1.copy()
-M0 = gp.spanning_tree_precond(B0)  # includes diagonal of mtx1 (S^diag)
+M0 = pg.spanning_tree_precond(B0)  # includes diagonal of mtx1 (S^diag)
 B1 = sparse_prune((B0 @ sparse.linalg.inv(M0)).tocoo(), sparse_max_n(B0, mtx1_q))
 B0_diff = sparse.linalg.norm(Id1 - B0)
 B1_diff = sparse.linalg.norm(Id1 - B1)
 
 # %% MST/MOS (m = 2)
-M1 = gp.spanning_tree_precond(B1)
+M1 = pg.spanning_tree_precond(B1)
 B2 = sparse_prune((B1 @ sparse.linalg.inv(M1)).tocoo(), sparse_max_n(B1, mtx1_q))
 B2_diff = sparse.linalg.norm(Id1 - B2)
 
 # %% MST/MOS (m = 3)
-M2 = gp.spanning_tree_precond(B2)
+M2 = pg.spanning_tree_precond(B2)
 B3 = sparse_prune((B2 @ sparse.linalg.inv(M2)).tocoo(), sparse_max_n(B2, mtx1_q))
 B3_diff = sparse.linalg.norm(Id1 - B3)
 
