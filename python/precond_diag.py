@@ -11,7 +11,8 @@ import numpy as np
 
 # %% Diagonal preconditioners
 def unit(x):
-    return np.where(x != 0, x / np.abs(x), 1)
+    x[x == 0] = 1
+    return x / np.abs(x)
 
 def diagp0(mtx):
     return mtx.diagonal()

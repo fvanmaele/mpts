@@ -67,16 +67,16 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
 
 
 def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
+    preconds_ref = precond_setup(mtx)
+    preconds_mst = precond_setup_mst(mtx, 4)
+    preconds_lf  = precond_setup_lf(mtx, 4)
+    
+    preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
+    #preconds = {**preconds_ref}
+
     # Generate plots for different right-hand sides
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]
-        
-        preconds_ref = precond_setup(mtx)
-        preconds_mst = precond_setup_mst(mtx, 4)
-        preconds_lf  = precond_setup_lf(mtx, 4)
-        
-        preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
-        #preconds = {**preconds_ref}
 
         for label, precond_m in preconds.items():
             if len(precond_m) == 1:
