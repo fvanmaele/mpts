@@ -15,7 +15,8 @@ import trial_precond as tr
 import precond_graph as pg
 import networkx as nx
 
-from sparse_lops import AltLinearOperator, IterLinearOperator
+from sparse_lops import AltLinearOperator, IterLinearOperator, ProdLinearOperator
+from sparse_util import lu_sparse_operator
 
 
 # %%
@@ -69,25 +70,27 @@ def precond_setup_graph(mtx, opt_graph, opt_label, m_max):
         )
 
 
-    # MOS-a factors
+    # MOS-a factors M_0, ..., M_{m-1}
     print(f'setup: {opt_label}_mos-a', file=stderr)
     graph_mos_a, graph_mos_a_diff = pg.graph_precond_mos_a(mtx, opt_graph, m_max)
     preconds[opt_label + '_mos-a'] = []
     
     for m in m_range:
         preconds[opt_label + '_mos-a'].append(
-            tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_a[:m])
+            # Inverse M_{m-1}^{-1} ... M_0^{-1}
+            tr.precond_lops(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_a[:m], ProdLinearOperator)
         )
 
 
-    # MOS-d factors
+    # MOS-d factors M''_0, .., M''_{m-1}
     print(f'setup: {opt_label}_mos-d', file=stderr)
     graph_mos_d = pg.graph_precond_mos_d(mtx, Pi_graph_noscale, diagp1(mtx))
     preconds[opt_label + '_mos-d'] = []
     
     for m in m_range:
         preconds[opt_label + '_mos-d'].append(
-            tr.precond_prod_r(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_d[:m])
+            # Inverse M''_{m-1}^{-1} ... M''_0^{-1}
+            tr.precond_lops(mtx, [sparse.diags(diagp1(mtx)).tocoo()] + graph_mos_d[:m], ProdLinearOperator)
         )
 
 

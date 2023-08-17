@@ -98,8 +98,7 @@ def graph_precond_mos_a(mtx, optG, m):
         B_diff.append(sparse.linalg.norm(Id - B))
         M_MOS.append(M.copy())
 
-    M_MOS.reverse()  # M_{m-1}, ..., M_0
-    return M_MOS, B_diff
+    return M_MOS, B_diff    # M_0, ..., M_{m-1}
 
 
 def graph_precond_mos_d(mtx, Al_pp, T):
@@ -153,8 +152,7 @@ def graph_precond_mos_d(mtx, Al_pp, T):
     for l in range(0, m):
         M_MOS_d.append(sparse.diags(J) + sparse.diags(T_inv) @ Al_p[l])
     
-    M_MOS_d.reverse()  # M_pp_{m-1}, ..., M_pp_0
-    return M_MOS_d
+    return M_MOS_d      # M_pp_0, ..., M_pp_{m-1}
 
 
 # %% Maximum linear forest preconditioner
