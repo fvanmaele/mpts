@@ -6,6 +6,7 @@
 
 from pathlib  import Path
 from scipy.io import mmread
+from scipy    import sparse
 from pyamg    import krylov
 
 import warnings
@@ -70,9 +71,7 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
     preconds_ref = precond_setup(mtx)
     preconds_mst = precond_setup_mst(mtx, 4)
     preconds_lf  = precond_setup_lf(mtx, 4)
-    
-    preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
-    #preconds = {**preconds_ref}
+    preconds     = {**preconds_ref, **preconds_mst, **preconds_lf}
 
     # Generate plots for different right-hand sides
     for xi, x in enumerate(xs):
@@ -123,7 +122,7 @@ def main(mtx_path, seed, max_outer, max_inner):
     np.seterr(all='raise')
     
     np.random.seed(seed)
-    mtx   = mmread(mtx_path)
+    mtx   = sparse.coo_array(mmread(mtx_path))
     n, m  = mtx.shape
     title = mtx_path.stem
 
