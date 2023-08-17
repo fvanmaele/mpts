@@ -10,8 +10,8 @@ from scipy         import sparse
 from pathlib       import Path
 from scipy.io      import mmread
 from sparse_util   import s_coverage, s_degree, sparse_ddiag
-from graph_precond import spanning_tree_precond, linear_forest_precond
-from diag_precond  import diagp0
+from precond_graph import spanning_tree_precond, linear_forest_precond
+from precond_diag  import diagp0
 
 
 def main(mtx_l):

@@ -16,26 +16,26 @@ from diag_precond import diagp1, unit
 
 # %% Generalized graph preconditioner
 # optG is assumed to not return diagonal elements in the adjacency matrix
-def graph_normalized(mtx):
+def matrix_normalized(mtx):
     """  Normalized and symmetrized version of a graph for segmentation
     """
     mtx_diagp_inv = sparse.diags(1 / diagp1(mtx))
     
-    return nx.Graph(abs(mtx_diagp_inv @ mtx) + abs(mtx_diagp_inv @ mtx).T)
+    return abs(mtx_diagp_inv @ mtx) + abs(mtx_diagp_inv @ mtx).T
 
 
 # special version (m = 1) of graph_precond_list_m()
 def graph_precond(mtx, optG):
-    C = graph_normalized(mtx)
+    C = matrix_normalized(mtx)
     D = sparse.diags(mtx.diagonal())  # DIAgonal
-    O = optG(C)  # graph optimization function (spanning tree, linear forest, etc.)
+    O = optG(nx.Graph(C))  # graph optimization function (spanning tree, linear forest, etc.)
     
     return sparse_prune(mtx, sparse.coo_array(nx.to_scipy_sparse_array(O) + D))
 
 
 def graph_precond_list_m(mtx, optG, m, scale):
-    C = graph_normalized(mtx)
-    M = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
+    C = matrix_normalized(mtx)
+    M = nx.to_scipy_sparse_array(optG(nx.Graph(C)))  # no diagonal elements
     S = [M]
 
     # Retrieve diagonal of input matrix for later adding
@@ -46,14 +46,14 @@ def graph_precond_list_m(mtx, optG, m, scale):
     for k in range(1, m):
         # C -> scale(C, S(M) \ S_diag(M), scale)
         C = nx.Graph(sparse_scale((nx.to_scipy_sparse_array(C) + D).tocoo(), M.tocoo(), scale))
-        M = nx.to_scipy_sparse_array(optG(C))       
+        M = nx.to_scipy_sparse_array(optG(nx.Graph(C)))       
         S.append(M)
 
     return [sparse_prune(mtx, sparse.coo_array(Sk + D)) for Sk in S]
     
 
 def graph_precond_add_m(mtx, optG, m):
-    C = graph_normalized(mtx)
+    C = matrix_normalized(mtx)
 
     # Begin with an empty sparse matrix
     S = sparse.csr_matrix(sparse.dok_matrix(mtx.shape))
@@ -64,7 +64,7 @@ def graph_precond_add_m(mtx, optG, m):
     # In every iteration, the optimized graph is computed for the remainder 
     # (excluding self-loops)
     for k in range(m-1):
-        Mk = nx.to_scipy_sparse_array(optG(C))  # no diagonal elements
+        Mk = nx.to_scipy_sparse_array(optG(nx.Graph(C)))  # no diagonal elements
         
         # Accumulation of spanning trees (may have any amount of cycles)
         S = S + Mk

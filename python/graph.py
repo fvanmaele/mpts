@@ -11,8 +11,8 @@ import warnings
 import numpy as np
 import json
 
-from trial import run_trial
-from graph_setup import setup_precond, setup_precond_mst, setup_precond_lf
+from trial       import run_trial
+from trial_setup import precond_setup, precond_setup_mst, precond_setup_lf
 
 
 class NumpyArrayEncoder(json.JSONEncoder):
@@ -28,9 +28,9 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]
         
-        preconds_ref = setup_precond(mtx)
-        preconds_mst = setup_precond_mst(mtx, 4)
-        preconds_lf  = setup_precond_lf(mtx, 4)
+        preconds_ref = precond_setup(mtx)
+        preconds_mst = precond_setup_mst(mtx, 4)
+        preconds_lf  = precond_setup_lf(mtx, 4)
         
         preconds = {**preconds_ref, **preconds_mst, **preconds_lf}
         #preconds = {**preconds_ref}

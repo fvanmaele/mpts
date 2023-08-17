@@ -8,31 +8,32 @@ Created on Mon Aug 14 04:20:12 2023
 
 #from scipy.io import mmread, mmwrite
 from scipy import sparse
-from diag_precond import diagp0, diagp1, diagp2
+from precond_diag import diagp0, diagp1, diagp2
+from sys import stderr
 
 import trial_precond as tr
-import graph_precond as gp
+import precond_graph as pg
 import networkx as nx
 
 from sparse_lops import AltLinearOperator, IterLinearOperator
 
 
 # %%
-def setup_precond(mtx):
+def precond_setup(mtx):
     preconds = {}
 
-    #print('setup: orig')
+    print('setup: orig')
     preconds['orig'] = [tr.precond_orig(mtx)]
     
-    #print('setup: jacobi')
+    print('setup: jacobi')
     preconds['diagp0'] = [tr.precond_diag(mtx, diagp0(mtx))]
     preconds['diagp1'] = [tr.precond_diag(mtx, diagp1(mtx))]
     preconds['diagp2'] = [tr.precond_diag(mtx, diagp2(mtx))]
     
-    #print('setup: tridiag')
+    print('setup: tridiag')
     preconds['tridiag'] = [tr.precond_tridiag(mtx)]
     
-    #print('setup: ilu0')
+    print('setup: ilu0')
     preconds['ilu0'] = [tr.precond_ilu0(mtx)]
     
     return preconds
@@ -41,36 +42,36 @@ def setup_precond(mtx):
 # %%
 # TODO: save matrix factors as .mtx files, load if available
 # TODO: print compute time for each setup phase
-def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
+def precond_setup_graph(mtx, opt_graph, opt_label, m_max):
     """ Compare the performance of spanning tree preconditioners
     """
     preconds = {}
     m_range = range(2, m_max+1)
 
     # MST factors, scale = 0 (MOS-d) and scale = 0.01 (ALT-i, ALT-o)
-    #print(f'setup: factors (mst, m = {m_max})')
-    Pi_graph_noscale = gp.graph_precond_list_m(mtx, opt_graph, m_max, scale=0)
-    Pi_graph_scale   = gp.graph_precond_list_m(mtx, opt_graph, m_max, scale=0.01)
+    print(f'setup: factors (mst, m = {m_max})', file=stderr)
+    Pi_graph_noscale = pg.graph_precond_list_m(mtx, opt_graph, m_max, scale=0)
+    Pi_graph_scale   = pg.graph_precond_list_m(mtx, opt_graph, m_max, scale=0.01)
 
     # Optimal graph preconditioner
-    #print(f'setup: {opt_label}')
+    print(f'setup: {opt_label}', file=stderr)
     P_graph = Pi_graph_noscale[0]
     preconds[opt_label] = [tr.precond_mtx(mtx, P_graph)]
 
 
     # Additive factors
-    #print(f'setup: {opt_label}_add')
+    print(f'setup: {opt_label}_add', file=stderr)
     preconds[opt_label + '_add'] = []
     
     for m in m_range:
         preconds[opt_label + '_add'].append(
-            tr.precond_mtx(mtx, gp.graph_precond_add_m(mtx, opt_graph, m))
+            tr.precond_mtx(mtx, pg.graph_precond_add_m(mtx, opt_graph, m))
         )
 
 
     # MOS-a factors
-    #print(f'setup: {opt_label}_mos-a')
-    graph_mos_a, graph_mos_a_diff = gp.graph_precond_mos_a(mtx, opt_graph, m_max)
+    print(f'setup: {opt_label}_mos-a', file=stderr)
+    graph_mos_a, graph_mos_a_diff = pg.graph_precond_mos_a(mtx, opt_graph, m_max)
     preconds[opt_label + '_mos-a'] = []
     
     for m in m_range:
@@ -80,8 +81,8 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
     # MOS-d factors
-    #print(f'setup: {opt_label}_mos-d')
-    graph_mos_d = gp.graph_precond_mos_d(mtx, Pi_graph_noscale, diagp1(mtx))
+    print(f'setup: {opt_label}_mos-d', file=stderr)
+    graph_mos_d = pg.graph_precond_mos_d(mtx, Pi_graph_noscale, diagp1(mtx))
     preconds[opt_label + '_mos-d'] = []
     
     for m in m_range:
@@ -91,7 +92,7 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
     # Inner alternating factors
-    #print(f'setup: {opt_label}_alt-i')
+    print(f'setup: {opt_label}_alt-i', file=stderr)
     preconds[opt_label + '_alt-i'] = []
 
     for m in m_range:
@@ -101,7 +102,7 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
     # Outer alternating factors
-    #print(f'setup: {opt_label}_alt-o')
+    print(f'setup: {opt_label}_alt-o', file=stderr)
     preconds[opt_label + '_alt-o'] = []
     
     for m in m_range:
@@ -111,7 +112,7 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
     # Outer repeating factors
-    #print(f'setup: {opt_label}_alt-o-repeat')
+    print(f'setup: {opt_label}_alt-o-repeat', file=stderr)
     preconds[opt_label + '_alt-o-repeat'] = []
     
     for m in m_range:
@@ -123,8 +124,8 @@ def setup_precond_graph(mtx, opt_graph, opt_label, m_max):
 
 
 # %%
-def setup_precond_mst(mtx, m_max):
-    return setup_precond_graph(mtx, nx.maximum_spanning_tree, 'max-st', m_max)
+def precond_setup_mst(mtx, m_max):
+    return precond_setup_graph(mtx, nx.maximum_spanning_tree, 'max-st', m_max)
 
-def setup_precond_lf(mtx, m_max):
-    return setup_precond_graph(mtx, gp.linear_forest, 'max-lf', m_max)
+def precond_setup_lf(mtx, m_max):
+    return precond_setup_graph(mtx, pg.linear_forest, 'max-lf', m_max)

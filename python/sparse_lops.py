@@ -23,6 +23,28 @@ def lu_sparse_operator(P, inexact=False):
         return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
 
 
+class ProdLinearOperator(sparse.linalg.LinearOperator):
+    """ Class for a preconditioner of multiplicative factors M_0, ..., M_{m-1}.
+    """
+    def __init__(self, A, Mi):
+        assert len(Mi) > 0
+        
+        # LinearOperator
+        self.shape = A.shape  # assumed consistent between `Mi`
+        self.dtype = None
+        super().__init__(self.dtype, self.shape)
+        
+        # Child members
+        self.Mi = Mi
+        
+    def _matvec(self, x):
+        y = x
+        for i in reversed(range(0, len(self.Mi))):
+            M = self.Mi[i]
+            y = M(y) if callable(M) else M @ y
+        return y
+    
+
 class AltLinearOperator(sparse.linalg.LinearOperator):
     """ Class for non-stationary preconditioners, used with FGMRES.
     """
@@ -34,7 +56,7 @@ class AltLinearOperator(sparse.linalg.LinearOperator):
         self.dtype = None        
         super().__init__(self.dtype, self.shape)
         
-        # Child members
+        # Child memberself.Mi[i]s
         self.i = len(Mi)
         self.Mi = Mi
         self.iter = 0       # current iteration, taken modulo `i`
