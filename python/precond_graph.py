@@ -11,7 +11,7 @@ import numpy as np
 from scipy import sparse
 
 from sparse_util  import sparse_prune, sparse_scale, sparse_max_n
-from diag_precond import diagp1, unit
+from precond_diag import diagp1, unit
 
 
 # %% Generalized graph preconditioner
@@ -45,7 +45,7 @@ def graph_precond_list_m(mtx, optG, m, scale):
     # retrieved in the previous step (2.2)
     for k in range(1, m):
         # C -> scale(C, S(M) \ S_diag(M), scale)
-        C = nx.Graph(sparse_scale((nx.to_scipy_sparse_array(C) + D).tocoo(), M.tocoo(), scale))
+        C = sparse_scale((C + D).tocoo(), M.tocoo(), scale)
         M = nx.to_scipy_sparse_array(optG(nx.Graph(C)))       
         S.append(M)
 
@@ -70,7 +70,7 @@ def graph_precond_add_m(mtx, optG, m):
         S = S + Mk
         
         # Subtract weights for the next iteration
-        C = nx.Graph(nx.to_scipy_sparse_array(C) - Mk)
+        C = C - Mk
 
     return sparse_prune(mtx, sparse.coo_array(S + D))
 
@@ -101,6 +101,7 @@ def graph_precond_mos_a(mtx, optG, m):
     return M_MOS, B_diff    # M_0, ..., M_{m-1}
 
 
+# XXX: not specific to graphs, rename function
 def graph_precond_mos_d(mtx, Al_pp, T):
     """
     Generalization of ILU factorizations (MOS Ansatz)

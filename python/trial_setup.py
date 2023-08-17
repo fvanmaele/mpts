@@ -16,7 +16,6 @@ import precond_graph as pg
 import networkx as nx
 
 from sparse_lops import AltLinearOperator, IterLinearOperator, ProdLinearOperator
-from sparse_util import lu_sparse_operator
 
 
 # %%
