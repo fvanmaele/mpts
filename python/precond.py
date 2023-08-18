@@ -11,7 +11,35 @@ import numpy as np
 from scipy import sparse
 
 from sparse_util  import sparse_prune, sparse_scale, sparse_max_n
-from precond_diag import diagp1, unit
+
+
+# %% Diagonal preconditioners
+def unit(x):
+    x[x == 0] = 1
+    return x / np.abs(x)
+
+def diagp0(mtx):
+    return mtx.diagonal()
+
+def row_sums_excluding_diagonal(mtx):
+    # Set the diagonal elements to zero in the CSR matrix
+    mtx = mtx.copy()
+    mtx.setdiag(0)
+
+    # Compute the sum of row elements excluding the diagonal elements
+    return np.array(mtx.sum(axis=1)).flatten()
+
+def diagp1(mtx):
+    mtx_d = mtx.diagonal()
+    return np.multiply(unit(mtx_d), np.maximum(np.abs(mtx_d), row_sums_excluding_diagonal(abs(mtx))))
+
+def diagp2(mtx):
+    mtx_d = mtx.diagonal()
+    return np.multiply(unit(mtx_d), np.array(abs(mtx).sum(axis=1)).flatten())
+
+def diagl1(mtx):
+    mtx_d = mtx.diagonal()
+    return mtx_d + row_sums_excluding_diagonal(abs(mtx))
 
 
 # %% Generalized graph preconditioner
@@ -75,19 +103,19 @@ def graph_precond_add_m(mtx, optG, m):
     return sparse_prune(mtx, sparse.coo_array(S + D))
 
 
-def graph_precond_mos_a(mtx, optG, m):
+def graph_precond_mos_a(mtx, optG, m, mtx_q=None):
     n, _ = mtx.shape
     Id = sparse.eye(n)
 
     # Vector of weights, matching the number of non-zero elements in each row of A
-    mtx_row_idx, _, _ = sparse.find(mtx)
-    _, mtx_q = np.unique(mtx_row_idx, return_counts=True)
+    if mtx_q is None:
+        mtx_row_idx, _, _ = sparse.find(mtx)
+        _, mtx_q = np.unique(mtx_row_idx, return_counts=True)
 
     # Check if B converges towards identity matrix
     # TODO: add warning if B_diff gets "too large" in some iteration
     # TODO: distance of B_l to the MOS preconditioner applied to A
     B_diff = []
-    #M_diff = []
     M_MOS  = []
     B = mtx.copy()
 

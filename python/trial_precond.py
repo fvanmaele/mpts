@@ -7,9 +7,9 @@ Created on Wed Jul 26 12:48:03 2023
 """
 
 from scipy import sparse
+import ilupp
 
 from sparse_util import s_coverage, s_degree, sparse_max_n
-from sparse_lops import lu_sparse_operator
 
 
 # %%
@@ -24,6 +24,7 @@ def precond_orig(mtx):
 def precond_diag(mtx, diag):
     try:
         M = sparse.diags(1. / diag, format='csc')
+    
     except FloatingPointError:
         M = None
 
@@ -41,7 +42,8 @@ def precond_tridiag(mtx):
     P = sparse.diags(diagonals, [-1, 0, 1])
     
     try:
-        M = lu_sparse_operator(P)
+        M = sparse.linalg.LinearOperator(P.shape, sparse.linalg.splu(P).solve)
+
     except RuntimeError:
         M = None
         
@@ -53,12 +55,12 @@ def precond_tridiag(mtx):
 
 
 def precond_mtx(mtx, P, q_max=None):
-    q = [q_max] * mtx.shape[0]
-    
-    try:
-        if q is not None:
-            P = sparse_max_n(P.tolil(), q)
-        M = lu_sparse_operator(P)
+    if q_max is not None:
+        q = [q_max] * mtx.shape[0]
+        P = sparse_max_n(P.tolil(), q)
+
+    try:    
+        M = sparse.linalg.LinearOperator(P.shape, sparse.linalg.splu(P).solve)
     
     except RuntimeError:
         M = None
@@ -72,7 +74,7 @@ def precond_mtx(mtx, P, q_max=None):
 
 def precond_lops(mtx, Pi, lop, **kwargs):
     try:
-        M = lop(mtx, [sparse.linalg.splu(P).solve for P in Pi], **kwargs)
+        M = lop(mtx, [sparse.linalg.splu(P).solve for P in reversed(Pi)], **kwargs)
 
     except RuntimeError:
         M = None
@@ -86,7 +88,8 @@ def precond_lops(mtx, Pi, lop, **kwargs):
 
 def precond_ilu0(mtx):
     try:
-        M = lu_sparse_operator(mtx, inexact=True)
+        M = ilupp.ILU0Preconditioner(sparse.csc_matrix(mtx))
+
     except RuntimeError:
         M = None
     

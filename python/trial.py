@@ -39,32 +39,29 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     """ Solve a (right) preconditioned linear system with a fixed number of GMRES iterations
     """
     # Right-hand side from exact solution
-    rhs = mtx * x
+    rhs = mtx @ x
     counter = gmres_counter()
     residuals = []  # input vector for fgmres residuals
 
-    try:
-        x_gmres, info = krylov.fgmres(mtx, rhs, M=M, x0=None, tol=1e-15, 
-                                      restrt=k_max_inner, maxiter=k_max_outer,
-                                      callback=counter, residuals=residuals)
+    x_gmres, info = krylov.fgmres(mtx, rhs, M=M, x0=None, tol=1e-15, 
+                                  restrt=k_max_inner, maxiter=k_max_outer,
+                                  callback=counter, residuals=residuals)
 
-        # Normalize to relative residual
-        relres = np.array(residuals) / np.linalg.norm(rhs)
+    # Normalize to relative residual
+    relres = np.array(residuals) / np.linalg.norm(rhs)
 
-        # Compute forward relative error
-        x_diff = np.matrix(counter.xk) - x.T
-        fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
+    # Compute forward relative error
+    x_diff = np.matrix(counter.xk) - x.T
+    fre = np.linalg.norm(x_diff, axis=1) / np.linalg.norm(x)
 
-        return {
-            #'x':  x,
-            'fre': fre.tolist(),
-            'rk': relres,
-            'exit_code': info, 
-            'iters': counter.niter 
-        }
+    return {
+        #'x':  x,
+        'fre': fre.tolist(),
+        'rk': relres,
+        'exit_code': info, 
+        'iters': counter.niter 
+    }
 
-    except ValueError:
-        return None
 
 
 def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
@@ -76,6 +73,7 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
     # Generate plots for different right-hand sides
     for xi, x in enumerate(xs):
         title_x = title_xs[xi]
+        print(f'{title}, x: {title_x}')
 
         for label, precond_m in preconds.items():
             if len(precond_m) == 1:
@@ -98,23 +96,20 @@ def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title
                     continue
                 
                 result = run_trial(mtx, x, M=M, k_max_outer=k_max_outer, k_max_inner=k_max_inner)
-                result['mtx']    = title
-                result['method'] = label_m
-                result['x_id']   = title_x
 
                 if result is not None:
-                    relres  = result['rk']
-                    fre     = result['fre']
-
-                    print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
-                        label_m, result['iters'], sc, sd, relres[-1], fre[-1]))
+                    result['mtx']    = title
+                    result['method'] = label_m
+                    result['x_id']   = title_x
                     
-                    # TODO: write label/method to JSON file
+                    print("{}, {} iters, s_coverage: {}, s_degree: {}, relres: {}, fre: {}".format(
+                        label_m, result['iters'], sc, sd, result['rk'][-1], result['fre'][-1]))
+
                     with open(f'{title}_x{title_x}_{label_m}.json', 'w') as f:
                         json.dump(result, f, cls=NumpyArrayEncoder, indent=2)
-                
+
                 else:
-                    warnings.warn(f'failed to solve {label} system')
+                    warnings.warn(f'failed to solve {label} system with method {label_m}')
 
 
 # %%
@@ -134,7 +129,6 @@ def main(mtx_path, seed, max_outer, max_inner):
     x2 = np.ones((n, 1))
     x3 = np.sin(np.linspace(0, 100*np.pi, n))
 
-    print(f'{title}, rhs: normally distributed')
     run_trial_precond(mtx, [x1, x2, x3], k_max_outer=max_outer, k_max_inner=max_inner, 
                       title=title, title_xs=['randn', 'ones', 'sine'])
 

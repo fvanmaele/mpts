@@ -14,7 +14,7 @@ from scipy import sparse
 
 from sparse_util  import sparse_prune, sparse_max_n
 from sparse_lops  import lu_sparse_operator
-from precond_diag import diagp1
+from precond      import diagp1
 
 from graph import run_trial
 import precond_graph as pg

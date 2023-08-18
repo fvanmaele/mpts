@@ -7,24 +7,11 @@ Created on Tue Jul 25 15:41:25 2023
 """
 
 from scipy import sparse
-import ilupp
 import numpy as np
 
 
-def lu_sparse_operator(P, inexact=False):
-    """ SuperLU based preconditioner for use with GMRES
-    """
-    assert sparse.issparse(P)
-    nrows, ncols = P.shape
-
-    if inexact:
-        return ilupp.ILU0Preconditioner(sparse.csc_matrix(P))
-    else:
-        return sparse.linalg.LinearOperator((nrows, ncols), sparse.linalg.splu(P).solve)
-
-
 class ProdLinearOperator(sparse.linalg.LinearOperator):
-    """ Class for a preconditioner of multiplicative factors M_0, ..., M_{m-1}.
+    """ Class for a preconditioner of multiplicative inverses M^{-1}_0, ..., M^{-1}_{m-1}.
     """
     def __init__(self, A, Mi):
         assert len(Mi) > 0
@@ -36,10 +23,10 @@ class ProdLinearOperator(sparse.linalg.LinearOperator):
         
         # Child members
         self.Mi = Mi
-        
+
     def _matvec(self, x):
         y = x
-        for i in reversed(range(0, len(self.Mi))):
+        for i in range(0, len(self.Mi)):
             M = self.Mi[i]
             y = M(y) if callable(M) else M @ y
         return y
