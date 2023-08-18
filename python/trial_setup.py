@@ -6,15 +6,14 @@ Created on Mon Aug 14 04:20:12 2023
 @author: user
 """
 
-#from scipy.io import mmread, mmwrite
-from scipy import sparse
-from precond_diag import diagp0, diagp1, diagp2
-from sys import stderr
-
 import trial_precond as tr
 import precond as pc
 import networkx as nx
 
+#from scipy.io import mmread, mmwrite
+from scipy       import sparse
+from precond     import diagp0, diagp1, diagp2
+from sys         import stderr
 from sparse_lops import AltLinearOperator, IterLinearOperator, ProdLinearOperator
 
 
@@ -22,18 +21,18 @@ from sparse_lops import AltLinearOperator, IterLinearOperator, ProdLinearOperato
 def precond_setup(mtx):
     preconds = {}
 
-    #print('setup: orig')
+    #print('setup: orig', file=stderr)
     preconds['orig'] = [tr.precond_orig(mtx)]
     
-    #print('setup: jacobi')
+    #print('setup: jacobi', file=stderr)
     preconds['diagp0'] = [tr.precond_diag(mtx, diagp0(mtx))]
     preconds['diagp1'] = [tr.precond_diag(mtx, diagp1(mtx))]
     preconds['diagp2'] = [tr.precond_diag(mtx, diagp2(mtx))]
     
-    #print('setup: tridiag')
+    #print('setup: tridiag', file=stderr)
     preconds['tridiag'] = [tr.precond_tridiag(mtx)]
     
-    #print('setup: ilu0')
+    #print('setup: ilu0', file=stderr)
     preconds['ilu0'] = [tr.precond_ilu0(mtx)]
     
     return preconds
@@ -118,9 +117,9 @@ def precond_setup_graph(mtx, opt_graph, opt_label, m_max):
     return preconds
 
 
-# %%
 def precond_setup_mst(mtx, m_max):
     return precond_setup_graph(mtx, nx.maximum_spanning_tree, 'max-st', m_max)
+
 
 def precond_setup_lf(mtx, m_max):
     return precond_setup_graph(mtx, pc.linear_forest, 'max-lf', m_max)

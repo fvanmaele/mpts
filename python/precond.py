@@ -14,13 +14,6 @@ from sparse_util  import sparse_prune, sparse_scale, sparse_max_n
 
 
 # %% Diagonal preconditioners
-def unit(x):
-    x[x == 0] = 1
-    return x / np.abs(x)
-
-def diagp0(mtx):
-    return mtx.diagonal()
-
 def row_sums_excluding_diagonal(mtx):
     # Set the diagonal elements to zero in the CSR matrix
     mtx = mtx.copy()
@@ -29,17 +22,21 @@ def row_sums_excluding_diagonal(mtx):
     # Compute the sum of row elements excluding the diagonal elements
     return np.array(mtx.sum(axis=1)).flatten()
 
+def unit(x):
+    x[x == 0] = 1
+    return x / np.abs(x)
+
+def diagp0(mtx):
+    return mtx.diagonal()
+
 def diagp1(mtx):
-    mtx_d = mtx.diagonal()
-    return np.multiply(unit(mtx_d), np.maximum(np.abs(mtx_d), row_sums_excluding_diagonal(abs(mtx))))
+    return np.multiply(unit(diagp0(mtx)), np.maximum(np.abs(diagp0(mtx)), row_sums_excluding_diagonal(abs(mtx))))
 
 def diagp2(mtx):
-    mtx_d = mtx.diagonal()
-    return np.multiply(unit(mtx_d), np.array(abs(mtx).sum(axis=1)).flatten())
+    return np.multiply(unit(diagp0(mtx)), np.array(abs(mtx).sum(axis=1)).flatten())
 
 def diagl1(mtx):
-    mtx_d = mtx.diagonal()
-    return mtx_d + row_sums_excluding_diagonal(abs(mtx))
+    return diagp0(mtx) + row_sums_excluding_diagonal(abs(mtx))
 
 
 # %% Generalized graph preconditioner
@@ -73,7 +70,7 @@ def graph_precond_list_m(mtx, optG, m, scale):
     # retrieved in the previous step (2.2)
     for k in range(1, m):
         # C -> scale(C, S(M) \ S_diag(M), scale)
-        C = sparse_scale((C + D).tocoo(), M.tocoo(), scale)
+        C = sparse_scale(C.tocoo(), M.tocoo(), scale)
         M = nx.to_scipy_sparse_array(optG(nx.Graph(C)))       
         S.append(M)
 
@@ -107,10 +104,12 @@ def graph_precond_mos_a(mtx, optG, m, mtx_q=None):
     n, _ = mtx.shape
     Id = sparse.eye(n)
 
-    # Vector of weights, matching the number of non-zero elements in each row of A
     if mtx_q is None:
+        # Vector of weights, matching the number of non-zero elements in each row of A
         mtx_row_idx, _, _ = sparse.find(mtx)
         _, mtx_q = np.unique(mtx_row_idx, return_counts=True)
+    else:
+        assert len(mtx_q) == n
 
     # Check if B converges towards identity matrix
     # TODO: add warning if B_diff gets "too large" in some iteration
