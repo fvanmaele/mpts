@@ -21,8 +21,12 @@ def sparse_ddiag(matrix):
     if not sparse.issparse(matrix):
         raise ValueError("Input matrix must be a Scipy sparse matrix.")
 
+    matrix_without_diagonal = sparse.csr_matrix(matrix - sparse.diags(matrix.diagonal()))
+    abs_row_sums_without_diagonal = abs(matrix_without_diagonal).sum(axis=1).T
+    abs_diagonal = abs(matrix.diagonal())
+
     # A1: Return self as flattened ndarray
-    return np.count_nonzero((abs(matrix.diagonal()) >= abs(sparse.csr_matrix(matrix)).sum(axis=1).T).A1) / matrix.shape[0]
+    return np.count_nonzero((abs_diagonal >= abs_row_sums_without_diagonal).A1) / matrix.shape[0]
 
 
 def sparse_prune(mtx, mtx_mask):
