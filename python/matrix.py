@@ -13,6 +13,7 @@ from sparse_util   import s_coverage, s_degree, sparse_ddiag
 from precond       import spanning_tree_precond, linear_forest_precond
 from precond_diag  import diagp0
 
+
 # %%
 def main(mtx_l, normalize_diag):
     print('name,diag,max_lf,max_st,diag_dom,max_deg')

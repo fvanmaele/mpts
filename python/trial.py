@@ -63,7 +63,6 @@ def run_trial(mtx, x, M, k_max_outer, k_max_inner):
     }
 
 
-
 def run_trial_precond(mtx, xs, k_max_outer=10, k_max_inner=20, title=None, title_xs=None):    
     preconds_ref = precond_setup(mtx)
     preconds_mst = precond_setup_mst(mtx, 4)

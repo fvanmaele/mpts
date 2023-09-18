@@ -11,10 +11,9 @@ import precond as pc
 import networkx as nx
 
 #from scipy.io import mmread, mmwrite
-from scipy       import sparse
-from precond     import diagp0, diagp1, diagp2
-from sys         import stderr
-from sparse_lops import AltLinearOperator, IterLinearOperator, ProdLinearOperator
+from scipy         import sparse
+from precond_diag  import diagp0, diagp1, diagp2
+from sparse_lops   import AltLinearOperator, IterLinearOperator, ProdLinearOperator
 
 
 # %%
