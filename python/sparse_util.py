@@ -9,7 +9,7 @@ import warnings
 import numpy as np
 from scipy import sparse
 
-
+# %%
 def sparse_is_symmetric(mtx, tol=1e-10):
     """ Check a matrix for numerical symmetry
     """
@@ -86,12 +86,16 @@ def sparse_scale(mtx, mtx_mask, scale):
     return sparse.coo_matrix((data, (rows, cols)))
 
 
-def s_coverage(mtx, mtx_pruned):
+def s_coverage(mtx, mtx_pruned, normalize_diag=False):
     """ Compute the S-coverage as quality measure for a sparse preconditioner
     """
     assert sparse.issparse(mtx)
     assert sparse.issparse(mtx_pruned)
-    
+
+    if normalize_diag:
+        mtx.setdiag(1)
+        mtx_pruned.setdiag(1)
+
     sc = abs(sparse.csr_matrix(mtx_pruned)).sum() / abs(sparse.csr_matrix(mtx)).sum()
     if sc > 1:
         warnings.warn('S coverage is greater than 1')
