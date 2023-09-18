@@ -20,24 +20,9 @@ def sparse_is_symmetric(mtx, tol=1e-10):
 def sparse_ddiag(matrix):
     if not sparse.issparse(matrix):
         raise ValueError("Input matrix must be a Scipy sparse matrix.")
-    
-    # Get the nonzero elements and their corresponding row indices
-    data, rows, cols = sparse.find(matrix)
-    
-    # Check if the matrix is square
-    if matrix.shape[0] != matrix.shape[1]:
-        return False
-    
-    # Iterate over each row
-    rows_ddiag = 0
-    for i in range(matrix.shape[0]):
-        row_values = data[rows == i]
-        row_sum = np.sum(np.abs(row_values)) - np.abs(matrix.diagonal()[i])
-        
-        if np.abs(matrix.diagonal()[i]) >= row_sum:
-            rows_ddiag += 1
-    
-    return rows_ddiag / matrix.shape[0]
+
+    # A1: Return self as flattened ndarray
+    return np.count_nonzero((abs(matrix.diagonal()) >= abs(sparse.csr_matrix(matrix)).sum(axis=1).T).A1) / matrix.shape[0]
 
 
 def sparse_prune(mtx, mtx_mask):

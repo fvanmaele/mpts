@@ -12,7 +12,7 @@ from scipy.io      import mmread
 from sparse_util   import s_coverage, s_degree, sparse_ddiag
 from precond       import diagp0, spanning_tree_precond, linear_forest_precond
 
-
+# %%
 def main(mtx_l):
     print('name,diag,max_lf,max_st,diag_dom,max_deg')
 
