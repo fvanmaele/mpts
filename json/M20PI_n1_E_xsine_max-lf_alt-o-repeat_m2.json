@@ -1,0 +1,14 @@
+{
+  "fre": [
+    1.4611029606287914e-15
+  ],
+  "rk": [
+    1.0,
+    7.08658190820409e-16
+  ],
+  "exit_code": 0,
+  "iters": 1,
+  "mtx": "M20PI_n1_E",
+  "method": "max-lf_alt-o-repeat_m2",
+  "x_id": "sine"
+}

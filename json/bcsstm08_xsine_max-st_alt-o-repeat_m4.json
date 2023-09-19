@@ -1,0 +1,14 @@
+{
+  "fre": [
+    3.91981110811139e-11
+  ],
+  "rk": [
+    1.0,
+    6.474704860183356e-16
+  ],
+  "exit_code": 0,
+  "iters": 1,
+  "mtx": "bcsstm08",
+  "method": "max-st_alt-o-repeat_m4",
+  "x_id": "sine"
+}

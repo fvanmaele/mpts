@@ -1,0 +1,14 @@
+{
+  "fre": [
+    1.2319811102919398e-15
+  ],
+  "rk": [
+    1.0,
+    4.0407506898742337e-16
+  ],
+  "exit_code": 0,
+  "iters": 1,
+  "mtx": "Chem97ZtZ",
+  "method": "max-st_add_m2",
+  "x_id": "randn"
+}
