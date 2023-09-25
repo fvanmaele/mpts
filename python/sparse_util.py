@@ -9,6 +9,7 @@ import warnings
 import numpy as np
 from scipy import sparse
 
+
 # %%
 def sparse_is_symmetric(mtx, tol=1e-10):
     """ Check a matrix for numerical symmetry
@@ -17,7 +18,7 @@ def sparse_is_symmetric(mtx, tol=1e-10):
     return (abs(mtx-mtx.T) > tol).nnz == 0
 
 
-def sparse_ddiag(matrix):
+def sparse_ddiag(matrix, strict=False):
     if not sparse.issparse(matrix):
         raise ValueError("Input matrix must be a Scipy sparse matrix.")
 
@@ -26,7 +27,10 @@ def sparse_ddiag(matrix):
     abs_diagonal = abs(matrix.diagonal())
 
     # A1: Return self as flattened ndarray
-    return np.count_nonzero((abs_diagonal >= abs_row_sums_without_diagonal).A1) / matrix.shape[0]
+    if strict:
+        return np.count_nonzero((abs_diagonal > abs_row_sums_without_diagonal).A1) / matrix.shape[0]
+    else:
+        return np.count_nonzero((abs_diagonal >= abs_row_sums_without_diagonal).A1) / matrix.shape[0]
 
 
 def sparse_prune(mtx, mtx_mask):
@@ -86,15 +90,11 @@ def sparse_scale(mtx, mtx_mask, scale):
     return sparse.coo_matrix((data, (rows, cols)))
 
 
-def s_coverage(mtx, mtx_pruned, normalize_diag=False):
+def s_coverage(mtx, mtx_pruned):
     """ Compute the S-coverage as quality measure for a sparse preconditioner
     """
     assert sparse.issparse(mtx)
     assert sparse.issparse(mtx_pruned)
-
-    if normalize_diag:
-        mtx.setdiag(1)
-        mtx_pruned.setdiag(1)
 
     sc = abs(sparse.csr_matrix(mtx_pruned)).sum() / abs(sparse.csr_matrix(mtx)).sum()
     if sc > 1:

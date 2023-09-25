@@ -1,6 +1,7 @@
 library(readr)
 options(scipen=6)
-matrix <- read_csv('matrix_norm_diag.csv')
+matrix <- read_csv('matrix_norm_diagp1.csv')
+matrix_orig <- read_csv('matrix.csv')
 
 # coverage(max ST) >= coverage(max LF) must hold for every matrix
 all(matrix['max_st'] >= matrix['max_lf'])
